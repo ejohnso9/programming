@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Project Euler Problem #92 HTML</title>
+
+    <script type="text/javascript">
+
+    // ProjectEuler.net Problem #92: Square Digit Chains
+    // Very curiously, when you add up the sums of the digits of a number
+    // and repeat this iteratively, all numbers end up in one of two cycles,
+    // either 1 or starting with 89.
+    // How many numbers below 10mil are on the 89 plan?
+    function pe92(N) {
+        "use strict";
+
+        var count89 = 0,
+            i,
+        
+            // helper to compute square of the digits in the number
+            sumDigitsSq = function (n) {
+
+                var digits = n.toString().split(''),
+                    sum = 0,
+                    d, i;
+
+                for (i = 0; i < digits.length; i++) {
+                    d = digits[i];
+                    sum += d * d;
+                }
+
+                return sum;
+            },
+
+            // starting with N, run down to 1 or 89
+            oneOr89 = function (n, returnList) {
+                var numList = [];
+                while (n !== 1 && n !== 89) {
+                    if (returnList) {
+                        numList.push(n);
+                    }
+                    n = sumDigitsSq(n);
+                }
+
+                numList.push(n);
+
+                return returnList ? numList : n;
+            };
+
+        for (i = 2; i < N; i++) {
+            if (oneOr89(i) === 89) {
+                count89 += 1;
+            }
+        }
+
+        return count89;
+        // return oneOr89(N, true);
+    }
+
+    // read input field, pass to func, populate output in 
+    // the output field
+    function run_pe92() {
+        var ip = document.getElementById('ipT'),
+            op = document.getElementById('opT'),
+            n = Number(ip.value),
+            i = pe92(n);
+
+        op.value = i.toString();
+    }
+
+    </script>
+  </head>
+
+  <body>
+    <h1>Run a Project Euler Problem</h1>
+    <form>
+      input: <input type="text" id="ipT" size="8"><br>
+      output: <input type="text" id="opT" size="40"><br>
+      <button onclick="run_pe92()" type="button">Run foo()</button>
+    </form>
+  </body>
+</html>
+

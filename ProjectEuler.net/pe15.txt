@@ -1,0 +1,118 @@
+
+
+// ascii text
+// Project Euler Problem #92
+
+Problem statement:
+
+    Starting in the top left corner of a 2×2 grid, and only being able to
+    move to the right and down, there are exactly 6 routes to the bottom
+    right corner.
+
+    How many such routes are there through a 20×20 grid?
+
+
+
+This problem was essentially solved on paper. At first I was guessing at
+either 2^n + 2 or 2^(n-1) - 2.  Neither of those hold up for long.
+
+So, let's just start simple and try to reason this out...
+
+Starting in the NW corner of the simplest grid:
+
+    . .
+    . .
+
+There's just two ways to do it:
+    a) go to the right, then there is no choice but down
+    b) go down, then there is no choice but right
+
+Let's represent that like so:
+
+    2 1
+    1 E
+
+That is, two paths total, one you go right or down, you are on a node
+that only has one path from there. So, let's extend this to the 3x3
+grid, and label the unknown spots:
+
+    . . .        a b c
+    . 2 1        b 2 1
+    . 1 E        c 1 E
+
+The cells or nodes in mirror positions from the a-E diagonal are
+equivalent. From c, we are already on a path with only 1 choice, so the
+grid can be redrawn as:
+
+
+    a b 1
+    b 2 1
+    1 1 E
+
+From b, we have two choices: right or down (as always). From the top b,
+going right leads to a fully constrained path, and going down, leads to
+a node we already solved to have two paths from there so, 3 total from
+the top b, and the left b is the same by symmetry.  It is easy enough to
+just trace out the three possible paths).
+
+
+    a 3 1
+    3 2 1
+    1 1 E
+
+So, from a there are two choices, each leading to a node that has 3
+possible paths from there. That means a is itself 6, and this is
+consistent with the given starting example.
+
+    6 3 1
+    3 2 1
+    1 1 E
+
+So let's, extend this again, and show a few steps of filling out the
+numbers, and just replace 'E' with 1:
+
+    . . . .     . . . 1     . . 4 1     .  10 4 1       20 10 4 1
+    . 6 3 1     . 6 3 1     . 6 3 1     10  6 3 1       10  6 3 1
+    . 3 2 1     . 3 2 1     4 3 2 1      4  3 2 1        4  3 2 1
+    . 1 1 1     1 1 1 1     1 1 1 1      1  1 1 1        1  1 1 1
+
+
+Most programmers will recognize by now that we have a Pascal's triangle
+going, and if you extend this just a couple more steps and then look
+along the SE to NW diagonal, you get the sequence:
+
+    [1, 2, 6, 20, 70, 252, 924, ... ]
+
+    Type that into OEIS, and get: A000984
+
+    https://oeis.org/A000984
+
+    [ 1, 2, 6, 20, 70, 252, 924, 3432, 12870, 48620,   // first 10
+    184756, 705432, 2704156, 10400600, 40116600, // 11-15
+    155117520, 601080390, 2333606220, 9075135300, 35345263800, // 16-20
+    137846528820, 538257874440, 2104098963720, 8233430727600,  // 21-24
+    32247603683100, 126410606437752, 495918532948104, 1946939425648112,
+    ... ]
+
+
+The tricky part is that the original problem statement gives an example
+of a 2x2 grid, but I've drawn that like so:
+
+    . . .
+    . . .
+    . . .
+
+because I am looking at vertices, not edges. If you are looking at edges,
+it is a 2 x 2 grid, but I have been referring to this as 3x3.
+
+6 is the third element in A000984 above, and corresponds to their version of a 2x2. 
+
+It took me a while to try to reconcile why it would not accept 35345263800
+(20th element) as the correct answer. 
+
+They are asking for a 20x20 (edges) grid, so I need the *21st* element:
+137846528820   or: 137,846,528,820   (~137.8 billion)
+
+That is the correct answer.
+
+
