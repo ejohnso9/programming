@@ -1,0 +1,5 @@
+import sys
+op = []
+for h in open(sys.argv[1], 'r'):
+    op.append("%d" % int("0x" + h, 16))
+print "\n".join(op)

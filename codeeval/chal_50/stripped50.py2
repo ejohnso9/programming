@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import sys
+
+def base26(n):
+    if n == 0:
+        return "A"
+
+    l = []
+    while n > 0:
+        rem = n % 26
+        l.append(chr(rem + 65))
+        n = (n - rem) / 26
+    l.reverse()
+    return ''.join(l)
+
+if __name__ == "__main__":
+
+    replDict = {}  # dict of patterns that were substituted
+    replIndex = 0  # base-26 counter of replacements
+    for line in open(sys.argv[1], 'r'):
+        line = line.strip()
+        (s, pats) = [s2.strip() for s2 in line.split(';')]
+        pats = [s2.strip() for s2 in pats.split(',')]
+        frList = []
+        for i in xrange(len(pats) / 2):
+            frList.append((pats[2 * i], pats[2 * i + 1]))
+
+        for (fpat, rpat) in frList:
+            tup = (fpat, rpat)
+            idx = s.find(fpat)  # returns -1 if not found
+            if idx > -1:
+                l = len(fpat)
+                replKey = '[' + base26(replIndex) + ']'
+                replDict[replKey] = rpat
+                replIndex += 1
+                s = s.replace(fpat, replKey)
+
+        for key in replDict:
+            s = s.replace(key, replDict[key])
+
+        print s

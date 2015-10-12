@@ -1,0 +1,6 @@
+yellow
+tooth
+abcdef bcdefghibb cc: just one lc 'A'
+abcdefg a cde: only one lc 'B'
+abcdefg ab def aaa bbb: only one lower 'see'
+abcdefg abc ef aaa bbb: only one lc DEE
