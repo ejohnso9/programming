@@ -1,3 +1,33 @@
 
+Python Bytecode Disassembler
 http://pymotw.com/2/dis/
 
+The Interactive Debugger
+https://pymotw.com/2/pdb/
+
+
+Fixing Whitespace formatting on CodeEval
+UserScripts via TamperMonkey: https://tampermonkey.net/
+
+https://gist.github.com/anonymous/085df6c7568e8bfabedb1456c357a95e
+
+
+Possible problem with challenge #240
+
+From Steven Jackson (Jackon?)
+In another case of ambiguous but I guess still technically correct,
+https://www.codeeval.com/open_challenges/240/ infuriated me for a good while. I looked
+here for the definition http://mathworld.wolfram.com/MersenneNumber.html, realized that
+didn't match up with the example output, and decided that maybe they meant Mersenne Prime,
+which does match up with the examples output. I was actually pulling together references
+to dispute the correctness of the test cases when I read http://oeis.org/A000225 (which
+was referenced by wolfram) a bit more closely, and followed the link to
+http://oeis.org/A001348. Really long story short: use http://oeis.org/A001348 as the
+definition of Mersenne Number. I'm sure there are others I've blocked from memory, I'll
+write up anything I remember.
+
+
+
+#226
+abcdefghijklmnopqrstuvwxyz
+uvwxyznopqrstghijklmabcdef
