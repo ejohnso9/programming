@@ -20,6 +20,11 @@ DESCRIPTION:
 
     followed by the block of text defined below.
 
+RESULT
+    http://www.pythonchallenge.com/pc/def/equality.html
+
+HISTORY
+    2019May20 updated for Python3
 """
 
 text = """\
@@ -1250,7 +1255,8 @@ def frequency_dict(text):
 
     d = {}
     for c in list(text):
-        if d.has_key(c):
+        #if d.has_key(c):
+        if c in d:
             d[c] += 1
         else:
             d[c] = 1
@@ -1292,19 +1298,19 @@ def main2():
     import string
 
     d = frequency_dict(text)
-    l = d.keys()
+    l = list(d.keys())
     l.sort()
-    print l   # ['\n', '!', '#', '$', '%', '&', '(', ')', '*', '+', '@',
+    print(l)   # ['\n', '!', '#', '$', '%', '&', '(', ')', '*', '+', '@',
               #  '[', ']', '^', '_', 'a' , 'e', 'i', 'l', 'q', 't', 'u',
               #  'y', '{', '}']
 
-    print "keys = '%s'" % ''.join(l)
-    # REULT: '!#$%&()*+@[]^_aeilqtuy{}'  # don't forget to add '\n'
+    print("keys = '%s'" % ''.join(l))
+    # RESULT: '!#$%&()*+@[]^_aeilqtuy{}'  # don't forget to add '\n'
 
     keep = 'aeilqtuy'
     drop = '\n!#$%&()*+@[]^_{}'
-    tr_table = string.maketrans(keep, keep)
-    print text.translate(tr_table, drop)
+    tr_table = str.maketrans(keep, keep, drop)
+    print(text.translate(tr_table))
 #-----------------------------------------------------------------------
 
 
@@ -1346,8 +1352,7 @@ if __name__ == '__main__':
     # the order they appeared using map and the filter_lc function
     # defined above.
 
-    print
-    print ''.join(map(filter_lc, text))  # RESULT: 'equality'
+    print(''.join(map(filter_lc, text))) # 'equality'
 
 
     # clue page #3: http://www.pythonchallenge.com/pc/def/equality.html
@@ -1356,6 +1361,8 @@ if __name__ == '__main__':
     # ALTERNATE SOLUTION
     main2() # result is also: 'equality'
     
+    # Page 3: http://www.pythonchallenge.com/pc/def/equality.html
+
 
 # END MAIN
 #///////////////////////////////////////////////////////////////////////

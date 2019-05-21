@@ -6,18 +6,27 @@ DESCRIPTION:
 
         http://www.pythonchallenge.com/pc/def/linkedlist.html  (.php)
 
+        start at: linkedlist.php?nothing=12345
+
     Clue page states:
 
     <!-- urllib may help. don't try ALL nothings, since it will never 
-    end. ~300 times is enough. -->
+    end. 400 times is enough. -->
+
+RESULT
+    http://www.pythonchallenge.com/pc/def/peak.html
+
+HISTORY
+    2019May20  updating for Python3
 """
 
 import re
-from urllib import urlopen
+import pdb
+from urllib.request import urlopen
 
 
 #-----------------------------------------------------------------------
-def follow(i):
+def follow(start_i):
     """
     DESCRIPTION:
         Follows a chain of URL's matching a quick and dirty pattern of
@@ -30,18 +39,22 @@ def follow(i):
         None
     """
 
+    i = 0
+
     # argument checking
-    assert type(i) is int
+    assert type(start_i) is int
+    
 
     pat = r'and the next nothing is \d+'
     base_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php'
-    url = base_url + '?nothing=%i' % i
+    url = base_url + '?nothing=%i' % start_i
 
     # follow the chain...
     while 1:
         # get HTML output as string
         fd = urlopen(url)
-        text = fd.read()
+        text = fd.read().decode('utf-8')
+        # pdb.set_trace()
         fd.close()
 
         # try to find the pattern
@@ -49,12 +62,12 @@ def follow(i):
         try:
             assert len(l) == 1
         except AssertionError:
-            print text
+            print(text)
             break
 
         match = l[0]                # e.g., '92512'
-        print match
         n = match.split()[-1]
+        print('[{}] {} '.format(i, match)); i += 1;
 
         # NOTE: such things can be expressed in fewer statements.
         # Dennis Ritchey advises: "Don't be clever - clever kills."
@@ -72,7 +85,7 @@ def follow(i):
 # MAIN
 if __name__ == '__main__':
 
-    follow(12345)
+    #follow(12345)
 
     # I had the loop defined in follow() as my main body. When the chain
     # ended on 92118, stating 'Yes. Divide by two and keep going.' I
@@ -80,13 +93,11 @@ if __name__ == '__main__':
     # while-loop into a function. As it turns out, there is only 1
     # such glitch, before the chain continues to 'peak.html'.
 
-    follow(92118 / 2)
+    # follow(int(92118 / 2))  # numbers not always the same
     # ends on 'peak.html'
+    follow(8022)
 
-    print """
-    Challenge #5 URL is:
-    http://www.pythonchallenge.com/pc/def/peak.html
-    """
+    print("http://www.pythonchallenge.com/pc/def/peak.html")
 
 # END MAIN
 #///////////////////////////////////////////////////////////////////////
