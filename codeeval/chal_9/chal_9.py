@@ -3,31 +3,26 @@
 import sys
 
 """
-Solution for codeeval challenge #40 (SELF DESCRIBING NUMBERS)
-https://www.codeeval.com/open_challenges/40/
+Solution for codeeval challenge #9 (STACK IMPLEMENTATION)
+https://www.codeeval.com/open_challenges/NN/
 
 AUTHOR: Erik Johnson
-DATE: 2015-OCT-04
+DATE: 2016-Jun-02
 
-DISCUSSION:
+DISCUSSION
+    Maybe a problem such as this graduates from "easy" to "moderate"
+    under a language like C, but under Python this still rates
+    "trivial".
 """
 
 
 if __name__ == "__main__":
-
     lines_out = []
+
     for line in open(sys.argv[1], 'r'):
-        counts = [0] * 10
-        line = line.strip()
-        N = len(line)
-        for i in [int(c) for c in line]:
-            counts[i] += 1
-
-        if ''.join([str(i) for i in counts[:N]]) == line:
-            zero_one = '1'
-        else:
-            zero_one = '0'
-
-        lines_out.append(zero_one)
+        s = line.rstrip()
+        l = list(reversed(s.split()))
+        lines_out.append(' '.join(l[::2]))
 
     print '\n'.join(lines_out)
+    sys.stdout.flush()
