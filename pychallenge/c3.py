@@ -13,6 +13,14 @@ DESCRIPTION:
 
     Embedded text block as below.  (Looks like a good application of
     REGEXP's (module re))
+
+RESULT:
+    Page 4: http://www.pythonchallenge.com/pc/def/linkedlist.html
+    -> Page 4: http://www.pythonchallenge.com/pc/def/linkedlist.php
+
+HISTORY
+    Created: god only knows when
+    2019May20  Reviewing, updating for Python3
 """
 
 
@@ -1279,6 +1287,7 @@ def find_guarded(text):
     import re
 
     # get a list of pattern matches
+    # NB: small letter outside guards forces match on exactly 3 caps
     pat = r'[a-z][A-Z]{3}[a-z][A-Z]{3}[a-z]'
 
     return re.findall(pat, text, re.M)
@@ -1290,20 +1299,18 @@ def find_guarded(text):
 if __name__ == '__main__':
 
     l = find_guarded(TEXT)  # the whole pattern match!
-    print l
-    # that returns the list of matches
+    print(l)
+    """
     ['qIQNlQSLi', 'eOEKiVEYj', 'aZADnMCZq', 'bZUTkLYNg', 'uCNDeHSBj',
     'kOIXdKBFh', 'dXJVlGZVm', 'gZAGiLQZx', 'vCJAsACFl', 'qKWGtIDCj']
+    """
 
     # pull the 5th (1-indexed) character out of each string
     cList = []
     for match in l:
         cList.append(match[4])
 
-    print ''.join(cList)
-    print
-
-    print """Next page can be found at:
-    http://www.pythonchallenge.com/pc/def/linkedlist.html  (.php)
-    """
+    answer = ''.join(cList)
+    template = 'http://www.pythonchallenge.com/pc/def/{}.html'
+    print(template.format(answer))
 

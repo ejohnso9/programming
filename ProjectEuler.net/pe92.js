@@ -1,9 +1,14 @@
 // JS
 // ProjectEuler.net Problem #92: Square Digit Chains
-// Very curiously, when you add up the sums of the digits of a number
-// and repeat this iteratively, all numbers end up in one of two cycles,
-// either 1 or starting with 89.
+// Very curiously, when you add up the sums of the squares of the digits
+// of a number and repeat this iteratively, all numbers end up in one of
+// two cases: ending on 1 or in a cycle including 89.  
+//
+// For example:
+// 85 -> 89 -> 145 -> 42 -> 20 -> 4 -> 16 -> 37 -> 58 -> 89
+//
 // How many numbers below 10mil are on the 89 plan?
+
 function pe92(N) {
 
     var 

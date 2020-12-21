@@ -1,12 +1,14 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 """
 DESCRIPTION:
     Python challenge problem #1
 
-        http://www.pythonchallenge.com/pc/def/274877906944.html
-        
-    forwards to: http://www.pythonchallenge.com/pc/def/map.html
+    http://www.pythonchallenge.com/pc/def/274877906944.html
+    (forwards to: http://www.pythonchallenge.com/pc/def/map.html)
+
+HISTORY
+    2019May20 Updating code for Python3.
 """
 
 # this is the text cut from the web page:
@@ -23,8 +25,12 @@ qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj."""
 def rot2(c):
     if 'a' <= c <= 'z':
         c = chr(ord(c) + 2)
+
+    # NB: assignment above affects this clause
     if c > 'z':
+        # roll back to beginning of alphabet
         c = chr(ord(c) - 26)
+
     return c
 #-----------------------------------------------------------------------
 
@@ -33,7 +39,7 @@ def rot2(c):
 # MAIN
 if __name__ == '__main__':
 
-    print ''.join(map(rot2, list(text)))
+    print(''.join(map(rot2, list(text))))
 
     result = """\
 i hope you didnt translate it by hand. thats what computers
@@ -55,13 +61,11 @@ maketrans(...)
     must be of the same length.
     """
 
-    print
-    text = 'map.html'
-    print ''.join(map(f, list(text)))
+    print(''.join(map(rot2, list('map.html'))))
+    # that would be 'ocr.jvon', which will actually get you a download
+    # with text in it, implying we should go to an HTML page.
 
-    # answer = 'ocr.jvon'
-
-    # the next clue page is here:
+    # the step starts here:
     # http://www.pythonchallenge.com/pc/def/ocr.html 
 
 # END MAIN
