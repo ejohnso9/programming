@@ -6,25 +6,51 @@ DESCRIPTION
     a page, selecting "Inspect", then select "Application" tab, then under "Storage",
     "Cookies".
 """
+
 import sys
+import requests
+from pathlib import Path
 
-DATA
+# GLOBAL DATA
+NL = '\n'
+URL = 'https://adventofcode.com/2015/day/2/input'
+SESS = '53616c7465645f5fcd6717488ba525bffab3b13653a7a0a7a4f5ae3d057c80582fd776cec4ea020d44b48994573d91af'
+FILENAME = '2015-2.input'
 
-# print(len(DATA))
 
-# PART 1
-left = sum([1 for c in DATA if c == '('])
-print(f"left is: {left}")
-right = sum([1 for c in DATA if c == ')'])
-print(f"right is: {right}")
-print(abs(left - right))  # 280
+def getDataLines(url, sess):
+    filename = Path(FILENAME)
+    if filename.exists():
+        print(f"reading from: {filename}")
+        with open(filename, 'r') as fd:
+            lines = fd.readlines()
+        return lines
+    else:
+        print(f"fetching from URL: {url}")
+        req = requests.get(url, cookies={'session': sess})
+        data = req.text
+        with open(filename, 'w') as fd:
+            fd.write(data)
+        return data.split(NL)
 
-# PART 2
-print(DATA[0:10])
-floor = 0
-for i, c in enumerate(DATA):
-    x = 1 if c == '(' else -1
-    floor += x
-    if floor == -1:
-        print(f"i is: {i}")  # 1796 is printed, AoC wants 1-based index, so 1797
-        break
+
+def main():
+
+    lines = getDataLines(URL, SESS)
+    total = 0
+
+    # sum up all the paper needed
+    for i, line in enumerate(lines):
+        l, w, h = [int(s) for s in line.split('x')]
+        # print(f"{i}: {t}")
+        dims = [l * w, w * h, l * h]
+        small = min(dims)
+        sub_total = 2 * sum(dims) + small
+        total += sub_total
+
+    # print(f"i is: {i}")
+    print(f"total is: {total}")  # 1597514
+
+
+if __name__ == '__main__':
+    main()
