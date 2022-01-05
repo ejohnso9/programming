@@ -37,9 +37,9 @@ def getDataLines(url, sess):
 def main():
 
     lines = getDataLines(URL, SESS)
-    total = 0
 
-    # sum up all the paper needed
+    # PART 1: sum up all the paper needed
+    total = 0
     for i, line in enumerate(lines):
         l, w, h = [int(s) for s in line.split('x')]
         # print(f"{i}: {t}")
@@ -47,9 +47,15 @@ def main():
         small = min(dims)
         sub_total = 2 * sum(dims) + small
         total += sub_total
+    print(f"paper total is: {total}")  # 1598415
 
-    # print(f"i is: {i}")
-    print(f"total is: {total}")  # 1597514
+    # PART 2: sum up all the ribbon needed
+    total = 0
+    for i, line in enumerate(lines):
+        l, w, h = [int(s) for s in line.split('x')]
+        sub_total = 2 * sum(sorted([l, w, h])[:2])
+        total += sub_total + (l * w * h)
+    print(f"ribbon total is: {total}")  # 
 
 
 if __name__ == '__main__':
