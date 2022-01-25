@@ -2,8 +2,11 @@
 
 'guile' is installed at pythonanywhere.com (i.e., /usr/bin/guile)
 
-To run the REPL:
+To run the REPL (interactively):
     $ guile
+
+To invoke the interpreter on a scheme file:
+    $ guile filename.scm
 
 start interpreter, first evaluating file:
     $ guile -l filename.scm
