@@ -1,0 +1,11 @@
+
+Sunday, March 20, 2022
+========================
+
+I would have sworn I had some Erlang notes on this computer from before?
+Can't find them.  Keeping this all as part of a Git repo that you can
+synch on any computer makes a lot of sense. Let's do that.
+
+
+
+
