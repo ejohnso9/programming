@@ -15,12 +15,17 @@ See "Etudes for Erlang" at front of IErl
 Sunday, March 20, 2022
 ========================
 
+I would have sworn I had some Erlang notes on this computer from before?
+Can't find them.  Keeping this all as part of a Git repo that you can
+synch on any computer makes a lot of sense. Let's do that.
+
+
 %% IDEA %%
 We have this RESULTS_XML file...
 Erlang has this NOSQL built-in DB...
-I already have Python code in place to user xml.dom.minidom to parse
+I already have Python code in place to use xml.dom.minidom to parse
 that file and combine Incidents.
-You basically get this built-in parallelism for free.
+Erlang basically gives this built-in parallelism for free.
 Could Erlang take a path to a file on a web server and parse the file
 and generate JSON for combine objects substantially faster than Python
 can do that processing?
@@ -28,14 +33,65 @@ It would be curious to see how much faster.
 Maybe build Python API which uses WebSocket to offload processing tasks
 to an Erlang system?
 If Erlang were substantially faster (at least 2X), the might save a lot
-time, and pave the way for generalized parallel programming vai
+time, and pave the way for generalized parallel programming via
 Erlang/Elixir for Simajin.
 
+Don't talk about it. Explore it. Prove it. Then, if proven to be
+substantially faster, quietly change existing Python code to talk to
+running Erlang services. 
 
-I would have sworn I had some Erlang notes on this computer from before?
-Can't find them.  Keeping this all as part of a Git repo that you can
-synch on any computer makes a lot of sense. Let's do that.
+*** Better yet, dynamically figure out if there is some Erlang server
+that could be used, and use that if available, else just do the straight
+Python solution!
 
+
+%% IDEA (Python) %%
+There are now at least 2 Python scripts grinding through RESULTS_XML
+files. Putting these into JSON form in a data file is likely to be much,
+much faster to pick up and parse than going through XML
+parsing/processing twice.
+
+Even faster would be a Flask or other Python server that has collections
+of Python objects cached in memory that can be dished out via some sort
+of streaming protocol (e.g.,, HTTP(S) or TCP/IP socket)
+
+signals to cache server as Simajin is finishing writing RESULS_XML
+files?
+
+[ ] Try to document a simple map of script usage of XML file data and
+    how you might build a cacheing server to speed all this up.
+
+[ ] Start doing Python networking books.
+
+Proof of Concept steps:
+    [ ] Client / server between Python and Erlang
+        * WebSocket?
+        * HTTP?
+        * TCP/IP Socket?
+    [ ] Research available modules in Erlang for:
+        * WebSocket
+        * XML parsing
+
+    [ ] General benchmarking of Erlang vs. Python performance
+
+
+[ ] What is the relative performance of picking up a .json file of
+    combined objects versus parsing raw XML?
+    If we've done decent progrmaming to start with, chaning Luke's
+    script to use a different sort of API call should be fairly clean,
+    simple, painless.
+
+[ ] You were using something before to generate some sort of output
+    data... was Python benchmarking? Code coverage?
+    Q: What are the standard libraries for Python code benchmarking?
+    A:
+
+    Q: Where *are* we spending a lot of computing time?
+    A:
+
+
+Material from front part of IErl...
+-------------------------------------
 
 On Windows, the Erlang shell is not on the path.
 You can run it from the Windows menu easliy enough:
@@ -109,17 +165,34 @@ Since:
 
 %% ej: Ummmm... hmmm?!? Granted, the result to 11 is a rather large
 %% number, but shouldn't that be something like largest representable
-%% float? Something approaching infinity? (or IEEE754 rep of infinity?)
-%% there a lot left go between 1.633..e16 and advertised representable
-%% range of exponents up to 
+%% float? Something approaching infinity? (or IEEE-754-1985 64-bit
+%% rep of infinity?) There is a lot room left betweeen 1.633..e16
+%% and advertised representable range of exponents up to 308?!?
 
-# Curiously, this is precisely what Python gives, too:
+# Curiously, this is *EXACTLY* what Python gives, too:
 >>> math.tan(math.pi / 2.0)
 1.633123935319537e+16
 
-
+%% IE-5, integer results:
 13> round(1.9).
 2
-%% an integer result:
 14> trunc(1.9).
 1
+
+%% IE-7, integer constants (up to base 36)
+> 2#1111
+15
+29> 16#badc0ffee.
+50159747054
+30> 18#gaffe.
+1743080
+
+%% IE-8,9
+Concept of immutable variables by default. You can make an assignment to
+a an unbound variable to begin with, but thereafter, expressions such as
+'n = n + 1' are always going to be false (and will throw errors).
+
+%% Remember: to see current bound variables:
+> b().
+
+
