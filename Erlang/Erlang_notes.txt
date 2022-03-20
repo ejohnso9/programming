@@ -1,11 +1,125 @@
 
+                                ==============
+                                === Erlang ===
+                                ==============
+
+Book References
+----------------
+LYSE: "Learn You Some Erlang for Great Good!", Fred Hebert, No Starch Press
+IErl (or just IE): "Introducing Erlang", Simon St.Laurent, O'Reilly
+
+See "Etudes for Erlang" at front of IErl
+    http://github.com/oreillymedia/etudes-for-erlang
+
+
 Sunday, March 20, 2022
 ========================
+
+%% IDEA %%
+We have this RESULTS_XML file...
+Erlang has this NOSQL built-in DB...
+I already have Python code in place to user xml.dom.minidom to parse
+that file and combine Incidents.
+You basically get this built-in parallelism for free.
+Could Erlang take a path to a file on a web server and parse the file
+and generate JSON for combine objects substantially faster than Python
+can do that processing?
+It would be curious to see how much faster.
+Maybe build Python API which uses WebSocket to offload processing tasks
+to an Erlang system?
+If Erlang were substantially faster (at least 2X), the might save a lot
+time, and pave the way for generalized parallel programming vai
+Erlang/Elixir for Simajin.
+
 
 I would have sworn I had some Erlang notes on this computer from before?
 Can't find them.  Keeping this all as part of a Git repo that you can
 synch on any computer makes a lot of sense. Let's do that.
 
 
+On Windows, the Erlang shell is not on the path.
+You can run it from the Windows menu easliy enough:
+    1) Hit the windows key
+    2) Type 'Erlang'
+    3) Hit return and "C:\Program Files\erl-24.3\bin\werl.exe" should
+        execute.
+
+'%' is the Erlang ocmment character
+    comments are single-line, ONLY (LYSE uses %% by convention, but one
+    '%' is sufficient to make a comment)
+
+The shell does have a basic understanding of the file system, and
+supports some basic Unix-like commands issued as functions calls from
+with the shell:
+
+    1> ls().
+    include lib
+
+    2> pwd().
+    c:/Program Files/erl-24.3/usr
+
+    %% to quit:
+    3> q().
+
+%% ^G to drop into "User switch command":
+
+User switch command
+ --> h
+  c [nn]            - connect to job
+  i [nn]            - interrupt job
+  k [nn]            - kill job
+  j                 - list all jobs
+  s [shell]         - start local shell
+  r [node [shell]]  - start remote shell
+  q                 - quit erlang
+  ? | h             - this message
 
 
+The shell is also a basic REPL:
+
+> help().
+** shell internal commands **
+b()        -- display all variable bindings
+e(N)       -- repeat the expression in query <N>
+f()        -- forget all variable bindings
+f(X)       -- forget the binding of variable X
+h()        -- history
+% ...
+l(Module)  -- load or reload module
+%% ... many more lines of commands
+
+
+> math:pi().
+3.141592653589793
+
+10> h(math,tan).
+
+  -spec tan(X) -> float() when X :: number().
+
+Since:
+  OTP 18.0,OTP 20.0
+
+  A collection of mathematical functions that return floats. Arguments are
+  numbers.
+
+11> math:tan(math:pi() / 2.0).
+1.633123935319537e16
+12> math:tan(math:pi() / 4.0).
+0.9999999999999999
+
+%% ej: Ummmm... hmmm?!? Granted, the result to 11 is a rather large
+%% number, but shouldn't that be something like largest representable
+%% float? Something approaching infinity? (or IEEE754 rep of infinity?)
+%% there a lot left go between 1.633..e16 and advertised representable
+%% range of exponents up to 
+
+# Curiously, this is precisely what Python gives, too:
+>>> math.tan(math.pi / 2.0)
+1.633123935319537e+16
+
+
+13> round(1.9).
+2
+%% an integer result:
+14> trunc(1.9).
+1
