@@ -74,6 +74,13 @@ Proof of Concept steps:
 
     [ ] General benchmarking of Erlang vs. Python performance
 
+    [ ] Q: Is Lua substantialy faster than Python at XML parsing?
+        (Does it even have standard modules for doing that?)
+
+    [ ] Q: Is use of lxml w/ callbacks way faster than xml.dom.minidom?
+        [ ] Find the book for lxml usage by Mike Driscoll.
+        [ ] benchmark xml.dom.minidom against lxml
+
 
 [ ] What is the relative performance of picking up a .json file of
     combined objects versus parsing raw XML?
