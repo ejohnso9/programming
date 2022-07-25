@@ -52,7 +52,7 @@ from hashlib import md5
 
 # GLOBAL DATA
 NL = '\n'
-PUZZ_INPUT = 'yzbqklnj'
+PUZZ_INPUT = 'yzbqklnj'  # my own input from AoC website
 
 
 def getHash(puzz_input, num_i):
@@ -63,7 +63,7 @@ def getHash(puzz_input, num_i):
 
 def main():
 
-    pat = '0' * 5
+    pat = '0' * 6  # part 1 is looking for 5 zeroes, part 2: 6
     i = 0  # i = 609000  # testing: start close to known solution
     key = PUZZ_INPUT  # key = 'abcdef' # test value
     while True:
@@ -74,7 +74,9 @@ def main():
             break
 
     # 1st gold star:
-    print("ej: 282749 was verified as correct answer on 2022Jul25")
+    print("on 2022Jul25...")
+    print("    Part 1:  282749 verified as correct answer")  # 282749 
+    print("    Part 2: 9962624 verified as correct answer")  # 9962624
 
 if __name__ == '__main__':
     main()
