@@ -1,0 +1,346 @@
+//       1         2         3         4         5         6         7         8
+//345678901234567890123456789012345678901234567890123456789012345678901234567890
+
+                                F# NOTES
+                                ========
+2022Apr08
+Notes for my F# adventure...
+Using "Programming F# 3.0" 2E, Chris Smith, O'Reilly
+
+========================================================================
+Part 1 - how to get some code in the system and run something.
+
+'dotnet' is the basic command to get stuff done.
+> dotnet -h
+// Will spew a fair amount of doc...
+
+// You can direclty enter the interactive 'fsi' interpreter / REPL:
+
+> dotnet fsi
+
+// exit the interactive 'fsi' REPO
+> #quit;;
+
+
+//
+// run a simple F# script without compilation
+//
+
+// 1) put the following text into a file named 'hello.fsx'"
+printfn "Hello, World!"
+
+// 2) Run it:
+> dotnet fsi hello.fsx
+Hello, World!
+// SUCCESS!
+
+
+New, full projects can be created with 'dotnet new ...'
+You can get more help on that:
+
+> dotnet new 
+> dotnet new console -h
+> dotnet new console -h --language F#
+
+//
+// Create a new F# project (in the *CURRENT* directory)
+//
+> dotnet new console --language F#
+
+This will generate a number of things in the current directory:
+
+    Program.fs
+    fsharp.fsproj
+    obj/
+
+As yet, this is not compiled, but you can still run it.
+> dotnet run
+Hello from F#
+
+// SUCCESS! (print of boilerplate code that was in Program.fs)
+// NB: my hello.fsx file is left untouched, still in
+// this project directory, but now not really part of this project.
+
+// We *can* build it...
+C:\Users\ejohn\src\git\programming\fsharp>dotnet build
+Microsoft (R) Build Engine version 17.1.0+ae57d105c for .NET
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  fsharp -> C:\Users\ejohn\src\git\programming\fsharp\bin\Debug\net6.0\fsharp.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.06
+
+>
+
+A bin/ directory is added into this current project dir.
+Dig down into it, and you can find a runnable: fsharp.exe
+Modify the Program.fs code to say "Hello, F#!!!", rebuild, re-run .exe
+to make sure we're really running what we think we're building:
+
+C:\Users\ejohn\src\git\programming\fsharp\bin\Debug\net6.0>.\fsharp.exe
+Hello, F#!!!
+// Yes! Yes, we are.
+
+// ej: I think it says 'fsharp' because that was the name of the
+// directory I first used 'dotnet new' in, and that should really be in a
+// subdirectory of my ~/src/git/programming/fsharp/ directory
+// (or give -o option to specify output dir in orig dotnet new command)
+// ej: Yes, that is a fact. Made new dir 'hello' within .../fsharp/ and
+// hello.exe is what is created (under Debug/ ) after running.
+
+// Build for production (from project home dir)
+> dotnet publish
+// This generates new stuff. What exactly the differences are, I am not
+// sure (i.e., between the hello.exe here and the hello.exe in the
+// directory above
+// TODO: write a Python program to do the raw digging - what is the
+// structure of this .exe?  What *IS* different? (debugging info
+// stripped?)
+C:\Users\ejohn\src\git\programming\fsharp\hello\bin\Debug\net6.0\publish>ls
+FSharp.Core.dll  de  fr               hello.dll  hello.pdb                 it  ko  pt-BR  tr   zh-Hant
+cs               es  hello.deps.json  hello.exe  hello.runtimeconfig.json  ja  pl  ru     zh-Hans
+
+// Some sort of support for langauges here, though it is generating
+// empty files. That's not all that helpful.  cs, de, es, fr, it, ja...
+// all are size 0  (i.e., all files not starting "hello")
+
+
+Ok, that's how to get some code slapped down and build a program from
+it, run it as a stand-aone exe or invoke an .fsx file via:
+> dotnet fsi myFilename.fsx
+
+
+========================================================================
+Part 2 - basic F# literals syntax, conversions, basic math functions
+
+
+// copied from page 16
+// ej: NB: 's' -> short, 'l' -> long
+
+// Type     Suffix  .NET Type       Range
+//--------  ------  -------------   --------------------------  
+byte        uy      System.Byte     [0 .. 255]
+sbyte       y       System.SByte    [-128 .. 127]
+int16       s       System.Int16    [-32768 .. 32767]
+uint16      us      System.UInt16   [0 .. 65535]
+int, int32          System.Int32    [-2**31 .. 2**31-1]
+uint32      u       System.UInt32   [0 .. 2**32-1]    
+int64       L       System.Int64    [-2**63 .. 2**63-1]
+uint64      UL      System.UInt64   [0 .. 2**64-1]
+float               System.Double   IEEE 64 w/ ~15 sig. digits
+float32     f       System.Single   IEEE 32 w/ ~7 sig. digits
+decimal     M       System.Decimal  fixed precision float type w/ 28 sig digs (precisely)
+
+// NB: int, int32 is default, no suffix to literals of that type
+
+// You can specify literals in hex, octal, binary...
+> let x = 0xbadcab;;
+val x: int = 12246187
+
+> let x = 0o77;;
+val x: int = 63
+
+> let binvar = 0b1111uy;;
+val binvar: byte = 15uy
+
+> let binvar = 0b1111y;;
+val binvar: sbyte = 15y
+
+> let binvar = 0b11111111y;;
+val binvar: sbyte = -1y
+
+> let binvar = 0b11111111uy;;
+val binvar: byte = 255uy
+
+
+// Unlike most languages, there is *NO* type coercion! It must all be
+// explicit, but note that each of the types given above can be used as
+// a conversion routine (each conversion routine supports all the other
+// types)
+
+> let x = 0b111uy;;
+val x: byte = 7uy
+
+> let y = 3;;
+val y: int = 3
+
+> x + y;;
+
+  x + y
+  ----^
+
+stdin(10,5): error FS0001: The type 'int' does not match the type 'byte'
+
+> int 0b1111uy + 10;;
+val it: int = 25
+
+> int 5.6;;
+val it: int = 5
+
+
+// note that conversion can lead to data loss, but this is not an error:
+> byte 5555;;
+val it: byte = 179uy
+
+> 5555 % 256;;
+val it: int = 179
+
+
+F# supports the 4 standard math operators: +, -, *, /
+Plus power and modulus: **, %
+// NB!!!: ** operator only works on float and float32 - must either
+// convert or use pown (below)
+
+> 2.0 ** 8;;
+val it: float = 256.0
+
+And other built-in math functions (see pg 18)
+abs, ceil, exp, floor, sign, log, log10, sqrt
+cos, sing, tan
+pown  // power of integer
+
+> 2.0 ** 8;;
+val it: float = 256.0
+
+> 2.0 ** 8 = pown 2 8;;
+val it: bool = true
+// ej: WHOA... That's a bit unexpected - equality of different types
+// despite being unable to combine types w/ standard operators!!
+// This seems to be a special case of comparing a round float to its
+// equivalent int value, and does not apply in general:
+
+- 0b1111uy = 15;;
+
+  0b1111uy = 15;;
+  -----------^^
+
+stdin(38,12): error FS0001: This expression was expected to have type
+    'byte'
+but here has type
+    'int'
+
+Bitwise Operators
+-------------------
+&&& And
+||| Or
+^^^ XOR
+<<< Shift Left
+>>> Shift Right
+
+// examples...
+> printf "%B " (0b1010 &&& 0b1100);;
+1000 val it: unit = ()
+
+> printf "%B " (0b1010 ||| 0b1100);;
+1110 val it: unit = ()
+
+> printf "%B " (0b1010 ^^^ 0b1100);;
+110 val it: unit = ()
+
+
+Boolean "operators" (they are really functions)
+-------------------------------------------------
+> [false && true; false || true; not false; not true];;
+val it: bool list = [false; true; true; false]
+// NB1: not the standard C "not" operator (~)!
+// NB2: no native XOR
+
+// As mentioned above, these are really functions:
+> let f = (&&);;
+val f: (bool -> bool -> bool)
+
+> f true true;;
+val it: bool = true
+
+> f true false;;
+val it: bool = false
+
+// NB: page 23 gives a definition of a function for printing a truth table,
+// then passes the operator/function in to it to print the truth table.
+
+// NB: This are "short circuit" functions (as you would expect).
+
+
+Strings
+-----------
+...work more or less as you might expect, with a few exceptions...
+
+// standard escapes
+> let escapes = ['\'', '\"', '\\', '\b', '\n', '\r', '\t'];;
+val escapes: (char * char * char * char * char * char * char) list =
+  [('\'', '"', '\\', '\b', '\010', '\013', '\009')]
+
+> let quote = "'Fuck!', Pooh said.";;
+val quote: string = "'Fuck!', Pooh said."
+
+// mutli-line strings without any special syntax:
+> let mls = "This string
+- takes up
+- three lines.";;
+val mls: string = "This string
+takes up
+three lines."
+
+// single quoting is used for characters, not for strings
+> let s = 'foo';;
+
+  let s = 'foo';;
+  --------^
+
+stdin(61,9): error FS0010: Unexpected quote symbol in binding
+
+> let s = "foo";;
+val s: string = "foo"
+
+
+========================================================================
+Core Types
+
+// Unit (you can think of this as null or Python None, but it is
+// distinct from an uninitialized value).
+> let x = ();;
+val x: unit = ()
+
+
+Tuples
+------------
+> let x = 1,2;;
+val x: int * int = (1, 2)
+
+> let x = (1, 2);;
+val x: int * int = (1, 2)
+
+// tuple unpacking much like Python
+> let x, y = "one", "two";;
+val y: string = "two"
+val x: string = "one"
+
+// two special functions: fst, snd  // get first and second tuple elements
+> let xy = 1,2;;
+val xy: int * int = (1, 2)
+
+> fst xy;;
+val it: int = 1
+
+> snd xy;;
+val it: int = 2
+
+
+List  (NB: ',' is not the element separator!)
+-----------------------------------------------
+> [1; 2; 3];;
+val it: int list = [1; 2; 3]
+
+// This is something distinctly different: a list of int 3-tuples
+> [1,2,3];;
+val it: (int * int * int) list = [(1, 2, 3)]
+
+
+// EOF
+
