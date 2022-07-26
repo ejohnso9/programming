@@ -75,7 +75,7 @@ def say(s):
 
 def main():
     input_s = "1113122113"  # from the web page: https://adventofcode.com/2015/day/10
-    for i in range(40):
+    for i in range(50):
         input_s = say(input_s)
 
     print(len(input_s))  # 360154 verified correct on 2022Jul26
