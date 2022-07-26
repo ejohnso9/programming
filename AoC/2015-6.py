@@ -52,9 +52,11 @@ STRATEGY:
     which to measure the performance under an RE and non_RE solution.
 
     Just doing the non-RE solution for now...
+    (I'm not competing against others on performance, otherwise I would
+    want to optimize run time.)
 
 DISCUSSION
-    You'll have to check the git logs to beleive, this, but I'm feeling
+    You'll have to check the git logs to beleive this, but I'm feeling
     pretty happy about seeing Part 2 after having solved Part I. The
     code change is almost trivial. I believe that is the benefit of
     having a decent design in the first place.
