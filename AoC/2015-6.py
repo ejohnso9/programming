@@ -52,6 +52,12 @@ STRATEGY:
     which to measure the performance under an RE and non_RE solution.
 
     Just doing the non-RE solution for now...
+
+DISCUSSION
+    You'll have to check the git logs to beleive, this, but I'm feeling
+    pretty happy about seeing Part 2 after having solved Part I. The
+    code change is almost trivial. I believe that is the benefit of
+    having a decent design in the first place.
 """
 
 
@@ -80,11 +86,13 @@ def iterate(op, onOff_d, row_start, col_start, row_end, col_end):
             key = f"{row_i},{col_i}"
             # print("key:", key)
             if op == OP_OFF:
-                onOff_d[key] = False  # OFF
+                value = onOff_d[key]
+                onOff_d[key] = value - 1 if value > 0 else 0
             elif op == OP_ON:
-                onOff_d[key] = True  # ON
+                onOff_d[key] += 1
             elif op == OP_TOGGLE:
-                onOff_d[key] = not onOff_d[key]
+                # Part 1: onOff_d[key] = not onOff_d[key]
+                onOff_d[key] += 2
 
 
 def main():
@@ -92,11 +100,12 @@ def main():
     onOff_d = {}
     for r in range(1000):
         for c in range(1000):
-            onOff_d[f"{r},{c}"] = False  # OFF
+            onOff_d[f"{r},{c}"] = 0  # OFF
 
     # read the data to process
     lines = open(INPUT_FILENAME, 'r').readlines()
-    # lines = ["toggle 499,499 through 500,500"]  # TEST line
+    # this TEST line should turn on 4 bulbs
+    # lines = ["toggle 499,499 through 500,500"]
 
     # process each line of input
     for line in lines:
@@ -110,11 +119,14 @@ def main():
                 iterate(op, onOff_d, *rcArgs_l)
 
     # count what's turned on
-    onCount = sum([1 for k,v in onOff_d.items() if v])
+    onCount = sum([v for k,v in onOff_d.items() if v > 0])
     print(f"onCount is: {onCount}")
 
     # takes something like 15-20 sec
     # 400410 verfied as correct answer on 2022Jul25
+
+    # Part 2: onCount is: 15343601  # verified correct @ 2022Jul25
+
 
 if __name__ == '__main__':
     main()

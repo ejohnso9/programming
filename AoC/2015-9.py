@@ -8,6 +8,8 @@ DISCUSSION
     of the most-studied problems in computer science.
     (see: https://en.wikipedia.org/wiki/Travelling_salesman_problem)
 
+    Again, Part 2 becomes almost trivial with a decent design on Part 1.
+
 STRATEGY
     Just encode the given distance data as a python dict,
     use itertools.permuations to walk all the destination arrangements,
@@ -95,13 +97,22 @@ def main():
     #     print(f"{k}: {v}")
 
     min_val = int(1e15)  # assuming this is way bigger than any real distance
+    max_val = 0  # assumed smaller than any real distance
 
     for p in permutations(cities):
         d = distance(p, dist_d)
+
+        # Part 1
         if d < min_val:
             min_val = d
 
+        # Part 2
+        if d > max_val:
+            max_val = d
+
+    # Part 1 and Part 2
     print(f"min_val is: {min_val}")  # 251 verfied correct on 2022Jul26
+    print(f"max_val is: {max_val}")  # 898 verfied correct on 2022Jul26
 
 
 if __name__ == '__main__':
