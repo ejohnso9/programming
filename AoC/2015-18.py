@@ -89,7 +89,7 @@ here).
 
 
 NL = '\n'
-N_ROWS = 100  # same value for N_COLS
+N_ROWS = None  # set in initDict()
 
 TEST_DATA = """\
 .#.#.#
@@ -98,6 +98,22 @@ TEST_DATA = """\
 ..#...
 #.#..#
 ####..
+"""
+
+TEST_DATA2 = """\
+##.#.#
+...##.
+#....#
+..#...
+#.#..#
+####.#
+"""
+
+# NB: just manually editing this for Part 2... The orig first & last rows are:
+"""
+###.##..##.#..#.##...#..#.####..#.##.##.##..###...#....#...###..#..###..###.#.#.#..#.##..#...##.#..#
+
+.#..#.#.#.#...#.##...###.##.#.#...###.##...#.#..###....###.#.###...##..###..#..##.##....###...###.##
 """
 
 DATA = """\
@@ -200,16 +216,18 @@ DATA = """\
 .##.......##.######.#.#..#..##....#####.###.#.##.....####....#......####....#.##.#.##..#.##...##.#.#
 .#.###...#.#.#.##.###..###...##..#.##.##..##..#.....###.#..#.##.##.####........##.#####.#.#....#...#
 ##...##..#.##.#######.###.#.##.#####....##.....##.#.....#.#.##.#....#.##.#....##.#..#.###..#..#.#...
-.#..#.#.#.#...#.##...###.##.#.#...###.##...#.#..###....###.#.###...##..###..#..##.##....###...###.##
+##..#.#.#.#...#.##...###.##.#.#...###.##...#.#..###....###.#.###...##..###..#..##.##....###...###.##
 """
 
 
 def initDict(data):
     cells_d = {}
     # assuming the board is square (will probably change in Part 2?)
-    lines = DATA.split(NL)[:-1]
+    lines = data.split(NL)[:-1]
+
     global N_ROWS
     N_ROWS = len(lines)
+
     for r, line in enumerate(lines):
         for c, char in enumerate(list(line)):
             cells_d[(r, c)] = (char == '#')
@@ -239,7 +257,7 @@ def edges(neighbors_l):
     def onBoard(row, col):
         return (0 <= row < N_ROWS) and (0 <= col < N_ROWS)
 
-    return [(r,c) for r, c in neighbors_l if onBoard(r, c)]
+    return [(r, c) for r, c in neighbors_l if onBoard(r, c)]
 
 
 def nextGen(cells_d):
@@ -257,6 +275,13 @@ def nextGen(cells_d):
 def nextCellState(r, c, cells_d):
     """compute cell(r,c) in next gen given current board"""
 
+    part2 = True
+    n = N_ROWS - 1
+    corners = [(0, 0), (0, n), (n, 0), (n, n)]
+    if part2:
+        if (r, c) in corners:
+            return True
+
     n = nCount(edges(neighbors(r, c)), cells_d)
     if cells_d[r, c]:
         # RULE 1: live cell stays live w/ 2 or 3 neighbors, else dead
@@ -264,16 +289,27 @@ def nextCellState(r, c, cells_d):
     else:
         # RULE 2: dead cell becomes live w/ exactly 3 neighbors, else dead
         return n == 3
-    
+
+
+def charRep(val_tf):
+    return '#' if val_tf else '.'
+
+
+def dumpBoard(cells_d, gen):
+    print(f"After {gen} step:")
+    for r in range(N_ROWS):
+        line = ''.join([charRep(cells_d[r, c]) for c in range(N_ROWS)])
+        print(line)
+    print()
+
 
 def main():
     """entry point"""
 
     # load the inital grid state into a dict
-    cells_d = initDict(DATA)
-
-    def charRep(val_tf):
-        return '#' if val_tf else '.'
+    data = DATA
+    #data = TEST_DATA2
+    cells_d = initDict(data)
 
     # dump a section to make sure we've got data loading correctly
     # upper-left and lower-right corners match input data grid
@@ -289,6 +325,7 @@ def main():
 
     for gen in range(100):
         cells_d = nextGen(cells_d)
+        # dumpBoard(cells_d, gen + 1)
 
     total = sum([1 for r, c in cells_d if cells_d[r, c]])
     print(total)
@@ -298,4 +335,3 @@ if __name__ == '__main__':
     main()
 
 # EOF
-
