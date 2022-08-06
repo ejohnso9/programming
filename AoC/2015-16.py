@@ -52,6 +52,21 @@ the value.
 
 What is the number of the Sue that got you the gift?
 
+--- Part Two ---
+As you're about to send the thank you note, something in the MFCSAM's
+instructions catches your eye. Apparently, it has an outdated
+retroencabulator, and so the output from the machine isn't exact
+values - some of them indicate ranges.
+
+In particular, the cats and trees readings indicates that there are
+greater than that many (due to the unpredictable nuclear decay of cat
+dander and tree pollen), while the pomeranians and goldfish readings
+indicate that there are fewer than that many (due to the modial
+interaction of magnetoreluctance).
+
+What is the number of the real Aunt Sue?
+
+
 DISCUSSION
     So, two general approaches occur to me:
 
@@ -599,21 +614,35 @@ Sue 500: pomeranians: 10, cats: 3, vizslas: 5
 
 def checkSue(known, line):
     """
-    :param known: the known dict of attribes given in problem statement
+    Part 2:
+    In particular, the cats and trees readings indicates that there are
+    greater than that many (due to the unpredictable nuclear decay of cat
+    dander and tree pollen), while the pomeranians and goldfish readings
+    indicate that there are fewer than that many (due to the modial
+    interaction of magnetoreluctance).
+
+    :param known: the known dict of attributes given in problem statement
     :param line: a DATA lines (from above)
     """
 
     # words, with trailing char stripped on all but last
     words = line.split()
-    w = [word[:-1] for word in words[2:-1]
-    cand = {}
+    w = [word[:-1] for word in words[2:-1]]
+    w.append(words[-1])
+    cand = {}  # a candidate Sue (dict)
     for i in [0, 2, 4]:
         cand[w[i]] = int(w[i + 1])
-    }
 
-    for key in candidateSue_d:
-        if known[key] != cand[key]
-            return False
+    for key in cand:
+        if key in ['cats', 'trees']:
+            if not known[key] < cand[key]:
+                return False
+        elif key in ['pomeranians', 'goldfish']:
+            if not cand[key] < known[key]:
+                return False
+        else:
+            if cand[key] != known[key]:
+                return False
 
     return True
 
@@ -633,7 +662,15 @@ def main():
         'perfumes': 1,
     }
 
-
+    lines = DATA.split(NL)[:-1]
+    for line in lines:
+        if checkSue(knownSue_d, line):
+            print(line)
+            # both parts verified correct on 2022Aug05
+            # Part 1:
+            # Sue 373: pomeranians: 3, perfumes: 1, vizslas: 0
+            # Part 2:
+            # Sue 260: goldfish: 0, vizslas: 0, samoyeds: 2
 
 if __name__ == '__main__':
     main()
