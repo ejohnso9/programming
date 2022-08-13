@@ -26,9 +26,7 @@ What is the sum of all numbers in the document?
 
 
 DISCUSSION
-    At the top level, the JSON file is translated to a native Python
-dict (in this case with keys: a, b, c, d, e, f). I need a general
-evaluator function that can recursively iterate over an object and
+    At the top level, the JSON file is translated to a native Python dict (in this case with keys: a, b, c, d, e, f). I need a general evaluator function that can recursively iterate over an object and
 convert that into a number. Let's call that: 
     numerate(obj)
 
