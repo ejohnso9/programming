@@ -161,20 +161,26 @@ DISCUSSION / STRATEGY
     I was getting 377, which is one off from the correct answer.
 
     I'm showing "The Dreamshire solution", and not claiming it is mine.
-    My ranking code is my own. I think it's pretty good. It is not as
-    short as the Dreamshire solution, which is impressive. It's also what
-    Brian Kernighan would term "clever". (Look up Kernighan's Law. That
-    may seem like a cute joke at first, but I have found that in
-    practice, there is real wisdom there, especially for multi-person
-    projects where others may be looking at a clever solution and
-    misunderstand it, be tempted to "fix" or re-factor it, or simply
-    re-implement something themselves because they are not sure the
-    clever solution is correct or what it really does. Believe me, this
-    is real - When that happens, it directly leads to code bloat as well
-    as multiple alternatives for doing the same thing which may not be
-    exactly identical. Which will then lead a third developer to ignore
-    both solutions and create yet a third. (Again, I have actually seen
-    this take place in real projects.) 
+    My code is my own. I think it's pretty good. It is not as
+    short as the Dreamshire solution, which is impressive. He also has a
+    blog and has been collecting feedback on his solution and updating
+    his implementation - we don't know what the initial version looked
+    like.
+
+    It is impressive and genuinely surprising at only 16 lines.
+    The current solution is what Brian Kernighan would term "clever".
+    (Look up Kernighan's Law. That may seem like merely a cute joke at
+    first, but I have found that in practice, there is real wisdom
+    there, especially for multi-person projects where others may be
+    looking at a clever solution and misunderstand it, be tempted to
+    "fix" or re-factor it, or simply re-implement something themselves
+    because they are not sure the clever solution is correct or what it
+    really does. Believe me, this is real, and when that happens, it
+    directly leads to code bloat as well as multiple alternatives for
+    doing the same thing which may not be exactly identical. And that
+    will tend to lead new developers to ignore both solutions and create
+    yet a third. (Again, I have actually seen this take place in real
+    projects.) 
 
 """
 
@@ -198,18 +204,8 @@ P1, P2 = 0, 1  # indices into Player 1 structure, Player 2 structure
 PLAYERS = [P1, P2]  # both players
 
 # we all know magic numbers are bad, right?
-"""
-High Card: Highest value card.
-One Pair: Two cards of the same value.
-Two Pairs: Two different pairs.
-Three of a Kind: Three cards of the same value.
-Straight: All cards are consecutive values.
-Flush: All cards of the same suit.
-Full House: Three of a kind and a pair.
-Four of a Kind: Four cards of the same value.
-Straight Flush: All cards are consecutive values of same suit.
-Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-"""
+# these are the ranks that directly correspond to the given table
+#  (except Royal Flush as its own rank)
 RANK_HIGH_CARD = 0
 RANK_ONE_PAIR = 1
 RANK_TWO_PAIR = 2
@@ -220,6 +216,7 @@ RANK_FULL_HOUSE = 6
 RANK_FOUR_OF_A_KIND = 7
 RANK_STRAIGHT_FLUSH = 8
 
+# DEBUGGING support to be able to print out hands and determined rank
 RANK_NAMES = [
     'RANK_HIGH_CARD',
     'RANK_ONE_PAIR',
@@ -232,6 +229,7 @@ RANK_NAMES = [
     'RANK_STRAIGHT_FLUSH',
 ]
 
+# rank value => rank name dict
 RANK_TO_NAME_D = {i: name for i, name in enumerate(RANK_NAMES)}
 
 
@@ -335,7 +333,7 @@ def determineWinner(hands, rank):
         NOT SUFFICIENT for poker hands in general!
 
     :param hands: list of the two hands (of same rank)
-    :param rank: the rank of both hands
+    :param rank: the rank (of both hands)
     :return: PLAYER_1 or PLAYER_2
     """
 
@@ -375,78 +373,27 @@ def determineWinner(hands, rank):
 
 def pe54(lines):
 
-    # The Dreamshire solution:
-    #   https://blog.dreamshire.com/project-euler-54-solution/
-    # filename = 'p054_poker.txt'  # the local hands data file
-    # hands = (line.split() for line in open(filename))
-    # values = {r: i for i, r in enumerate('23456789TJQKA', 2)}
-    # straights = [(v, v - 1, v - 2, v - 3, v - 4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
-    # ranks = [(1, 1, 1, 1, 1), (2, 1, 1, 1), (2, 2, 1), (3, 1, 1), (), (), (3, 2), (4, 1)]
-
-    # def hand_rank(hand):
-    #     score = list(zip(*sorted(((v, values[k]) for
-    #                          k, v in Counter(x[0] for x in hand).items()), reverse=True)))
-    #     score[0] = ranks.index(score[0])
-
-    #     if len(set(card[1] for card in hand)) == 1:
-    #         score[0] = 5  # flush
-
-    #     if score[1] in straights:
-    #         score[0] = 8 if score[0] == 5 else 4  # str./str. flush
-
-    #     return score
-
-    # print("P1 wins", sum(hand_rank(hand[:5]) > hand_rank(hand[5:]) for hand in hands))
-    # END Dreamshire solution
-
+    # ej: I used this to find a couple issues in my own code
+    # The Dreamshire solution: https://blog.dreamshire.com/project-euler-54-solution/
 
     playerCounts_d = {
         PLAYER_1: 0,
         PLAYER_2: 0,
     }
 
-    # keep track of the ranks found (this is debugging support)
-    rankStats_lol = [
-        [0] * 9,  # Player 1: 1 count element for each possible rank
-        [0] * 9,  # Player 2: 1 count element for each possible rank
-    ]
-
     # for every 2 poker hands in the data file...
     for i, line in enumerate(lines):
         dsCards = line.split()
         hand1, hand2 = getHandRep(line)
         rank1, rank2 = [rankHand(hand) for hand in [hand1, hand2]]
-        # dsRank1, dsRank2 = hand_rank(dsCards[:5]), hand_rank(dsCards[5:])
-
-        # tabulate stats
-        rankStats_lol[0][rank1] += 1
-        rankStats_lol[1][rank2] += 1
 
         if rank1 != rank2:
             player = PLAYER_1 if rank1 > rank2 else PLAYER_2
         else:
+            # resolve hand ties:
             player = determineWinner([hand1, hand2], rank1)
 
         playerCounts_d[player] += 1
-
-        # DEBUGGING
-        # stop if my winning player not same as Dreamstate winning player
-        # if (player == PLAYER_1 and dsRank2 > dsRank1) or (player == PLAYER_2 and dsRank2 < dsRank1):
-        #     # no longer happening
-        #     print("PROBLEM")
-
-        # I was curious to have a look at tied hands, and quickly discovered that hands only
-        # tie on 3 different ranks: high card, one pair, straight. And of the straights that tie,
-        # there is only one such deal and the high card in the straights is not the same!
-        # So, that is information specific to the given data file, and leads to an optimization of developer
-        # time to get the right answer for PE #54. It also means that this code should not be used against
-        # general data files of that form (i.e., anything other than the exact one given for PE #54).
-        #
-        # ignoreRanks = [RANK_HIGH_CARD, RANK_ONE_PAIR]
-        # if rank1 == rank2 and rank1 not in ignoreRanks:
-        #     print()
-        #     print(f"hand1: {hand1}, rank: {RANK_TO_NAME_D[rank1]}")
-        #     print(f"hand2: {hand2}, rank: {RANK_TO_NAME_D[rank2]}")
 
     return playerCounts_d
 
