@@ -79,41 +79,103 @@ DISCUSSION / STRATEGY
         KH KC 3D 8H JS  # pair of kings, J-high (followed by 8, 3)
         KS KD 3C 8S JD  # pair of kings, J-high (followed by 8, 3)
 
-    I don't know if any "full hand ties" appear in the data (yet)
-    - that's a distinct possibility.
+    I didn't know initially if any "full hand ties" actuall appear in
+    the data file - apparently they do not. A more general solution
+    would have to deal with that.
 
-    The given table follows typical poker books, listing a "royal
-    flush" as a kind of hand in its own right.  But it's really not,
+    The given table follows typical poker books, listing a "Royal
+    Flush" as a kind of hand in its own right.  But it's really not,
     it's a straight flush. It happens to be the highest possible straight
-    flush, it is not a fundamentally different kind of hand. In the same
+    flush but is not a fundamentally different kind of hand. In the same
     vein, one might as well refer to 3 aces as "Royal Trips" or something,
-    because aces are the highest you can have, but nobody deems that
-    "Trip Aces" warrants any special monkiker beyond just that.
+    because aces are the highest you can have, but no poker players
+    refer to a "Royal Full House" or "Royal Trips".
 
     In the ranking system I will implement, as far as rank is concerned,
     a Royal Flush is just a Straight Flush, ties between Straight Flushes
     being resolved by looking at the rank of the cards involved.
 
-    I think I will just use 0 for high card, 1 for a pair, 2 for two pair,
-    3 for three-of-a-kind, etc. up to 8 for straight flush.
+    Again, as it turns out (since the data file is random hands and not
+    constructed hands), there aren't any Royal Flush, Stright Flush,
+    nor Four of a Kind hands.
 
-    Often I just embed data files in the source code as a static data
-    structure of some sort, but b/c this data file is rather long
-    (1000 lines), I'm just going to pull it straight from the web,
-    on the fly, on each run at runtime. On the modern Internet, I can
-    hardly notice the delay.
+    My ranking values are:
+        0 for high card,
+        1 for a pair,
+        2 for two pair,
+        ...
+        8 for straight flush
 
-    Basically I need a function to assign a rank to a hand, then another
-    function that can break ties between hands of the same rank. Perhaps
-    another function that can extract the cards that aren't used in the
-    rank. For example, in a pair hand, there's 3 cards that aren't in
-    the pair. In three-of-a-kind, there's 2 other cards not in the
-    three-of-a-kind.
+    I often just embed data files as text chunks within the code, then
+    create functions to process that into some sort of structured data.
+    Because this data file is rather long (1000 lines), I started using
+    code to just pull it straight from the web on the fly, at each run
+    but when I ran into problems and started looking for other
+    solutions, they were reading local files so I switched to just read
+    local data file. Loading from the internet was hardly a noticeable
+    delay.
 
-    Let's use a base representation of a list 5: 2-tuples for a hand, and
-    reassign T, J, Q, K, A to int values: 10, 11, 12, 13, 14. Then we can
-    sort on rank, makes sets of rank, can build up higher order functions
-    to look at just the ranks or just the suits of a hand, etc.
+    I made a couple of errors in implementing this solution. One was
+    that when you have two hands tied in one or two pairs, the other
+    cards that you look at to resolve the tie have to be sorted in
+    Reverse order, not forward order.
+
+    The second was that when you have the ranks in sorted order, the
+    high card being 4 more than the low card does not necessarily imply
+    a straight. It does if you know you have 5 different ranks in the
+    hand, which is what I was thinking because I build a dict with the
+    sort of information and such a check is made in another place, but I
+    made a mistake in implementing the isFlush evaluation.
+
+    This raises the whole subject of software correctness, which I'm not
+    going to get into here.
+
+    The data file has no "Low Straight" hands: A2345. If one has
+    remapped the value of Ace to be 14, A2345 should lose to 23456
+    stright. But if you just look for the high card, code may well think
+    that A2345 beats 23456. It does not. Yet you can get the right
+    answer at ProjectEuler for Problem #54 without handling this case
+    correctly, which leads me to mention "sufficiency" versus
+    "over-engineering". PE #54 solutions don't need to solve ties on any
+    hand ranks other than high card, one pair, and straight. That's not
+    sufficient to implement a general poker solution. So, are PE #54
+    solutions that ignore the low straight, don't resolve ties for two
+    pair, three-of-a-kind, etc. "deficient"?
+
+    I would argue that they are not. Instead the code should be
+    documented to be sufficient for a particular purpose, (or documented
+    to be insufficient as a general solution). The goal here is to find
+    the correct answer for PE #54. Did I "cheat"? Well... sort of, from
+    certain perspectives, I did. Yet being able to look around on the
+    Internet and find code that addresses certain issues is also a
+    valuable skill. The programmer that tries to solve everything from
+    first principles is going to spend a lot of time re-solving problems
+    that he could have just "stolen" some public code forums. That directly
+    translates to more development time and more (often "crufty") code
+    that has to be maintained in a project.
+
+    I compared my own code against other's code to find where my error
+    was and then fixed my own code. I did not plagiarize. My code was
+    first giving 385 (which seems unusually low for random hands -
+    that's pretty skewed toward Player 2 wins).  After one of the fixes
+    I was getting 377, which is one off from the correct answer.
+
+    I'm showing "The Dreamshire solution", and not claiming it is mine.
+    My ranking code is my own. I think it's pretty good. It is not as
+    short as the Dreamshire solution, which is impressive. It's also what
+    Brian Kernighan would term "clever". (Look up Kernighan's Law. That
+    may seem like a cute joke at first, but I have found that in
+    practice, there is real wisdom there, especially for multi-person
+    projects where others may be looking at a clever solution and
+    misunderstand it, be tempted to "fix" or re-factor it, or simply
+    re-implement something themselves because they are not sure the
+    clever solution is correct or what it really does. Believe me, this
+    is real - When that happens, it directly leads to code bloat as well
+    as multiple alternatives for doing the same thing which may not be
+    exactly identical. Which will then lead a third developer to ignore
+    both solutions and create yet a third. (Again, I have actually seen
+    this take place in real projects.) 
+
 """
 
 from collections import Counter
@@ -234,7 +296,7 @@ def rankHand(hand):
     lowStraight = all([r in ranks for r in [14, 2, 3, 4, 5]])
 
     # top card is 4 more than bottom card in a sequence
-    maxRank = max(ranks)
+    maxRank = max(ranks)  # rank of the highest card in the hand
     straightRanks = list(range(maxRank - 4, maxRank + 1))
     isStraight = lowStraight or all([r in ranks for r in straightRanks])
 
@@ -313,35 +375,37 @@ def determineWinner(hands, rank):
 
 def pe54(lines):
 
-    # The dreamshire solution: https://blog.dreamshire.com/project-euler-54-solution/
-    filename = 'p054_poker.txt'  # the local hands data file
-    hands = (line.split() for line in open(filename))
-    values = {r: i for i, r in enumerate('23456789TJQKA', 2)}
-    straights = [(v, v - 1, v - 2, v - 3, v - 4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
-    ranks = [(1, 1, 1, 1, 1), (2, 1, 1, 1), (2, 2, 1), (3, 1, 1), (), (), (3, 2), (4, 1)]
+    # The Dreamshire solution:
+    #   https://blog.dreamshire.com/project-euler-54-solution/
+    # filename = 'p054_poker.txt'  # the local hands data file
+    # hands = (line.split() for line in open(filename))
+    # values = {r: i for i, r in enumerate('23456789TJQKA', 2)}
+    # straights = [(v, v - 1, v - 2, v - 3, v - 4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
+    # ranks = [(1, 1, 1, 1, 1), (2, 1, 1, 1), (2, 2, 1), (3, 1, 1), (), (), (3, 2), (4, 1)]
 
-    def hand_rank(hand):
-        score = list(zip(*sorted(((v, values[k]) for
-                             k, v in Counter(x[0] for x in hand).items()), reverse=True)))
-        score[0] = ranks.index(score[0])
+    # def hand_rank(hand):
+    #     score = list(zip(*sorted(((v, values[k]) for
+    #                          k, v in Counter(x[0] for x in hand).items()), reverse=True)))
+    #     score[0] = ranks.index(score[0])
 
-        if len(set(card[1] for card in hand)) == 1:
-            score[0] = 5  # flush
+    #     if len(set(card[1] for card in hand)) == 1:
+    #         score[0] = 5  # flush
 
-        if score[1] in straights:
-            score[0] = 8 if score[0] == 5 else 4  # str./str. flush
+    #     if score[1] in straights:
+    #         score[0] = 8 if score[0] == 5 else 4  # str./str. flush
 
-        return score
+    #     return score
 
-    print("P1 wins", sum(hand_rank(hand[:5]) > hand_rank(hand[5:]) for hand in hands))
+    # print("P1 wins", sum(hand_rank(hand[:5]) > hand_rank(hand[5:]) for hand in hands))
     # END Dreamshire solution
+
 
     playerCounts_d = {
         PLAYER_1: 0,
         PLAYER_2: 0,
     }
 
-    # keep track of the ranks found
+    # keep track of the ranks found (this is debugging support)
     rankStats_lol = [
         [0] * 9,  # Player 1: 1 count element for each possible rank
         [0] * 9,  # Player 2: 1 count element for each possible rank
@@ -352,34 +416,24 @@ def pe54(lines):
         dsCards = line.split()
         hand1, hand2 = getHandRep(line)
         rank1, rank2 = [rankHand(hand) for hand in [hand1, hand2]]
-        dsRank1, dsRank2 = hand_rank(dsCards[:5]), hand_rank(dsCards[5:])
-        # doesn't happen:
-        # if rank1 != dsRank1[0] or rank2 != dsRank2[0]:
-        #     print("break here")
+        # dsRank1, dsRank2 = hand_rank(dsCards[:5]), hand_rank(dsCards[5:])
 
         # tabulate stats
         rankStats_lol[0][rank1] += 1
         rankStats_lol[1][rank2] += 1
 
-        method1 = False  # True: ignore tied rank hands
-        if method1:
-            # DEBUGGING: if you only want non-tied hands
-            if rank1 != rank2:
-                player = PLAYER_1 if rank1 > rank2 else PLAYER_2
-                playerCounts_d[player] += 1
+        if rank1 != rank2:
+            player = PLAYER_1 if rank1 > rank2 else PLAYER_2
         else:
-            # normal computation...
-            if rank1 != rank2:
-                player = PLAYER_1 if rank1 > rank2 else PLAYER_2
-            else:
-                player = determineWinner([hand1, hand2], rank1)
+            player = determineWinner([hand1, hand2], rank1)
 
-            playerCounts_d[player] += 1
+        playerCounts_d[player] += 1
 
-            # stop if my winning player not same as Dreamstate winning player
-            if (player == PLAYER_1 and dsRank2 > dsRank1) or (player == PLAYER_2 and dsRank2 < dsRank1):
-                # no longer happening
-                print("PROBLEM")
+        # DEBUGGING
+        # stop if my winning player not same as Dreamstate winning player
+        # if (player == PLAYER_1 and dsRank2 > dsRank1) or (player == PLAYER_2 and dsRank2 < dsRank1):
+        #     # no longer happening
+        #     print("PROBLEM")
 
         # I was curious to have a look at tied hands, and quickly discovered that hands only
         # tie on 3 different ranks: high card, one pair, straight. And of the straights that tie,
@@ -418,3 +472,4 @@ if __name__ == '__main__':
 
 
 # EOF
+
