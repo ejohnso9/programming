@@ -56,27 +56,14 @@ def main():
         if i % 100_000 == 0:
             print(f"i = {i}")
 
-        # if nPresents > max_val:
-        #     max_val = nPresents
-        #     print(max_val)
-
         if nPresents >= TARGET:
             print(f"House {i} got {nPresents} presents.")
             break
 
-    # for house_i in houses:
-    #     print(house_i)
+    # found: 776160  # verified correct for Part 1 on 2022Aug05
+    # found: 786240  # verified correct for Part 2 on 2022Aug05
 
-    # found: 776160  # verified correct 2022Aug05
-
-    # Part 2 prints: found: 5405400  but AoC site prints:
-    # That's not the right answer; your answer is too high.
-
-    # Part 2 prints: found: 887040  but AoC site prints:
-    # That's not the right answer; your answer is too high.
-
-    # Something not right about my approach here?
-    # Yes: glossed over part of the instructions:
+    # I had previously glossed over part of the instructions:
     # Each elf delivers 11 presents in part 2. With that, the correct
     # answer pops right out: 786240  # accepted on AoC website 2022Aug09
 
