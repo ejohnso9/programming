@@ -102,7 +102,6 @@ def isIntArea(b, H):
     b_2 = b / 2.0
     H_sq = H * H
     h = sqrt(H ** 2 - half_b ** 2)
-    if
 
     if b % 2 == 1:
         # odd
