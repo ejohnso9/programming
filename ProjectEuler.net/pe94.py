@@ -116,6 +116,11 @@ def isIntArea(b, H):
     return h if is_int_area else False
 
 
+def isPythag(a, b, c):
+    """Does the basic Pythagorean relationship hold?"""
+    return a**2 + b**2 == c**2
+
+
 def pe94():
     perim_total = 0
     # having run this, I know there aren't any solutions right near the boundary:
@@ -133,17 +138,23 @@ def pe94():
     print(f"perimeter total is: {perim_total}")
     # TODO: sum up perimeters
 
+def checkPythag(lines):
+    for line in lines.split(NL)[:-1]:
+        a, b, c = [int(float(s)) for s in line[1:-1].split(', ')]
+        if not isPythag(a, b, c):
+            print(f"FALSE: {line}")
+        else:
+            print(f"TRUE: {line}")
 
 def main():
 
+    checkPythag(DATA)
+
     # Run Project Euler Problem #94
-    pe94()
+    # pe94()
 
 
-if __name__ == '__main__':
-    main()
-
-"""
+DATA = """\
 (3.0, 4.0, 5)
 (8.0, 15.0, 17)
 (33.0, 56.0, 65)
@@ -171,7 +182,10 @@ if __name__ == '__main__':
 (147381019.5, 255271415.0, 294762040)
 (151922181.5, 263136936.0, 303844362)
 (155854942.0, 269948677.0, 311709883)
-perimeter total is: 9399467725   WRONG!
 """
+# perimeter total is: 9399467725   WRONG!
+
+if __name__ == '__main__':
+    main()
 
 # EOF
