@@ -1,4 +1,6 @@
-;
+#!/usr/bin/guile -s
+!#
+
 ; SICP(2E) Problem 1.5, page 21
 ; AUTHOR: Erik Johnson
 ; DATE: 2022Jan25

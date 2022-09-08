@@ -1,3 +1,5 @@
+#!/usr/bin/guile -s
+!#
 
 ; AUTHOR: Erik Johnson
 ;   DATE: 2022Jan25

@@ -1,3 +1,5 @@
+#!/usr/bin/guile -s
+!#
 
 (define expr_1_2
   ( /
