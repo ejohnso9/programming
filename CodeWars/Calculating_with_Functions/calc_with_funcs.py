@@ -34,7 +34,7 @@ For example, this should return 2, not 2.666666...:
 DISCUSSION
     Functions can themselves have attributes in Python.
     DRY: (D)on't (R)epeat (Y)ourself principle!
-    All the numberic functions are essentially the same - I don't want
+    All the numeric functions are essentially the same - I don't want
     to explicitly define each one (as the given boilerplate code leads
     you to do). Likewise, all the operator functions are essentially
     the same.
