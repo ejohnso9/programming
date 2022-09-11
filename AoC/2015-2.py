@@ -1,15 +1,33 @@
 
 """
 DESCRIPTION
-    An example fetching data via URL.
-    You have to get the session value, which can be found in Chrome by R-clicking on
-    a page, selecting "Inspect", then select "Application" tab, then under "Storage",
-    "Cookies".
+    An example fetching data via URL: fetching data on a URL is not a
+    requirement here, but I figured that since the AoC website already
+    has a page with my data, why not just read that dynamically and not
+    even bother getting the data over here in a static way at all?
+
+    In order to do so, you must first have logged into the AoC website,
+    and then a session cookie is needed. That can be found in Chrome by
+    R-clicking on a page, selecting "Inspect", then select "Application"
+    tab, then under "Storage", "Cookies".
+
+    So, it is a bit manual to go fetch the session cookie. This is
+    basically a Proof of Concent (POC) just because I felt like it.
+
+AUTHOR
+    Erik Johnson
+
+HISTORY (see also: git log <filename>)
+    2022Jul25 update comments
+    2022Jan03 working
+    2022Jan03 created
 """
+
 
 import sys
 import requests
 from pathlib import Path
+
 
 # GLOBAL DATA
 NL = '\n'

@@ -22,7 +22,7 @@ from REPL, to load file:
 
 See also:
     guile> ,h  ; print some basic help info
-    $ main guile
+    $ man guile
     $ info guile
     $ info guile-tut
 

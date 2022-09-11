@@ -1,0 +1,17 @@
+
+def factor(n):
+    """https://stackoverflow.com/questions/6800193/what-is-the-most-efficient-way-of-finding-all-the-factors-of-a-number-in-python"""
+    return set(reduce(list.__add__,
+        ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
+
+my data:
+[
+    [571, 348, 38, 12, 30, 1, 0, 0, 0],
+    [429, 456, 60, 22, 30, 1, 2, 0, 0]
+]
+
+ROC data:
+[
+    [571, 0, 371, 41, 12, 4, 1, 0, 0, 0],
+    [429, 0, 474, 62, 24, 8, 1, 2, 0, 0]
+]
