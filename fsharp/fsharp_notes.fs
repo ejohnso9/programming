@@ -1,32 +1,39 @@
 //       1         2         3         4         5         6         7         8
 //345678901234567890123456789012345678901234567890123456789012345678901234567890
 
+(*
                                 F# NOTES
                                 ========
 2022Apr08
 Notes for my F# adventure...
-Using "Programming F# 3.0" 2E, Chris Smith, O'Reilly
 
-========================================================================
-Part 1 - how to get some code in the system and run something.
+REFERENCES
+----------------
+PF3: "Using "Programming F# 3.0" 2E, Chris Smith, O'Reilly
+FPwFS: "Functional Programming with F#", Yusuf Motara, eDoc
+NB: My page citations are the PDF page, not necessarily the page number
+    actually shown in the PDF document.
 
-'dotnet' is the basic command to get stuff done.
+*)
+
+
+//======================================================================
+// Part 1 - how to get some code in the system and run something.
+
+// 'dotnet' is the basic command to get stuff done.
 > dotnet -h
 // Will spew a fair amount of doc...
 
-// You can direclty enter the interactive 'fsi' interpreter / REPL:
+> dotnet fsi   // enter the interactive F# interpreter / REPL:
 
-> dotnet fsi
-
-// exit the interactive 'fsi' REPO
-> #quit;;
+> #quit;;   // exit the interactive 'fsi' REPL
 
 
 //
 // run a simple F# script without compilation
 //
 
-// 1) put the following text into a file named 'hello.fsx'"
+// 1) put the following text into a file named 'hello.fsx'
 printfn "Hello, World!"
 
 // 2) Run it:
@@ -36,11 +43,17 @@ Hello, World!
 
 
 New, full projects can be created with 'dotnet new ...'
-You can get more help on that:
+There's two main ways to do that:
+    1) convert the current directory into a project
+        > dotnet new console -lang F#
+    2) specify the name to create a new directory for the project
+        > dotnet new console -lang F# -name myNewProj
+        // see also -o option
 
-> dotnet new 
+You can get more help on 'dotnet new':
+> dotnet new -h
 > dotnet new console -h
-> dotnet new console -h --language F#
+
 
 //
 // Create a new F# project (in the *CURRENT* directory)
@@ -120,7 +133,7 @@ it, run it as a stand-aone exe or invoke an .fsx file via:
 Part 2 - basic F# literals syntax, conversions, basic math functions
 
 
-// copied from page 16
+// copied from FP3 page 16
 // ej: NB: 's' -> short, 'l' -> long
 
 // Type     Suffix  .NET Type       Range
@@ -267,9 +280,9 @@ val it: bool = false
 // NB: This are "short circuit" functions (as you would expect).
 
 
-Strings
+(* Strings
 -----------
-...work more or less as you might expect, with a few exceptions...
+...work more or less as one probably expects (with a few exceptions) *)
 
 // standard escapes
 > let escapes = ['\'', '\"', '\\', '\b', '\n', '\r', '\t'];;
@@ -281,11 +294,8 @@ val quote: string = "'Fuck!', Pooh said."
 
 // mutli-line strings without any special syntax:
 > let mls = "This string
-- takes up
-- three lines.";;
-val mls: string = "This string
 takes up
-three lines."
+three lines.";;
 
 // single quoting is used for characters, not for strings
 > let s = 'foo';;
@@ -299,8 +309,8 @@ stdin(61,9): error FS0010: Unexpected quote symbol in binding
 val s: string = "foo"
 
 
-========================================================================
-Core Types
+//======================================================================
+// Core Types
 
 // Unit (you can think of this as null or Python None, but it is
 // distinct from an uninitialized value).
@@ -342,5 +352,182 @@ val it: int list = [1; 2; 3]
 val it: (int * int * int) list = [(1, 2, 3)]
 
 
-// EOF
+========================================================================
+Lists (FP3, pg 34-42)
+  basics, comprehensions, List module functions
 
+//
+// basics
+//
+
+// 'cons' operator: '::' - tack a new element on front of list
+> let l1 = [1;2;3]
+- let l2 = 0 :: l1
+- l2;;
+val l1: int list = [1; 2; 3]
+val l2: int list = [0; 1; 2; 3]
+val it: int list = [0; 1; 2; 3]
+
+// index list elements as you would expect:
+> l1[1];;
+val it: int = 2
+
+// ranges
+> let x = [1..5];;
+val x: int list = [1; 2; 3; 4; 5]
+
+> let x = [10 .. -1 .. 0];;
+val x: int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
+
+// list concatenation w/ '@' operator
+> let evens = [2..2..10]
+- let odds = [1..2..10]
+- let both = evens @ odds;;
+val evens: int list = [2; 4; 6; 8; 10]
+val odds: int list = [1; 3; 5; 7; 9]
+val both: int list = [2; 4; 6; 8; 10; 1; 3; 5; 7; 9]
+
+//
+// List comprehension
+//
+
+// simple
+let numsNear x = [
+  yield x - 1
+  yield x
+  yield x + 1
+]
+
+> numsNear 3;;
+val it: int list = [2; 3; 4]
+
+// unlike Python, pretty much any valid F# code can go inside a List comprehension
+> let x = [
+  let negate x = -x
+  for i in 1 .. 10 do 
+    if i % 2 = 0 then
+      yield negate i
+    else
+      yield i
+];;
+val x: int list = [1; -2; 3; -4; 5; -6; 7; -8; 9; -10]
+
+
+//
+// List module functions
+// NB: List is a module in Microsoft.FSharp.Collections (automatically imported)
+//
+
+> List.length x;;
+val it: int = 10
+
+> List.head x;;
+val it: int = 1
+
+> List.tail x;;
+val it: int list = [-2; 3; -4; 5; -6; 7; -8; 9; -10]
+
+// List.exists:  apply pred func to list, true if any element meets pred.
+// (like Python 'in')
+> let has8 el = (el = 8)
+- List.exists has8 x;;
+val has8: el: int -> bool
+val it: bool = false
+
+> let has7 el = (el = 7)
+- List.exists has7 x;;
+val has7: el: int -> bool
+val it: bool = true
+
+// reverse
+> List.rev x;;
+val it: int list = [-10; 9; -8; 7; -6; 5; -4; 3; -2; 1]
+
+// zip, map
+> let i_l = [1..7]
+- let sq i = i * i
+- List.zip i_l (List.map sq i_l);;
+val i_l: int list = [1; 2; 3; 4; 5; 6; 7]
+val sq: i: int -> int
+val it: (int * int) list =
+  [(1, 1); (2, 4); (3, 9); (4, 16); (5, 25); (6, 36); (7, 49)]
+
+// filter
+> let even x = (x % 2 = 0)
+- List.filter even [1..10];;
+val even: x: int -> bool
+val it: int list = [2; 4; 6; 8; 10]
+
+// partition: ([elements where pred func true], [els w/ pred func false])
+> List.partition even [1..10];;
+val it: int list * int list = ([2; 4; 6; 8; 10], [1; 3; 5; 7; 9])
+
+// List.reduce  (acc must be same type as list elements)
+> List.reduce (+) [1..10];;
+val it: int = 55
+
+> List.reduce (*) [1..6];; 
+val it: int = 720
+
+// List.fold: a more general collapsing of lists where the type of list
+//  element need not be related to the accumulator value.
+// NB: the initiall acc value in the call
+> let slen acc s = acc + String.length s  // acc function: old_acc one_elem -> new_acc_value
+- let s_l = ["one"; "two"; "three"]       // list of strings to fold
+- List.fold slen 0 s_l;;                  // squash the list down into one value: 11 total chars
+val slen: acc: int -> s: string -> int
+val s_l: string list = ["one"; "two"; "three"]
+val it: int = 11
+
+// sometimes list processing order doesn't matter, and sometimes it does
+// (NB: .reduceBack and .foldBack are *NOT* just processing the reversed list!!!)
+> let cat a b = a + b
+- List.reduce cat ["a"; "b"; "c"];;
+val cat: a: string -> b: string -> string
+val it: string = "abc"
+
+// you still get the same thing here
+> let cat a b = a + b
+- List.reduceBack cat ["a"; "b"; "c"];;
+val cat: a: string -> b: string -> string
+val it: string = "abc"
+
+// because:  ("a" + "b") + "c" is same as: "a" + ("b" + "C")
+
+// this happens to be true
+> 4 - 3 - 2 - 1 = 1 - (2 - (3 - 4));;
+val it: bool = true
+
+// but working on the reverse list is *NOT* what's happening!!!
+> 3 - 2 - 1 = 1 - (2 - 3);;
+val it: bool = false
+
+> let abc = ["a"; "b"; "c"];;
+val abc: string list = ["a"; "b"; "c"]
+
+> List.reduce cat (List.rev abc);;
+val it: string = "cba"
+
+> List.reduceBack cat abc;;
+val it: string = "abc"
+
+// List.map builds a new list under image of function
+> let foo i = i + 42;;
+val foo: i: int -> int
+
+> List.map foo [1..5];;
+val it: int list = [43; 44; 45; 46; 47]
+
+// List.iter might seem like same thing, but it is not.
+// It calls func for every element in list, bust expects a func that returns unit.
+> List.iter foo [1..5];;
+fsharp_notes.fs(138,11): error FS0001: Type mismatch. Expecting a
+    'int -> unit'
+but given a
+    'int -> int'
+The type 'unit' does not match the type 'int'
+
+let foo i = printfn "::%d::" i
+List.iter foo [1..3]
+
+// EOF

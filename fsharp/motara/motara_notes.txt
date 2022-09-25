@@ -1,0 +1,423 @@
+
+Feedback on the PDF Book
+"Functional Programming with F#", by Yussuf Motara
+
+
+ej: Page number references here are the actual PDF document page (which
+are generally different than the "document page" that shows in the
+actual page foooter).
+
+Single-column versus two-column formatting.
+You've probably spent a fair amount of time thinking about this.  I
+think there are advantages and disadvantages to both. 
+
+
+
+but I think the
+mertis of a single-column format (as you will find used in nearly all
+modern computer texts outweigh the benefits of the two column format.
+
+pg 5
+-----
+There's quite a bit going on here. One specific feedback I have is that
+the example formatting, with lines left and right ended with big dots I
+think it just distracting. It's odd. Having a grey background and using
+a fixed-width font is sufficient to make it obvious that this is a chunk
+of code.
+
+This "down arrow": "indicates where a line can, optionally, be broken.
+To indicate that code on subsequent lines is part of this line, it is
+indented."
+
+    Seriously? You're going to insert a "down arrow" in every place
+    where a line could optionally be broken?
+
+The first place I see this used is on Pg. 15. Is it really used very
+much in this document at all? I think maybe better to skip this
+documentation of optional newlines in this legend altogether. You might
+mention it in a few places in the body of the document, but it doesn't
+really seem like a core formatting concept to me?
+
+    """
+    Here we have an example that shows single-line expressions and
+    multiple-line expressions in a multiplestep single-line expression.
+    Notice the fifth line, where a small variation to the above
+    conventions can be seen. The code could just as easily have been
+    written as follows:
+    """
+    
+Here, we have some non-fixed-width text, sandiwiched between two pieces
+of code, all within a grey backgrounded block with side border lines with
+balls on the end which would imply this is all a sample code block. 
+Yet the content of the block quoted above is pretty obviously not
+actually code (nor is it code comments). The formatting here seems to be
+contradictory to the formatting conventions this very page is trying to
+establish?
+
+
+
+pg 7
+----
+This comes out formatted very badly, making the document look "sloppy":
+
+    //      Learn      more      about       F#       at
+    http://docs.microsoft.com/dotnet/fsharp
+
+If it won't fit on one line (this line isn't all that long, and is part
+of the downside of this two-column formatting), then make it two lines:
+
+    // Learn more about F# at:
+    //   http://docs.microsoft.com/dotnet/fsharp
+
+
+    "O <- Your code goes Here"
+
+That's not literal text that gets inserted by 'dotnet' as sample code
+(at least not now. Maybe it was at one point?)
+The code I currently get from a command like:
+
+    > dotnet new console -lang F# -o hello
+
+is this:
+
+    // For more information see https://aka.ms/fsharp-console-apps
+    printfn "Hello from F#"
+
+Which leaves me wondering what is this little "target" symbol?
+My code goes there? What code should I be putting there?
+I thought you were already showing example code that starts with:
+
+    let from whom = ...
+
+I don't see any explanation of this "target" symbol on page 5.
+(Here, again, less is more: just nix "Your code goes here".)
+
+That block at the bottom of the first column, is it not example code?
+It's using a fixed-width font like code formatting normally does, yet
+doesn't have the grey background and "funky" side border like code
+examples are described on page 5 to have.  If this is not example code,
+what kind of code is it? What distinguishes this code from example code?
+
+
+pg 13
+------
+Code given here for 'averageOf' doesn't seem to be formatted according
+to the 
+Is this not example code? Or has the intended formatting for example
+code simply not been applied here?
+
+My feeling is that "less is more" here. The code is formatted with a
+fixed-width font. I think that's sufficient to distinguish this text as
+example code.
+
+# example Python code is this:
+def averageOf(numbers):
+    sum = 0
+    count = 0
+    for n in numbers:
+    sum = sum + n
+    count = count + 1
+    return sum / count
+
+Granted, that is imperative programming, but an experienced Python
+programmer is a lot more likely to provide this:
+
+    def averageOf(numbers):
+        return sum(numbers) / float(len(numbers))
+
+It's hard to argue that that is not short, sweet, understandable, even
+"beautiful".  That code is in a more functional style, of course, 
+not the sort of imperative code you wanted to demonstrate. But since F#
+also supports imperative programming, why not compare imperative F# code
+to functional F# code?  You would then avoid the slight to Python (there
+is a weak implication here that Python is imperative while F# is
+functional, which is incorrect) and has the advantage of introducing
+people such as me to F#'s imperative syntax at the same time.
+
+
+pg 15
+-----
+
+    """
+    Brackets in F#, just as in algebra, are only used to
+    separate logical groups or clarify the order in which
+    operations are performed. They have no special
+    meaning other than this.
+    """
+
+This is perhaps not an absolute, and perhaps the terminology is standard
+in other parts of the world I am not fmailiar with, but I cannot think
+of a single computer text I have seen in America in the last 30 years,
+where this was not true:
+    "brackets" means these: '[', ']'
+    and "parentheses" means these: '(', ')'  (sometimes called "parens")
+    and these are "braces": '{', '}'
+    Without some overarching need, I see no reason to muddy that.
+    This seems as important as the formatting conventions of page 5.
+
+IDEA: instead of saying that the parens have no special meaning, an
+introductory example of creating a function, then calling it with some
+args, and then noting that the code uses no parens is perhaps a more
+memorable way to introduce F#'s different syntax regarding '(' and ')'.
+
+
+in the "SYNTAX: let BINDING" block.
+
+    let x = <downarrow>expr[0] in
+        expr[1]
+
+(I'm using (square) brackets here to indicate subscripts like in the
+text of the PDF document (because I am writing in plain text using vim
+and have no subscripts or formatting of any kind, actually.)
+
+(First time through this page, I initially I thought I was looking at
+some sort of APL-like operator. Then I remembered this optional page
+break.)
+
+I was feeling like I was missing the central idea of that block when I
+first read it. It makes a lot more sense after you go to the next page
+and see the code example. I think the syntax block would have a lot more
+"power" if you first go through the code example, then sum up the syntax
+and meaning of expr[0] and expr[1].
+
+
+
+
+(end of page-specific comments)
+
+I guess if I wanted to try to give you some overall, useful and
+genuinely constructive criticism on your document, it would be to take a
+step back from the technicalities of special symbols, backgrounds, 
+borders, subscripts, footnotes, bold, italic, fonts, etc. etc. etc. and
+ask yourself:
+
+    "Who is my audience?"
+
+    "What is the goal here?"
+
+    "Am I trying create a document that is complete and technically accurate in
+    terms of F# syntax and funcltional subtlety?  Am I trying to create
+    a document that would impress academicians or am I intending to
+    speak to a very different group?  Am I writing an introduction for
+    non-F# programmers (and, perhaps, non-programmers of any type) to
+    try to get them, first of all, to actually use F# for something
+    (and, *later* to get into more esoteric things like whether a statement
+    like:
+
+        let rec avg count sum numbers = ...
+
+    establishes a function that takes three arguments or does not. If
+    you want to get into the idea that avg is not actually a function
+    that takes three arguments, is that a point you want to bring up
+    right at the front of the document or is that better saved for
+    later?)
+
+
+I think the document, as it is, is sort of a strange mix that is trying
+to do all of this at the same time. It is sort of a "Tour de Force" of
+the complex and sophisticated formatting that PDF can support. Many
+modern computer books use a fair bit of that formatting to good effect
+but right at the beginning of this document, I think we've got some
+overkill going on. "Sometimes less is more".
+
+Getting bogged down in describing the whole formatting syntax, with
+multiple footnotes as explanatory text on the very first page of the
+document I think sort of sets a tone of complexity and complication that
+is going to feel offputting to many new programmers.
+
+
+I think a first section, fairly similar to what you have for
+"Interlude: Going Functional", but that focuses on the basics of being
+able to use CLI tools would be super useful to beginners.
+
+I think such a document should be able to assume that a reader can:
+    1) Use some editor to put some text in a file.
+
+    2) Find their 'terminal' or 'Command Prompt' and invoke a CLI
+       command with some args from withn the directory where their
+       text file lives with some args and see the output.
+
+
+Having a very task-based, "just do this:" approach is probably very
+useful in that first section. For example:
+
+    Enter this command at your terminal or 'cmd' window:
+
+    > dotnet
+
+you should get output similar to this:
+
+    Usage: dotnet [options]
+    Usage: dotnet [path-to-application]
+
+    Options:
+      -h|--help         Display help.
+      --info            Display .NET information.
+      --list-sdks       Display the installed SDKs.
+      --list-runtimes   Display the installed runtimes.
+
+    path-to-application:
+      The path to an application .dll file to execute.
+
+OK, now we have established that the basic command needed to do F# stuff exists
+on this computer.  A reference about where to get dotnet installed (or
+perhaps an appendix about establishing this) would be great.
+    https://fsharp.org/use/windows/
+    https://fsharp.org/use/mac/
+    https://fsharp.org/use/linux/
+
+
+After that, I would guide the user through three flavors of "Hello, World!":
+
+    1) By simply putting the code into the file 'hello.fsx', then invoking
+       'dotnet fsi' on the file:
+
+       > dotnet fsi hello.fsx
+
+        (I'm not entirely clear myself why putting the code into the
+        file 'hello.fsx' works while putting it into 'hello.fs' does
+        not. I'm not entirely clear on what this implies about what gets
+        compiled or does not, what is interpreted on the fly, etc.  This
+        would be a great thing to explain in detail in an introductory
+        document.)
+
+    2) Running "Hello, World!" interactively:
+
+        > dotnet fsi
+        
+        > printfn "Hello, F#!";;
+        Hello, F#!
+        val it: unit = ()
+
+        > #quit;;
+
+        Now, we've covered not only how to get the interactive REPL
+        going, but how to get *out* of it! Some extra discussion about
+        types/return values here might be appropriate, but the main
+        thing at this point is to simply be able to run F# interactively
+        (and to be able to exit).
+
+    3) "Hello, World!" as a compiled project:
+
+        > dotnet new console -lang F# -o hello
+        > cd hello
+
+        // change output so we can verify it's *your* program:
+        > vim Program.fs
+
+        > dotnet build
+        > dotnet run
+        My first F# program! Yay!
+
+        Now, we're talking about a high-level, functional language,
+        *compiled*, executing in the MS CLR environment, taking advantage
+        of JIT compilers, probably running at near C/C++ speed!!!
+
+None of the introductory documents that I started with laid this out in
+simple, easy-to-follow terms. I had to fumble around for a while to get
+this figured out. I've been programming professionally for about 25
+years and I imagine many people without that sort of background could
+well spend much more time than I did getting up to this point. I imagine
+many of them could well exit the F# realm entirely, in frustration,
+prior to getting these simple use cases working.
+
+A second, "Hello, World" program that does something like import
+Console.Writeln and calls that instead of prinfn would show a real-world
+example of the interoperability between F# and the the whole C# .NET
+ecology and being able to leverage that from within F# I see as a sort
+of "hook", especially to established programmers (of some flavor) that
+are curious to explore this functional realm in a modern, MS-centric but
+not strictly MS world.
+
+With those three flavors of "Hello, World" working, I think a person
+could feel like they actually have the basic tools they need to be able
+to actually *do* something with F#.
+
+With this in place, a document can spend a bit more time going through
+some-hands on examples to establish some of the basic features like
+lists, tuples, pattern matching, etc. *then* get on with some of the
+finer points of language syntax and functional features, come *back* to
+the idea that 'avg' technically isn't a function that takes three args.
+Introduce partial evaluation, etc.
+
+
+Having another section about nifty stuff you can do with Microsoft
+Visual Studio Code, install instructions for Ionide, special key sequences
+to higlight a chunk of code and execute it within that particular IDE is
+OK, but I think it should not be established the viewpoint from which a
+document is going to talk about how to learn F#. Such material should be
+optional material. The basic CLI tools necessary to get a small piece of
+F# code actually running are required.
+
+
+
+My view on footnotes is that they tend to detract from a document. They
+make a document seem more complicated, more "scattered". They may make
+it look more like a graduate level white-paper and in that sense may
+seem more appealing to the academic crowd, but I think it's a documented
+trail of where original text is not communicating as clearly as it
+should have in the first place. So, what is the motivation to leave that
+original text in its original state, now that we have established it
+needs additional, explanatory text?
+
+In decades gone by, where a good deal of work may have already gone into
+a document or book to get it "typeset" and ready to go to press, being
+able to insert one small character in the body of the text without
+causing a lot of rewrapping and text shifting downstream - and then to
+add a small note in the footer of a page (where you normally have extra
+white space not taken up with text), in order to be able add clarifying,
+"after the fact" text, made sense.
+
+In a completely-malleable, infinitely-editable, modern PDF document, I'm
+not convinced clarifying text as a footnote makes much sense at all.
+Just re-work the original text so that it is clear. A footnote in a PDF
+document ought to be the sort of superfluous, optional text that could
+just as easily be entirely skipped by the reader without any real loss
+of meaning or continuity. If the content is not of that nature, then
+shouldn't the footnote just be worked into the main document so that it
+essentially cannot be missed?  (And if it is of a completley superfluous
+nature, re-examine whether that footnote should really exist at all.)
+
+(By the way, what are you using to create the PDF document? A Pro copy
+of Adobe Acrobat?  Is it basically a WYSIWYG editor?  I know there are a
+few Python modules for creating PDF documents, and have thought about
+trying to make a "book", or Introductory PDF document myself, but I
+think authoring content for document construction via a Python module is
+going to be a lot different than any WYSIWYG editor.)
+
+
+I hope none of my feedback seems arogant or offputting. I've never
+published a book or a document such as yours myself so, I am no
+authority. I'm just trying to give constructive criticism as best as I
+know how.  I think writing about stuff is a good way to solidify one's
+own learning, and so it is useful to me as well.  I feel like I sort of
+have one chance to give you a "first impression" of material as I go
+through it.  Once I've spent some time carefully examining and thinking
+about stuff, it's no longer a "first impression".
+
+
+So, I'm going to "let these comment fly" (so to speak) for now. They are
+themselves not a finely polished document and they are providing some
+feedback on only a few pages of a much bigger document. As such, such
+comments may not really be applicable to the document as a whole.
+Still, I thought they might be somewhat useful to you as they are now.
+
+I still have a long ways to go in your document. I have a long ways to
+go in Chris Smith's "Programming F# 3.0" book. I found an online copy of
+the Cambridge Press book I mentioned, "Functional Programming Using F#",
+by Hansen and Rischel. I intend to spend some more time with that book
+as well.
+
+I still have a long ways to go to get competent in F# and in the
+fully-functional paradigm in general. (Erlang and Elixir are two other
+flavors of language I am trying to find time to explore and I know those
+are primarily "functionally oriented". I expect a great deal of what I
+learn about doing things in the F# / functional way will be fully
+transferrable to those languages.
+
+
+If you find these comments genuinely useful, we can continue our
+communications. I will try to tell you honestly what I think about
+material.
+
+
