@@ -1,0 +1,54 @@
+
+[
+DESCRIPTION
+    simple example of multiplying two numbers together
+    (also exercizing branching)
+DATE: 2022Sep25
+]
+
+6 is waiting at Starchild Numerology.
+7 is waiting at Starchild Numerology.
+
+Go to Starchild Numerology: north 1st left, 2nd right, 1st left, 1st left, 2nd left.
+Pickup a passenger going to Multiplication Station.
+Pickup a passenger going to Multiplication Station.
+
+Go to Multiplication Station: west 1st right, 2nd right, 1st right, 4foo left.
+Switch to plan "NoTrunk".
+
+[Trunk]
+Pickup a passenger going to Trunkers.
+Go to Trunkers: south 1st right, 2nd left.
+Pickup a passenger going to The Babelfishery.
+Go to The Babelfishery: east 1st right, 1st right.
+Switch to plan "Babel_Finish".
+
+[NoTrunk]
+Pickup a passenger going to The Babelfishery.
+Go to The Babelfishery: south 1st right, 1st left.
+Switch to plan "Babel_Finish".
+
+[Babel_Finish]
+Pickup a passenger going to the Post Office.
+Go to Post Office: north 1st left, 1st right.
+Go to Taxi Garage: north 1st right, 1st left, 1st right.
+
+
+[
+    Lesson: an int converted to string appears to print as "42.000000"
+    whether it has been truncated or not. Internally, code is making no
+    distinction between float and int?
+
+    Lesson: When creating branches, you are going to have to get to
+    some plan that cleanly falls off the end of the file, leaving the
+    taxi back at the garage.
+
+    Q: What if you try to leave the Garage going north or south?
+    A: north is possible, south is an error.
+
+    Q: Can you drop numbers on the Post Office?
+    A: 
+
+    Q: Will this code accept ordinals like 1rd, 2st, 3nd, 4foo?
+    A: Yes. Also, bare numbers.
+]
