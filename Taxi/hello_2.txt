@@ -1,0 +1,14 @@
+
+[
+You can have "comments" such as these, parsed as "labels".
+By empirical test, you can have blank lines between input lines.
+And, as this comment shows, comments can span multiple lines.
+]
+
+"Arrived at [Post Office]." is waiting at the Writer's Depot.
+
+Go to Fueler Up: west 1st right.
+Go to Writer's Depot: north 3rd left, 2nd left.
+Pickup a passenger going to the Post Office.
+Go to Post Office: north 1st right, 2nd right, 1st left.
+Go to Taxi Garage: north 1st right, 1st left, 1st right.
