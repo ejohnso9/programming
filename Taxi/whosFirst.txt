@@ -1,0 +1,27 @@
+
+[
+DESCRIPTION
+    When two people are queued at a place, I'm guessing FIFO behaviour,
+    though that is not explicitly stated. This code checks that.
+    Yes, as expected, it is "One" that is picked up.
+
+AUTHOR: Erik Johnson
+DATE: 2022Sep26
+]
+
+[Initial data condition]
+"One" is waiting at Writer's Depot.
+"Two" is waiting at Writer's Depot.
+
+[Go fetch one passenger]
+Go to Writer's Depot: west 1st left, 2nd right, 1st left, 2nd left.
+Pickup a passenger going to Post Office.
+
+[Dump the string]
+Go to Post Office: north 1st right, 2nd right, 1st left.
+
+[End]
+Go to Taxi Garage: north 1st right, 1st left, 1st right.
+
+[EOF]
+
