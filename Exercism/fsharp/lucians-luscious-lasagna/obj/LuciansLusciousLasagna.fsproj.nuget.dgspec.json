@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/ejohnson/src/git/programming/Exercism/fsharp/lucians-luscious-lasagna/LuciansLusciousLasagna.fsproj": {}
+  },
+  "projects": {
+    "/Users/ejohnson/src/git/programming/Exercism/fsharp/lucians-luscious-lasagna/LuciansLusciousLasagna.fsproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/ejohnson/src/git/programming/Exercism/fsharp/lucians-luscious-lasagna/LuciansLusciousLasagna.fsproj",
+        "projectName": "LuciansLusciousLasagna",
+        "projectPath": "/Users/ejohnson/src/git/programming/Exercism/fsharp/lucians-luscious-lasagna/LuciansLusciousLasagna.fsproj",
+        "packagesPath": "/Users/ejohnson/.nuget/packages/",
+        "outputPath": "/Users/ejohnson/src/git/programming/Exercism/fsharp/lucians-luscious-lasagna/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ejohnson/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/sdk/7.0.101/FSharp/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Exercism.Tests": {
+              "target": "Package",
+              "version": "[0.1.0-beta1, )",
+              "generatePathProperty": true
+            },
+            "FSharp.Core": {
+              "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
+              "target": "Package",
+              "version": "[7.0.0, )",
+              "generatePathProperty": true
+            },
+            "FsUnit.xUnit": {
+              "target": "Package",
+              "version": "[4.0.4, )",
+              "generatePathProperty": true
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.8.3, )",
+              "generatePathProperty": true
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.1, )",
+              "generatePathProperty": true
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.4.3, )",
+              "generatePathProperty": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
