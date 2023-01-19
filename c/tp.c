@@ -1,23 +1,27 @@
-
 #include <stdio.h>
 
+// tp => test program
+// reads a single line of text from the file 'line.txt',
+// prints it on stdout
+
 int main () {
-   FILE *fp;
-   char str[60];
+    FILE *fp;
+    char str[120];
 
-   /* opening file for reading */
-   fp = fopen("file.txt" , "r");
-   if(fp == NULL) {
-      perror("Error opening file");
-      return(-1);
-   }
-   if( fgets (str, 60, fp)!=NULL ) {
-      /* writing content to stdout */
-      puts(str);
-   }
-   fclose(fp);
+    /* opening text file for reading */
+    fp = fopen("line.txt" , "r");
+    if (fp == NULL) {
+       perror("Error opening file");
+       return(-1);
+    }
 
-   return(0);
+    /* write contents of file.txt to stdout */
+    if (fgets(str, 120, fp) != NULL ) {
+        puts(str);
+    }
+
+    fclose(fp);
+    return(0);
 }
 
 
