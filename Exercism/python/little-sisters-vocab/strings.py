@@ -1,6 +1,9 @@
 """Functions for creating, transforming, and adding prefixes to strings."""
 
 
+# pylint: disable=W1405
+
+
 def add_prefix_un(word):
     """Take the given word and add the 'un' prefix.
 
@@ -8,11 +11,12 @@ def add_prefix_un(word):
     :return: str - of root word prepended with 'un'.
     """
 
-    return f"un{word}" 
+    return f"un{word}"
 
 
 def make_word_groups(in_words):
-    """Transform a list containing a prefix and words into a string with the prefix followed by the words with prefix prepended.
+    """Transform a list containing a prefix and words into a string with the
+    prefix followed by the words with prefix prepended.
 
     :param in_words: list - of vocabulary words with prefix in first index.
     :return: str - of prefix followed by vocabulary words with
@@ -61,7 +65,8 @@ def adjective_to_verb(sentence, index):
     return sentence[:-1].split()[index] + "en"
 
 
-if __name__ == '__main__':
+def main():
+    # local testing
     input_data = [
         'Look at the bright sky.',
         'His expression went dark.',
@@ -96,5 +101,9 @@ if __name__ == '__main__':
 
     # input_data = ['en', 'circle', 'fold', 'close', 'joy', 'lighten', 'tangle', 'able', 'code', 'culture']
     # print(make_word_groups(input_data))
+
+
+if __name__ == '__main__':
+    main()
 
 # EOF
