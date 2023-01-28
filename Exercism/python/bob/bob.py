@@ -32,7 +32,7 @@ import string
 
 
 def is_question(hey_bob: str) -> bool:
-    return hey_bob.strip().endswith('?')
+    return hey_bob.endswith('?')
 
 
 def is_yelling(hey_bob: str) -> bool:
@@ -42,14 +42,15 @@ def is_yelling(hey_bob: str) -> bool:
 
 def response(hey_bob: str) -> str:
     _input = hey_bob.strip()
+    if not _input:
+        return "Fine. Be that way!"
+
     if is_question(_input) and not is_yelling(_input):
         return "Sure."
     elif is_question(_input) and is_yelling(_input):
         return "Calm down, I know what I'm doing!"
     elif is_yelling(_input):
         return "Whoa, chill out!"
-    elif not _input:
-        return "Fine. Be that way!"
     else:
         return "Whatever."
 
