@@ -1,5 +1,14 @@
-"""Functions to manage and organize queues at Chaitana's roller coaster."""
 
+"""
+Functions to manage and organize queues at Chaitana's roller coaster.
+
+"""
+
+# I have my own coding conventions that sometimes add additional information
+# to vars. For example: allDbRecs_lod  (a list-of-dicts typed var)
+# That's not an invalid name. It is perfectly valid.
+# I don't need a bunch of whining about pylint not liking my var names.
+# pylint: disable=C0103
 
 def add_me_to_the_queue(qExpress, qNormal, ticket_type, person):
     """Add a person to the 'express' or 'normal' queue depending on the ticket number.
