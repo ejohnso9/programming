@@ -1,0 +1,43 @@
+
+
+So, a few things to note about the Lua language...
+
+conditionals treat the special value nil and false as false,
+*EVERYTHING* else is treated as true.
+
+Here are a few results that might seem surprising:
+
+> 0 and 1
+1
+> 1 and 0
+0
+> nil and 0
+nil
+> 0 and nil
+nil
+> not 0
+false
+> not not ""
+true
+
+
+-- For 'and', when the first argument is falsy, you get the first argument.
+-- Otherwise, you get the second argument.
+
+a and b or c    -- is equivalent to the C tertiary test: a ? b : c
+                -- provided b is truthy
+
+a = 3; b = 4;
+a > b and a or b  -- like python: max(a, b) or C: a > b ? a : b
+                  -- also valid python: a > b and a or b
+                  -- but max(a, b) probably clearer syntax
+                  -- and Lua has this: math.max(a, b)
+                  -- 'math' is a table
+
+
+-- 'and' has precedence over 'or'. These are equivalent:
+a and b or c
+(a and b) or c
+
+
+
