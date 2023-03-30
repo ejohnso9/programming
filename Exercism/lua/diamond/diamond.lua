@@ -1,12 +1,4 @@
 
--- orig code
---[[
-return function(which)
-
-end
---]]
-
-
 -- API by example:
 --    makeString('B', 2) => ' B'
 --    makeString('B', 5) => ' B   '
@@ -49,15 +41,7 @@ local function makeDiamond(c_arg)
 end
 
 
--- works! (in VS CODE: ctrl-F5) -- result: 65
--- print(string.byte('A'))
---[[
-s = makeHalfString('B', 5)
-print(" 123456789")
-print(string.format('"%s"', s))
---]]
-
-
 return makeDiamond
 
 --EOF
+
