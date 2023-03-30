@@ -38,15 +38,14 @@ local function makeDiamond(c_arg)
         c = string.char(byte_A + i - 1)
         s2 = makeHalfString(c, c_i)
         s1 = string.reverse(s2:sub(2))
-        --lines_t[i] = string.format('"%s"', s1..s2)
-        lines_t[i] = s1 .. s2
+        lines_t[i] = string.format('%s\n', s1 .. s2)
     end
 
     for i = c_i - 1, 1, -1 do
         lines_t[c_i + i] = lines_t[c_i - i]
     end
 
-    return table.concat(lines_t, '\n')
+    return table.concat(lines_t)
 end
 
 
@@ -57,8 +56,6 @@ s = makeHalfString('B', 5)
 print(" 123456789")
 print(string.format('"%s"', s))
 --]]
-
-print(makeDiamond('B'))
 
 
 return makeDiamond
