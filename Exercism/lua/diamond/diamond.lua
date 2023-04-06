@@ -1,12 +1,4 @@
 
--- orig code
---[[
-return function(which)
-
-end
---]]
-
-
 -- API by example:
 --    makeString('B', 2) => ' B'
 --    makeString('B', 5) => ' B   '
@@ -38,18 +30,18 @@ local function makeDiamond(c_arg)
         c = string.char(byte_A + i - 1)
         s2 = makeHalfString(c, c_i)
         s1 = string.reverse(s2:sub(2))
-        --lines_t[i] = string.format('"%s"', s1..s2)
-        lines_t[i] = s1 .. s2
+        lines_t[i] = string.format('%s\n', s1 .. s2)
     end
 
     for i = c_i - 1, 1, -1 do
         lines_t[c_i + i] = lines_t[c_i - i]
     end
 
-    return table.concat(lines_t, '\n')
+    return table.concat(lines_t)
 end
 
 
 return makeDiamond
 
 --EOF
+
