@@ -1,0 +1,7 @@
+
+# compiled / optimized Python files
+*.py[cod]
+
+__pycache__/
+.pytest_cache/
+
