@@ -5,10 +5,16 @@ DESCRIPTION:
     by Tony Parisi, ISBN: 978-1-449-32357-8
 
     GitHub repo: https://github.com/tparisi/WebGLBook
+
+TODO / NOTES
+    [ ] twiddle the project matrix to better understand camera position
+    The book is primarily about using Three.js as the API to WebGL, but
+    this "straight WebGL" example is also useful, if a bit "hard" /
+    cryptic in places.
 -->
 
   <head>
-    <title>WebGL-UAR pages 10-15</title>
+    <title>WebGL-UAR, Chapter 1, pages 10-15</title>
 
 <script>
 var gl;
@@ -70,18 +76,20 @@ var shaderProgram,
     shaderProjectionMatrixUniform,
     shaderModelViewMatrixUniform;
 
+// [ ] TODO: have JS read these in from filesystem files?
 var vertexShaderSource =
-    "    attribute vec3 vertexPos;\n" +
-    "    uniform mat4 modelViewMatrix;\n" +
-    "    uniform mat4 projectionMatrix;\n" +
-    "    void main(void) {\n" +
-    "		 // Return the transformed and projected vertex value\n" +
-    "        gl_Position = projectionMatrix * modelViewMatrix * \n" +
-    "            vec4(vertexPos, 1.0);\n" +
-    "    }\n";
+    "attribute vec3 vertexPos;\n" +
+    "uniform mat4 modelViewMatrix;\n" +
+    "uniform mat4 projectionMatrix;\n" +
+    "\n" +
+    "void main(void) {\n" +
+    "    // Return the transformed and projected vertex value\n" +
+    "    gl_Position = projectionMatrix * modelViewMatrix * \n" +
+    "    vec4(vertexPos, 1.0);\n" +
+    "}\n";
 
 var fragmentShaderSource =
-    "    void main(void) {\n" +
+    "void main(void) {\n" +
     "    // Return the pixel color: always output white\n" +
     "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
     "}\n";
@@ -102,6 +110,7 @@ function initShader(gl) {
     gl.linkProgram(shaderProgram);
 
     // get pointers to the shader params
+    // ej: why? required? [ ] test trying to remove?
     shaderVertexPositionAttribute = gl.getAttribLocation(shaderProgram, "vertexPos");
     gl.enableVertexAttribArray(shaderVertexPositionAttribute);
 
