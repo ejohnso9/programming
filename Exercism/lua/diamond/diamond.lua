@@ -1,14 +1,20 @@
+#!/usr/bin/env lua
+-- file: diamond.lua
 
--- API by example:
---    makeString('B', 2) => ' B'
---    makeString('B', 5) => ' B   '
---    makeString('C', 5) => '  C  '
---    makeString('D', 4) => '   D'
-local function makeHalfString(c, length)
-    t = {}
-    -- convert 'c' to numeric 1-based index
-    target_i = string.byte(c:upper()) - string.byte('A') + 1
-    for i = 1, length do
+
+-- helper func to convert 'A' to 1, 'B' to 2, etc
+local function charIndex(c)
+    return string.byte(c:upper()) - string.byte('A') + 1
+end
+
+
+-- construct one line, given the letter (char 'c')
+local function makeLine(c, halfLength)
+    local t = {}  -- list-building buffer (table)
+
+    -- build the right-hand half of the string (center and RH part)
+    local target_i = charIndex(c)
+    for i = 1, halfLength do
         if i == target_i then
             t[i] = c
         else
@@ -16,28 +22,33 @@ local function makeHalfString(c, length)
         end
     end
 
-    return table.concat(t, '')
+    local rh_str = table.concat(t)
+
+    -- LH side is RH side (strictly) reversed
+    -- NB: still works for strings of length 1 b/c the
+    --     substring will be '' (empty string)
+    return string.reverse(rh_str:sub(2)) .. rh_str .. '\n'
 end
 
 
-local function makeDiamond(c_arg)
-    lines_t = {}
-    byte_A = string.byte('A')
-    c_i = string.byte(c_arg:upper()) - byte_A + 1  -- 1 for 'A', 2 for 'B', etc.
-    n = 2 * c_i - 1  -- width of the widest line
+-- build the diamond multi-line string
+local function makeDiamond(c)
+    local lines_t = {}  -- list of lines in the diamond
+    local c_i = charIndex(c)  -- A: 1, B: 2, ..., Z: 26
 
+    -- diamond top (+ center line)
+    -- make a line for 'A' up to whatever 'c' is
     for i = 1, c_i do
-        c = string.char(byte_A + i - 1)
-        s2 = makeHalfString(c, c_i)
-        s1 = string.reverse(s2:sub(2))
-        lines_t[i] = string.format('%s\n', s1 .. s2)
+        local c2 = string.char(string.byte('A') + i - 1)
+        lines_t[i] = makeLine(c2, c_i)
     end
 
+    -- reflect top-half of diamond to make bottom half
     for i = c_i - 1, 1, -1 do
         lines_t[c_i + i] = lines_t[c_i - i]
     end
 
-    return table.concat(lines_t)
+    return table.concat(lines_t)  -- one multi-line string
 end
 
 
