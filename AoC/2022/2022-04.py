@@ -52,10 +52,9 @@ def overlaps(range_1: tuple, range_2: tuple) -> bool:
     x, y = range_2
 
     return (
-        # one of the endpoints of the first range is "inside" the bounds of the second range
-        (x <= a <= y) or (x <= b <= y)
-        # or vice-versa
-        or (a <= x <= b) or (a <= y <= b) )
+        (x <= a <= y) or (x <= b <= y)     # one of endpoints of 1st range "inside" bounds of 2nd range
+        or (a <= x <= b) or (a <= y <= b)  # or vice-versa
+    )
 
 
 def f_part1Value(line: str, f_logic: Callable) -> int:
@@ -76,11 +75,13 @@ def f_part1Value(line: str, f_logic: Callable) -> int:
 
 
 def main():
+    """Implements AoC Day 4"""
+
+    # read input file
     with open(FILENAME, 'r') as fd:
         lines = fd.readlines()
 
     # Part 1: number of completely-overlapping pairs
-    total = 0
     f_value = f_part1Value
     total = sum([f_value(line, f_logic=contains) for line in lines])
     exp = 573
