@@ -24,11 +24,10 @@ HISTORY
 
 # GLOBAL DATA
 FILENAME = "2022-02a.input.txt"
-PROBLEM = "Aoc 2022 Day 2, part 1"
+PROBLEM = "Aoc 2022 Day 2, part "
 
 
-# convert a line of text into the one int for the line, else None value if that won't parse
-def mapAbcXyzToInt(line: str) -> int:
+def f_part1Value(line: str) -> int:
     """
     my selection of (rock, paper, scissors) values: (1, 2, 3)
     challenge outcome maps (lose, draw, win): to (0, 3, 6)
@@ -53,17 +52,49 @@ def mapAbcXyzToInt(line: str) -> int:
     return val_map[line.strip()]
 
 
+def f_part2Value(line: str) -> int:
+    """
+    first column: opponent selection
+    2nd column: needed challenge outcome: (lose, draw, win): (0, 3, 6)
+
+    my selection of (rock, paper, scissors) values: (1, 2, 3)
+    """
+    val_map = {
+        # opponent rock
+        "A X":  0 + 3,  # lose: I play scissors
+        "A Y":  3 + 1,  # draw: I play rock
+        "A Z":  6 + 2,  #  win: I play paper
+
+        # opponent paper
+        "B X":  0 + 1,  # lose: I play rock
+        "B Y":  3 + 2,  # draw: I play paper
+        "B Z":  6 + 3,  #  win: I play scissors
+
+        # opponent scissors
+        "C X":  0 + 2,  # lose: I play paper
+        "C Y":  3 + 3,  # draw: I play scissors
+        "C Z":  6 + 1,  #  win: I play rock
+    }
+
+    return val_map[line.strip()]
+
+
 def main():
-    f_value = mapAbcXyzToInt
     with open(FILENAME, 'r') as fd:
-        scores = [f_value(line) for line in fd.readlines()]
-        totalRpsScore_i = sum(scores)
+        lines = fd.readlines()
 
     # Part 1: my total RPS score
-    print(f"{PROBLEM}: my total RPS score: {totalRpsScore_i}")  # submitted and accepted on 2023Aug06
+    f_value = f_part1Value
+    p1_total = sum([f_value(line) for line in lines])
+    print(f"{PROBLEM} 1: my total RPS score: {p1_total}")
     # 14297 submitted and accepted 2023Aug06
 
-    # Part 2: TODO
+    # Part 2: The basic functional pattern remains the same: we are still aggregating a value function
+    #   over all the lines of input. Just need a new function to remap input to value.
+    f_value = f_part2Value
+    p2_total = sum([f_value(line) for line in lines])
+    print(f"{PROBLEM} 2: my total RPS score: {p2_total}")
+    # 10498 submitted and accepted on 2023Aug06
 
 
 # ENTRY POINT
