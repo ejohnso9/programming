@@ -1,7 +1,8 @@
 #!/usr/bin/env python 
 
 """
-Advent of Code solution for Problem #1 (first part)
+Advent of Code solution for Problem #1 (both parts)
+https://adventofcode.com/2022/day/1
 
 IDEAS:
     1) Develop a Python or other library of functions for doing typical things
@@ -18,7 +19,10 @@ IDEAS:
         - C
         - JS (in browser page directly, via Node on CLI)
         - JS leveraging GPU
-        - Scheme
+        - Scheme (can you even do socket communication in Scheme?)
+            [v] Q: what's the Linux scheme available on pythonanywhere.com again?
+                A: /usr/bin/guile
+            [ ] R: find documentation for socket communication
         - maybes:
             - TypeScript
             - Erlang
@@ -65,23 +69,18 @@ def getCaloriesEachElf(lines):
     return acc_loi  # total calories for each elf
 
 
-def processLines(lines):
-    caloriesEachElf = getCaloriesEachElf(lines)
-    return max(caloriesEachElf)
-
-
 def main():
     with open(FILENAME, 'r') as fd:
         lines = fd.readlines()
 
     # print the top elf's total calories
-    maxCals = processLines(lines)
-    print(f"2022P1: Part 1: top elf total cal: {maxCals}")  # 68787 submitted and accepted on 2023Aug06
+    maxCalsEachElf = getCaloriesEachElf(lines)
+    totalCalsTopDown = sorted(maxCalsEachElf, reverse=True)
+    print(f"2022P1: Part 1: top elf total cal: {totalCalsTopDown[0]}")  # 68787 submitted and accepted on 2023Aug06
 
     # print the total calories of the top 3 elves
-    sortedTotalCals = sorted(maxCals)
-    print(f"2022P1: Part 2: top 3 elves total cal: {sum(sortedTotalCals[:2])}")
-    #  submitted and accepted on 2023Aug06
+    print(f"2022P1: Part 2: top 3 elves total cal: {sum(totalCalsTopDown[:3])}")
+    # 198041 submitted and accepted on 2023Aug06
 
 
 # ENTRY POINT
