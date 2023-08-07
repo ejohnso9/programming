@@ -15,6 +15,9 @@ HISTORY
     2023Aug07  ej  created
 """
 
+from typing import Callable
+from functools import partial
+
 # GLOBAL DATA
 DAY = 4
 FILENAME = f"2022-{DAY:02d}.input.txt"
@@ -48,11 +51,14 @@ def overlaps(range_1: tuple, range_2: tuple) -> bool:
     a, b = range_1
     x, y = range_2
 
-    return ((x <= a <= y) or (x <= b <= y)
-            or (a <= x <= b) or (a <= y <= b))
+    return (
+        # one of the endpoints of the first range is "inside" the bounds of the second range
+        (x <= a <= y) or (x <= b <= y)
+        # or vice-versa
+        or (a <= x <= b) or (a <= y <= b) )
 
 
-def f_part1Value(line: str, line_index: int) -> int:
+def f_part1Value(line: str, f_logic: Callable) -> int:
     """
     Convert a line of input to either 0 or 1
 
@@ -64,26 +70,7 @@ def f_part1Value(line: str, line_index: int) -> int:
         a, b = line.split(',')
         r1 = tuple([int(w) for w in a.split('-')])
         r2 = tuple([int(w) for w in b.split('-')])
-        if r1 is None or r2 is None:
-            _ = "STOP"
-        return 1 if contains(r1, r2) else 0
-    except ValueError:
-        print(f"ValueError on line {line_index}")
-
-
-def f_part2Value(line: str, line_index: int) -> int:
-    """
-    Convert a line of input to either 0 or 1
-
-    :param line: the input line as string (need not be stripped)
-    :return: 1 if one range is contained within the other, else 0
-    """
-
-    try:
-        a, b = line.split(',')
-        r1 = tuple([int(w) for w in a.split('-')])
-        r2 = tuple([int(w) for w in b.split('-')])
-        return 1 if contains(r1, r2) else 0
+        return 1 if f_logic(r1, r2) else 0
     except ValueError:
         print(f"ValueError on line {line_index}")
 
@@ -92,20 +79,25 @@ def main():
     with open(FILENAME, 'r') as fd:
         lines = fd.readlines()
 
-    # Part 1: number of overlapping pairs
+    # Part 1: number of completely-overlapping pairs
     total = 0
     f_value = f_part1Value
-    for index, line in enumerate(lines):
-        value = f_value(line, index + 1)
-        total += value
-    print(f"{PROBLEM} Part 1: count of overlapping pairs: {total}")
+    total = sum([f_value(line, f_logic=contains) for line in lines])
+    exp = 573
+    print(f"{PROBLEM} Part 1: count of contained pairs: {total}  (should be {exp})")
+    assert total == exp
     # 573 submitted and accepted 2023Aug07 (first try! ;)
 
-    # Part 2: TODO
-    # f_value = f_part2Value
-    # badgeScores = [f_value(lines[i: i + 3]) for i in range(0, len(lines), 3)]
-    # print(f"{PROBLEM} 2: total priority: {sum(badgeScores)}")
-    # submitted and accepted on 2023Aug07
+    # Part 2: number of pairs that overlap at all
+    # let's now make both parts "extra DRY"...
+    part = 2
+    f_value = partial(f_part1Value, f_logic=overlaps)
+    total = sum([f_value(line) for line in lines])
+    exp = 867
+    print(f"{PROBLEM} Part {part}: count of overlapping pairs: {total}  (should be {exp})")
+    assert total == exp
+    # 1440 is too high :(  (not sure why I got this, but diff answer after cleanup)
+    # 867 submitted and accepted on 2023Aug07 (2nd try)
 
 
 # ENTRY POINT
