@@ -17,6 +17,7 @@ THOUGHTS/IDEAS/DISCUSSION:
 [B] [W] [F] [L] [M] [F] [L] [G] [J]
  1   2   3   4   5   6   7   8   9 
 
+
 move 3 from 6 to 2
 move 2 from 8 to 7
 ...
@@ -37,59 +38,73 @@ from typing import Callable
 from functools import partial
 
 # GLOBAL DATA
-DAY = 4
+DAY = 5
 FILENAME = f"2022-{DAY:02d}.input.txt"
 PROBLEM = f"Aoc 2022 Day {DAY},"
 
 
-def init()
-    """read the input file, return initial list-of-lists, list of lines"""
-    lol = [
-        list("BVSNTCHQ"),
-        list("WDBG"),
-        list("FWRTSQB"),
+def processCommands(commands: list, stacks: list[str]):
+    """Execute each command, manipulate 'stacks' accordingly."""
+
+    def pull(n_chars: int, stackIndex: int):
+        s = stacks[stackIndex]  # the string to read and change
+        stacks[stackIndex] = s[:-n_chars]  # s minus last n chars
+        return s[-n_chars:]  # the last n chars that were on that stack
+
+    def push(s: str, stackIndex: int):
+        stacks[stackIndex] += s
+
+    for cmd in commands:
+        words = cmd.split()  # on whitespace
+        n, fromStack, toStack = [int(words[i]) for i in (1, 3, 5)]
+        s = pull(n, fromStack - 1)  # passing 0-based index
+        push(s[::-1], toStack - 1)  # [::-1] => str reversed
+
+    return stacks
+
+
+def init(input_file):
+    """read the input file, return initial list-of-str, list of command lines"""
+    stacks = [
+        "BVSNTCHQ",
+        "WDBG",
+        "FWRTSQB",
+        "LGWSZJDN",
+        "MPDVF",
+        "FWJ",
+        "LNQBJV",
+        "GTRCJQSN",
+        "JSQCWDM",
     ]
+
     # read input file
-    with open(FILENAME, 'r') as fd:
+    with open(input_file, 'r') as fd:
         lines = fd.readlines()
 
-    # find the blank line, return what's below it
+    # find the blank line, axe it and what's above it
+    blank_index = [i for i, line in enumerate(lines) if line.strip() == ""][0]
+    commands = lines[blank_index + 1:]
 
-
-def f_part1Value(line: str, f_logic: Callable) -> int:
-    """
-    Convert a line of input to either 0 or 1
-
-    :param line: the input line as string (need not be stripped)
-    :return: 1 if one range is contained within the other, else 0
-    """
-
-    try:
-        a, b = line.split(',')
-        r1 = tuple([int(w) for w in a.split('-')])
-        r2 = tuple([int(w) for w in b.split('-')])
-        return 1 if f_logic(r1, r2) else 0
-    except ValueError:
-        print(f"ValueError on line {line_index}")
+    return stacks, commands
 
 
 def main():
-    """Implements AoC Day 4"""
+    """Implements AoC Day 5"""
 
     # read input file
     with open(FILENAME, 'r') as fd:
         lines = fd.readlines()
 
-    # 
-    stacks_lol, lines = init(FILENAME)
+    # read input file, initialize the main data structure
+    stacks_lol, commands = init(FILENAME)
+
+    # do the stack manipulations
+    stacks = processCommands(commands, stacks_lol)
+    answer = ''.join([s[-1] for s in stacks])
 
     # Part 1: number of completely-overlapping pairs
-    # f_value = f_part1Value
-    # total = sum([f_value(line, f_logic=contains) for line in lines])
-    # exp = 573
-    # print(f"{PROBLEM} Part 1: count of contained pairs: {total}  (should be {exp})")
-    # assert total == exp
-    # 573 submitted and accepted 2023Aug07 (first try! ;)
+    print(f"{PROBLEM} Part 1: top of each stack: {answer}")
+    # 'FJSRQCFTN' submitted and accepted 2023Aug08 (first try!)
 
     # Part 2: number of pairs that overlap at all
     # let's now make both parts "extra DRY"...
