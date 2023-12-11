@@ -1,0 +1,6 @@
+
+2023Nov27
+
+I don't remember why this file is in here.
+Compare it to the other program, understand the differences, update the
+solution if you need to, get rid of this temp directory.
