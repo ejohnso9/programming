@@ -30,6 +30,12 @@ covers columns: 28 through 30. Once I see the '.' in column 31, I know the exten
 cells around that, but in this case that "ring" doesn't extend onto the previous line, as it will for all other lines.
 If there is a "symbol" in that ring, add the number to the list, else we're done processing "775".
 
+    After solving part 1, I decided I wanted to start to develop a library of functions that may be useful towards
+this type of program (which is common both here and at other programming sites). So fro examplek, get a list of adjacent
+cells given the (row, col) of some cell. Cells in the middle will have 8 neighbors, cells in corners only 3, and cells
+on edges have 5. This is general pattern that comes up over and over again. It is functionality that can be implemented\
+separate from whatever processing is specific to the adjacent cells.
+
 STRATEGY
     There's a few special cases for processing numbers that are on the first or last line, and numbers that start
 on the first column or end on the last column. Generally, read a list of strings, then process strings a line at
@@ -60,6 +66,7 @@ import sys
 # GLOBAL DATA
 NL = '\n'
 INPUT_FILENAME = "2023-03.txt"
+__MATRIX__ = None  # inited in main()
 
 
 def load_lines():
@@ -79,6 +86,178 @@ def load_lines():
         lines = fd.readlines()
 
     return [line.rstrip() for line in lines]
+
+
+def findChar(char_to_find: str, matrix=None) -> list:
+    """
+    Find all occurrences of 'char_to_find', return a list of tuples: ((row, col), value)
+    """
+
+    found_chars_l = list()  # RV
+    m = matrix if matrix else __MATRIX__
+    for row, line in enumerate(m):
+        for col, c in enumerate(list(line)):
+            if c == char_to_find:
+                found_chars_l.append((row, col))
+
+    return found_chars_l
+
+
+def getAdjacencyList(row: int, col: int, values=False, matrix=None) -> list[tuple]:
+    """
+    Given row and col indices, return a list of (row, col) tuples that are adjacent (including diagonally), assuming
+    we are talking about a square matrix of rows of columns (list-of-lists and list-of-strings work identically).
+
+    TODO: add option for only orthogonally adjacent
+    """
+
+    ls = list()  # RV
+
+    m = matrix if matrix else __MATRIX__
+    n_rows = len(m)
+    n_cols = len(m[0])
+
+    # to aid debugging, these are built in LtoR, TOP to BOTTOM order
+    if row > 0:  # we have a previous row
+        r = row - 1
+
+        # column to the left
+        if col > 0:
+            c = col - 1
+            t = (r, c, m[r][c]) if values else (r, c)
+            ls.append(t)
+
+        # same column (cell above)
+        ls.append((r, col, m[r][col]) if values else (r, col))
+
+        # column to the right
+        if col < n_cols - 1:
+            c = col + 1
+            t = (r, c, m[r][c]) if values else (r, c)
+            ls.append(t)
+
+    # always have same row
+    r = row
+    if col > 0:
+        c = col - 1
+        ls.append((r, c, m[r][c]) if values else (r, c))
+    if col < n_cols - 1:
+        c = col + 1
+        ls.append((r, c, m[r][c]) if values else (r, c))
+
+    # next row down
+    if row < n_rows - 1:  # we have a next row
+        r = row + 1
+
+        # column to the left
+        if col > 0:
+            c = col - 1
+            ls.append((r, c, m[r][c]) if values else (r, c))
+
+        # same column
+        c = col
+        ls.append((r, c, m[r][c]) if values else (r, c))
+
+        # column to the right
+        if col < n_cols - 1:
+            c = col + 1
+            ls.append((r, c, m[r][c]) if values else (r, c))
+
+    return ls  # cells adjacent to (row, col) as: [(r0, c0), (r1, c1), ... ]
+
+def getIntAt(row, col, matrix=None) -> int:
+    """
+    Return the int where (row,col) is one of the cells within the string.
+    """
+    m = matrix if matrix else __MATRIX__
+    line0 = m[0]
+    c = m[row][col]
+    if c not in string.digits:
+        raise ValueError(f"char at ({row}, {col}), {c} is not a digit.")
+
+    # scan left
+    _col = col
+    while 0 <= _col:
+        if m[row][_col] not in string.digits:
+            break
+        _col -= 1
+    left = _col + 1  # first index in the digit string
+
+    # scan right
+    _col = col
+    while _col < len(line0):  # strictly less b/c of comparison directly to col count
+        if m[row][_col] not in string.digits:
+            break
+        _col += 1
+    right = _col - 1  # last index in the digit string
+
+    return int(m[row][left:right + 1])
+
+
+def isGear(row, col, matrix=None) -> int:
+    """
+    If there are 2 PNs adjacent to the arg (row, col), then I will return the gear ratio: one PN time the other.
+    If there are not 2 adjacent PNs, I will return None.
+
+    Implementation is a bit tricky here...
+    There are a few ways digit strings can appear around a '*', some of which imply separate numbers, some
+    of which do not. Examples:
+
+    6 adjacent digits, 2 parts:    3 adjacent digits, but only 1 part
+        .123.                          .123.
+        ..*..                          ..*..
+        .790.                          .....
+
+    3 adjacent digits, 1 part:     2 adjacent digits, 1 part
+        .123.                          123..
+        ..*..                          ..*..
+        .....                          .....
+
+    * There are other arrangements not shown here...
+    * I'm assuming there is never a case of more than two separate PNs adjacent to a gear.
+    * If adjacent digits appear on more than one line, I'm assuming that's a gear.
+
+    The other two valid cases would then be:
+        XD.DX      .....
+        ..*..      ..*..
+        .....      XD.DX
+
+    Where X is either a digit or not - I didn't analyze it, but I can see two digit part numbers and at least
+    one instance of a one-digit part number.
+    """
+
+    m = matrix if matrix else __MATRIX__
+    adj_cells = getAdjacencyList(row, col, values=True)
+    adj_digits = [t for t in adj_cells if t[2] in string.digits]
+    # should be digits on just 1 or 2
+
+    # digits on more than one row?
+    row_values = list(set(r for r, c, v in adj_digits))
+    assert len(row_values) < 3  # just make sure my assumption is not wrong
+    if len(row_values) > 1:
+        # get the int for the first row value (using the first digits on that row)
+        first_row = row_values[0]
+        row, col, _ = [t for t in adj_digits if t[0] == first_row][0]  # one of the digits happens to be first
+        i1 = getIntAt(row, col)
+        second_row = row_values[1]
+        row, col, _ = [t for t in adj_digits if t[0] == second_row][0]  # one of the digits, as above
+        i2 = getIntAt(row, col)
+        return i1 * i2
+
+    # else: all the digits must be on the same row! (which we essentially know)
+    # NB: could be left and right on same row as '*'!
+    _row = row_values[0]
+    # NB: the center must be '.' or the '*' itself to separate two numbers
+    if m[_row][col] in '.*':
+        # the left and right chars on the row
+        c_left = m[_row][col - 1]
+        c_right = m[_row][col + 1]
+        if all([c in string.digits for c in (c_left, c_right)]):
+            i1 = getIntAt(_row, col - 1)
+            i2 = getIntAt(_row, col + 1)
+            return i1 * i2
+
+    return None  # arg (row, col) not actually a gear
 
 
 def get_line_nums(line: str) -> list[tuple]:
@@ -194,7 +373,16 @@ def main():
 
     # read the data file
     lines = load_lines()
+    global __MATRIX__  # the default data structure other API will access (if not explicitly passed)
+    __MATRIX__ = lines
     # print(f"loaded {len(lines)} lines")
+
+    # DEBUG testing
+    # adj_ls = getAdjacencyList(0, 0)
+    # adj_ls = getAdjacencyList(1, 6, values=True)
+    # stars = findChar('*')
+    # i = getIntAt(12, 137)  # 515 @end of row 13 (text index)
+    # i = getIntAt(9, 0)  # 379 @start of row 10 (text index)
 
     # what are the symbols? (digits are not symbols, and neither is '.', the rest are)
     symbols = set()
@@ -216,7 +404,19 @@ def main():
     print(f"Part 1: {sum(engine_nums)}")
 
     # Part 2:
-    print(f'Part 2: {"not implemented"}')
+    #   2.1 find all the stars ('*'),
+    #   2.2 check each for actually being a gear (func return None when it is not),
+    #   2.3 build a list of all the gear ratios
+    stars = findChar('*')
+    ratios = list()
+    for row, col in stars:
+        ratio = isGear(row, col)  # int ratio or None if that's not a gear
+        if ratio:
+            ratios.append(ratio)
+
+    # OMG!!! I can hardly believe I hit this first try, too!
+    # 84363105 accepted @ 2023Dec12T18:02
+    print(f'Part 2: {sum(ratios)}')
 
     return 0  # normal exit code
 
