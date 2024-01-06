@@ -107,6 +107,11 @@ def is_valid_game(game_t, max_t):
     return all([game_t[i] <= max_t[i] for i in range(3)])
 
 
+def power(rgb):
+    r, g, b = rgb
+    return r * g * b
+
+
 def main():
 
     # read the data file
@@ -124,7 +129,15 @@ def main():
     valid_game_nums = [i + 1 for i, game_t in enumerate(maxes_ls)
                        if is_valid_game(game_t, max_t)]
 
-    print(sum(valid_game_nums))  # 2716 accepted 2023Dec10T18:30
+    # Part 1: 2716 accepted 2023Dec10T18:30 (I think this was also first try? I didn't comment it initially.)
+    print(f"Part 1: {sum(valid_game_nums)}")
+
+    # Part 2: 72227 accepted 2023Dec11T11:48  (first try! ;))
+    # commentary: Part 2 was trivial (mainly b/c of the way I keep data in various stages of processing.)
+    # I already had 'maxes_ls' from Part 1. After that, all that is needed is:
+    #   1) define power()
+    #   2) evaluate: sum([power(t) for t in maxes_ls])
+    print(f"Part 2: {sum([power(t) for t in maxes_ls])}")  # "Part 2: 72227"
 
     return 0  # normal exit code
 
