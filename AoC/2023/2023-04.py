@@ -30,15 +30,17 @@ def card_value(line):
     rest = line[line.index(':') + 1:]
     win, have = rest.split('|')
     win_loi = [int(n) for n in win.split()]
+    assert len(set(win_loi)) == len(win_loi)
     have_loi = [int(n) for n in have.split()]
+    assert len(set(have_loi)) == len(have_loi)
     count = sum([1 for num in win_loi if num in have_loi])
 
-    return 2 ** (count - 1)
+    return 2 ** (count - 1) if count > 0 else 0
 
 
 def process_lines(lines: list[str]) -> int:
 
-    return [card_value(line for line in lines)]
+    return [card_value(line) for line in lines]
 
 
 def main():
@@ -51,7 +53,7 @@ def main():
     # Part 1: Yay! 553079 accepted first try @ 2023Dec10T1724
     card_values = process_lines(lines[:-1])
     print(len(card_values))
-    print(f"Part 1: {sum(card_values)}")
+    print(f"Part 1: {sum(card_values)}")  # 20117 accepted 2024Jan06T1709
 
     # Part 2:
     # print(f'Part 2: {"not implemented"}')
