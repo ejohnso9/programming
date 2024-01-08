@@ -5,14 +5,69 @@ r"""
 Solution for: https://adventofcode.com/2023/day/1
 
 DISCUSSION
-    This should be almost trivial.
+    This problem seems like it should be nearly trivial.
+In fact, it injects a rather nasty complication - surprising for a Day 1
+problem. The issue is in overlap of characters of digit names -
+somethign not covered in the examples.
 
-STRATEGY
-    Just need some basic string processing functions and a sum() call.
+This Reddit article basically says that values like "twone" should be
+replaced with "21":
+    https://www.reddit.com/r/adventofcode/comments/1884fpl/2023_day_1for_those_who_stuck_on_part_2
+
+I would call that poor problem design (or poor problem description, to
+not specify the procedure to handle such overlaps). Once the procedure
+for such name overlaps is known, I can just add it to my replacement
+table.)
+
+The Reddit article talks about the 'regex' module (which is outside the
+Standard Python Library") taking a non-overlapping argument. My feeling
+is:
+    A) The 're' module *IS* within the Standard Python Library - why would
+        you be using anything else?
+
+    B) If you can solve a problem without involving regular expressions
+        in the first place, that is likely to be a substantially more
+        efficient solution (and less complicated, easier to understand,
+        IMHO, generally).
+
+Instead of replacements like: "85xtwone" -> "85xtw1"
+others are suggsting things like: "85xtwone" -> "85xtwo1e"
+The you will still catch "two" if you are doing digit name replacements
+in the order one, two, three, ... but then "two" needs to be replaced
+with "t2o"... I dunno... that seems cutesy / cheesy / artificial to me.
+
+I'm not sure if this overlap wrinkle was intentional to make Day 1
+tough, but I think that's unncessarily evil on a Day 1 problem. 
+I suspect the issue was perfectly well known to Eric Wustl since
+"xtwone3four" is actually in the example text, which perhaps speaks to
+reading examples very, very closely and carefully, but it doesn't really
+spell out the expected procedure to handle such text - one is left
+guessing at possible procedures to handle such overlaps.
+
+Before finding the Reddit article, I just searched my input puzzle text
+for overlapping names:
+
+possible overlaps:
+    oneight:   *** several instances of this!
+    threeight: NONE
+    fiveight: NONE
+    nineight: NONE
+    twone:    *** several instances of this!
+    sevenine: NONE
+    eightwo:  *** several instances of this!
+    eighthree: NONE
+
+And then knew this was at the core of my unaccepted answer, but since I
+wasn't solving this on same day of puzzle release, found the expected procedure
+later (Jan 8th) via Google search.
+Knowing that, I can simply replace: "twone" with "21", "eightwo" with "82", etc.
+
 """
 
-# NB: I'm not playing code golf here (though documentation may be
-# lacking). This is basically the way I write production code.
+# NB: I'm not playing code golf here. This is basically the opposite of
+# code golf: it's bascially the way I would write production code
+# (except perhaps a bit less documented, refactored, and polish then I
+# would submit for final production code).
 
 
 # Standard Python Library
@@ -22,11 +77,16 @@ import sys
 
 # GLOBAL DATA
 NL = '\n'
-INPUT_FILENAME = "2023-01_input.txt"
+INPUT_FILENAME = "2023-01.txt"
+overlaps = ['oneight', 'twone', 'eightwo']
 DIGIT_MAP = {
-    word: str(i + 1)
-    for i, word in enumerate("one two three four five six seven eight nine".split())
+    'oneight': '18',
+    'twone': '21',
+    'eightwo': '82'
 }
+digit_names = "one two three four five six seven eight nine"
+for i, name in enumerate(digit_names.split()):
+    DIGIT_MAP[name] = str(i + 1)
 
 
 def words_to_digits(line):
@@ -56,20 +116,22 @@ def main(filename):
 
     # DEBUG cross-check
     total2 = 0
-    for i in range(len(lines)):
-        line = lines[i]
+    for i, line in enumerate(lines):
         s = words_to_digits(lines[i])
         value = getnum(s)
         i_ls = [int(c) for c in list(s) if c in string.digits]
         d = data[i]  # value from the short way
         assert value == d
-        print(f'{i + 1}: total={total2}, {value}, "{line}", "{s}", {i_ls}')
+        if any([pat in line for pat in overlaps]):
+            print(f'{i + 1}: total={total2}, {value}, "{line}", "{s}", {i_ls}')
         total2 += value
 
     print()
     print(f"for {len(lines)} lines, total1 = {total1}")
     print(f"total2 is: {total2}")
     # 55130 accepted for part 1 (2023Dec08)
+    # 54495 rejected for part 2 (2024Jan08)
+    # 54985 accepted for part 2 (2024Jan08)
 
     return 0  # normal exit code
 
