@@ -32,17 +32,17 @@ is:
 
 Instead of replacements like: "85xtwone" -> "85xtw1"
 others are suggsting things like: "85xtwone" -> "85xtwo1e"
-The you will still catch "two" if you are doing digit name replacements
+Then you will still catch "two" if you are doing digit name replacements
 in the order one, two, three, ... but then "two" needs to be replaced
-with "t2o"... I dunno... that seems cutesy / cheesy / artificial to me.
+with "t2o", etc. I dunno; this seems cutesy / cheesy / artificial to me.
 
 I'm not sure if this overlap wrinkle was intentional to make Day 1
-tough, but I think that's unncessarily evil on a Day 1 problem. 
-I suspect the issue was perfectly well known to Eric Wustl since
-"xtwone3four" is actually in the example text, which perhaps speaks to
-reading examples very, very closely and carefully, but it doesn't really
-spell out the expected procedure to handle such text - one is left
-guessing at possible procedures to handle such overlaps.
+tough, but I suspect the issue was perfectly well known to Eric Wustl
+since "xtwone3four" is actually in the example text, which perhaps
+speaks to reading examples very, very closely and carefully, but it
+still doesn't really spell out the expected procedure to handle such
+overlapping text - one is left guessing at possible procedures to handle
+such overlaps.
 
 Before finding the Reddit article, I just searched my input puzzle text
 for overlapping names:
@@ -61,12 +61,16 @@ And then knew this was at the core of my unaccepted answer, but since I
 wasn't solving this on same day of puzzle release, found the expected procedure
 later (Jan 8th) via Google search.
 Knowing that, I can simply replace: "twone" with "21", "eightwo" with "82", etc.
+NB: those subs need to happen before single-digit subs!
 
+I guess this is a very good lesson for dealing with overlapping string
+patterns, but I still feel like that was unnecessarily evil for a Day 1
+problem.
 """
 
 # NB: I'm not playing code golf here. This is basically the opposite of
 # code golf: it's bascially the way I would write production code
-# (except perhaps a bit less documented, refactored, and polish then I
+# (except perhaps a bit less documented, refactored, and polished than I
 # would submit for final production code).
 
 
@@ -84,8 +88,8 @@ DIGIT_MAP = {
     'twone': '21',
     'eightwo': '82'
 }
-digit_names = "one two three four five six seven eight nine"
-for i, name in enumerate(digit_names.split()):
+_ = "one two three four five six seven eight nine"
+for i, name in enumerate(_.split()):
     DIGIT_MAP[name] = str(i + 1)
 
 
