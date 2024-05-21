@@ -11,6 +11,35 @@ TODO / NOTES
     The book is primarily about using Three.js as the API to WebGL, but
     this "straight WebGL" example is also useful, if a bit "hard" /
     cryptic in places.
+
+
+*** Working as of 2024Feb26 ***
+========================================================================
+For reasons, the lower-level details of which I forget, you can't load
+this page directly into a web browser. You need to access it from a
+server. Python can serve the files from a directory very simply:
+
+# Python 2
+$ python -m SimpleHTTPServer 8000
+
+# under Python 3, the module has been migrated to:
+$ python -m http.server 8000
+
+Then from your web browser, fetch:
+
+http://localhost:8000/
+
+OR: http://localhost:8000/pgs10-15.html
+
+Should display a black square with a white square centered within it, as
+seen in the book, Figure 1-5, pg. 16.
+
+NB: That's a pure WebGL implementation, not using any Three.js (or
+    other) library. The Three.js home is:
+        https://threejs.org/
+
+JFC!!! Let's get on with it - should be FUN, work with it!
+
 -->
 
   <head>
