@@ -14,6 +14,10 @@ NOTES
     PEP-8-named vars here
 """
 
+
+import pdb  # pdb.set_trace()
+
+
 # DATA / GLOBAL symconsts
 DNA_BASES_COMP_MAP = {'A': 'T', 'T':'A', 'C': 'G', 'G': 'C'}
 
@@ -35,14 +39,16 @@ def Complement(pattern: str) -> str:
 
 def PatternMatching(pattern: str, genome: str) -> list[int]:
     """
-    Given 'Pattern' to find and a string of ACGT* bases,
-    return the (0-based) indices of 'Pattern' occurences.
+    Given 'Pattern' and a string of ACGT* bases, return the
+    (0-based) indices of 'Pattern' occurences (or [] if 'pattern'
+    not found)
     """
 
+    # TODO: redo this imp. using str.index()
     positions = []  # RV
     k = len(pattern)
-    for i in range(len(genome) - k):
-        s = genome[i:i-k]
+    for i in range(len(genome) - k + 1):
+        s = genome[i:i+k]
         if s == pattern:
             positions.append(i)
 
@@ -50,7 +56,7 @@ def PatternMatching(pattern: str, genome: str) -> list[int]:
 
 
 def testPatternMatching():
-    arg1, arg2 = 'ATAT', 'GATATATGCATATACTT'
+    arg1, arg2 = 'ACTT', 'GATATATGCATATACTT'
     rv = PatternMatching(arg1, arg2)
     try:
         assert rv == [1, 3, 9]
@@ -79,4 +85,12 @@ if __name__ == '__main__':
     # print(f"This library module defines: {globals()}")
 
     testPatternMatching()
+
+    # TODO: the whole genome is available as one big string right here:
+    #    https://bioinformaticsalgorithms.com/data/realdatasets/Replication/Vibrio_cholerae.txt
+    #    [ ] benchmark PatternMatching() with a list comprehension
+    #       - [ ] as-is
+    #       - [ ] using .index()
+    #       - [ ] using .startswith()
+    #       - [ ] any significant difference?
 
