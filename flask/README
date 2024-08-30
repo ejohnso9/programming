@@ -1,0 +1,14 @@
+
+2024May18
+------------
+This directory has a virtual env setup within it, as reccomended at:
+    https://flask.palletsprojects.com/en/3.0.x/installation/
+
+You should activate it before doing stuff in the 'flask' project, here
+(i.e., this dir) (e.g., before installing flask)
+
+    $ . .venv/bin/activate
+
+to get out of venv environment, you can probably just:
+
+    $ deactivate
