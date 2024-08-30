@@ -1,7 +1,10 @@
+
+# these patterns ignore the directory regardless of place in tree
 **/bin/
 **/obj/
-.venv/*
-Debug/*
+**/.venv/
+**/Debug/
+
 .idea/*
 .ionide/*
 .vscode/*
