@@ -4,18 +4,19 @@
 # run on pythonanywhere.com @ Python version 3.9.5
 
 r"""
+https://docs.python.org/3/library/html.parser.html#module-html.parser
 Solution for: https://adventofcode.com/2023/day/5
 
 DISCUSSION
-    I'm starting this promblem on 2024Jul10, about half a year after the
+    I'm starting this problem mid July 2024, about half a year after the
 contest started. By now, I'm sure there are plenty of solutions out on
 the internet. I even saw a step-by-step walkthrough of one of the
-problems when I was simply trying to used Google to get back to my last
-problem.
+problems when I was simply trying to use Google to get back to my last
+problem statement.
 
     You either believe I am doing my own work or you don't. I attest
 that I am. My solution may look like other's solutions. My var names and
-coding style is unique, but the general approach about how to attack a
+coding style are unique, but the general approach about how to attack a
 problem is generally not going to be: smart people are going to tend to
 generally do things in a similar way. You give several thousand smart
 people the same problem, there's likely going to be a relatively small
@@ -24,12 +25,12 @@ number of general approaches.
     Since I'm in no hurry, I am basically writing code the same as I do
 for production for an employer. That is, properly documented, properly
 commented, well-organized with meaningful var and function names, etc.
-If I were trying to tear through this on Christmas eve or day, trying to
-desperately be in the first 100, all that would be skipped.
+If I were trying to tear through this on Christmas Eve or day, trying to
+desperately be in the first 100, that would all be skipped.
 
     Python is a dynamically-typed language. Yet adding type hints is a
-form of documentation: aids understandability for anyone else that might
-have to understand (maintain) my code.
+form of documentation: it aids understandability for anyone else that
+might have to understand (maintain) my code.
 
 
 My solution is going to be implemented around 2 core functions:
@@ -89,7 +90,8 @@ import sys
 
 # GLOBAL DATA
 NL = '\n'
-INPUT_FILENAME = "2023-05.txt"
+INPUT_FILENAME = "2023-05.input.txt"
+# INPUT_FILENAME = "2023-05_sample.txt"
 
 
 def loadSeeds(lines: list[str]) -> list[int]:
@@ -103,12 +105,87 @@ def loadSeeds(lines: list[str]) -> list[int]:
     return seeds
 
 
+def loadDicts(lines: list[str]) -> list[tuple]:
+    """
+    I know dict definitions start on line 2
+    """
+
+    lol_tuples = []
+    ls = None
+
+    for line in lines[2:]:
+        line_s = line.strip()
+        # blank line at end of map
+        if not len(line_s):
+            continue
+        elif line_s.endswith('map:'):
+            # start new map
+            if ls:
+                lol_tuples.append(ls)
+            ls = []
+        else:
+            loi = [int(w) for w in line_s.split()]
+            ls.append(tuple(loi))
+
+    # we may be missing a final blank line to cause the last list to get appended
+    if ls:
+        lol_tuples.append(ls)
+
+    return lol_tuples
+
+
+def findMapRow(value: int, map: list):
+    """
+    Given one particular map and a value, return the applicable map tuple
+    or None if no map row was applicable.
+    """
+
+    for i, tup in enumerate(map):
+        dest, src, width = tup
+        if src <= value <= src + width:
+            return tup
+
+    return None
+
+
+def mapInput(value: int, map_tuple):
+    if not map_tuple:
+        return value
+
+    dest, src, width = map_tuple
+    offset = value - src
+
+    return dest + offset
+
+
+def mapSeed(seedValue: int, maps: list) -> int:
+    """
+    Given a starting seed value, map it through all the maps
+    """
+
+    value = seedValue
+    for map in maps:
+        tup = findMapRow(value, map)
+        value = mapInput(value, tup) if tup else value
+
+    return value
+
+
 def main(input_file: Path):
 
     # read the input data file, process it
     lines = load_lines(input_file)
-    seeds = loadSeeds(lines)
+    seeds: list[int] = loadSeeds(lines)
     print(seeds)
+    maps = loadDicts(lines)
+
+    # do all the mapping, generating (seed, location) tuples
+    data = [(seed, mapSeed(seed, maps)) for seed in seeds]
+    sorted_data = sorted(data, key=lambda t: t[1])
+    seed, location = sorted_data[0]
+    print(f"seed: {seed} at location: {location}")
+    # BINGO!!! First try: location: 486613012
+
     sys.exit()
 
     ls_of_dicts = load_dicts(lines)
