@@ -1,5 +1,7 @@
+bin/*
+Debug/*
 .idea/*
-fsharp/.ionide/*
-fsharp/.vscode/*
+.ionide/*
+.vscode/*
 fsharp/fsharp\ -\ Shortcut.lnk
 fsharp/functional-programming-using-f#.pdf
