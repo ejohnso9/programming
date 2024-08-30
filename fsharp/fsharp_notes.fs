@@ -49,6 +49,10 @@ There's two main ways to do that:
     2) specify the name to create a new directory for the project
         > dotnet new console -lang F# -name myNewProj
         // see also -o option
+        //
+        // 2024Aug28 I am now running F# version 8.0 on Windows 11.
+        // Syntax has changed somewhat:
+        > dotnet new console --language F# --name hello
 
 You can get more help on 'dotnet new':
 > dotnet new -h
@@ -531,11 +535,5 @@ let foo i = printfn "::%d::" i
 List.iter foo [1..3]
 
 
-// a README I created on 
 // EOF
-
-
-
-
-
 

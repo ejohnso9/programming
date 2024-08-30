@@ -1,0 +1,43 @@
+
+2024, Late August... trying to restart this F# adventure...
+
+The other file, 'fsharp_notes.fs' was intended to be F# source.
+I don't think it really is, though parts of it are sort of in the
+syntax.
+
+
+I am working more diligently on getting through the Chris Smith Book,
+"Programming F# 3.0"
+The language is now up to version 8.0. At my level, nearly the whole
+book wil still be applicable. One minor change to note is that you can
+now index a list or string without the dot syntax.
+    Previously...
+    let s = "my string"
+    s.[3] // would be 's'
+    s[3]  // same thing, more regular syntax, now
+
+// From the other file...
+
+//
+// run a simple F# script without compilation
+//
+// 1) put the following text into a file named 'hello.fsx'
+printfn "Hello, World!"
+// 2) Run it:
+> dotnet fsi hello.fsx
+Hello, World!
+// SUCCESS!
+New, full projects can be created with 'dotnet new ...'
+There's two main ways to do that:
+    1) convert the current directory into a project
+        > dotnet new console -lang F#
+    2) specify the name to create a new directory for the project
+        > dotnet new console -lang F# -name myNewProj
+        // see also -o option
+        //
+        // 2024Aug28 I am now running F# version 8.0 on Windows 11.
+        // Syntax has changed somewhat:
+        > dotnet new console --language F# --name hello
+You can get more help on 'dotnet new':
+> dotnet new -h
+> dotnet new console -h
