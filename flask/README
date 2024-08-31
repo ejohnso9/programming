@@ -12,3 +12,15 @@ You should activate it before doing stuff in the 'flask' project, here
 to get out of venv environment, you can probably just:
 
     $ deactivate
+
+2024Aug30
+------------
+I previously had a .venv dir in here. But the whole thing was being
+managed by git - all the *.pyc for a whole Python installation. That is
+totally not what I want.
+
+I think I have it remove now and .gitignore updated at the
+.../src/git/programming level.
+
+Have to put back a .venv if you want one now.
+
