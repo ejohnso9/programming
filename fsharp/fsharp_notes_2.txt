@@ -1,4 +1,14 @@
 
+REFERENCES
+    https://stackoverflow.com/users/33518/tomas-petricek
+        Has link in Git profile to F# traning, and book:
+            http://functional-programming.net/
+
+    F# String module functions (not the OO interface of System.String)
+        https://fsharp.github.io/fsharp-core-docs/reference/fsharp-core-stringmodule.html
+
+
+
 2024, Late August... trying to restart this F# adventure...
 
 The other file, 'fsharp_notes.fs' was intended to be F# source.
@@ -32,12 +42,13 @@ There's two main ways to do that:
     1) convert the current directory into a project
         > dotnet new console -lang F#
     2) specify the name to create a new directory for the project
-        > dotnet new console -lang F# -name myNewProj
+        // OLD: > dotnet new console -lang F# -name myNewProj
         // see also -o option
         //
         // 2024Aug28 I am now running F# version 8.0 on Windows 11.
         // Syntax has changed somewhat:
         > dotnet new console --language F# --name hello
+
 You can get more help on 'dotnet new':
 > dotnet new -h
 > dotnet new console -h
