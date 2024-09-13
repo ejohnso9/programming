@@ -88,5 +88,22 @@ Let's try this:
 | 73162890 accepted on 2024Sep13 |
 *--------------------------------*
 
+Highlighting digits in Chrome is super helpful. A human can deal with
+scanning 50 lines of data, 3 chars per line.
 
+
+Programming is often called "an art", and successfully practicing that
+art is often trying to strike a reasonable balance between competing
+requirements: time to develop a solution to something, time for a
+program to run, correctness, length and complexity of code, cleaner,
+simpler code versus code that is more complex, harder to read, but may
+run more efficiently, etc.
+
+In this case, I don't need a Python program. I started out doing stuff
+in the Python REPL, but turns out I don't even need that: just highlight
+certain digits in the given patterns and inspect what is left and what
+is right, try to build up the number that is consistent with the given
+patterns. Solved.
+
+# EOF
 
