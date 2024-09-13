@@ -1,0 +1,92 @@
+
+2024Sep13
+
+Project Euler, Problem #79
+    https://projecteuler.net/problem=79
+========================================
+
+DESCRIPTION
+
+
+DISCUSSION
+    This is another problem where I'm going to first attempt to just
+solve this manually, without any code. Well, without a format code file:
+I do a few things in the interactive Python REPL.
+After getting the text file imported...
+
+>>> ints
+[319, 680, 180, 690, 129, 620, 762, 689, 762, 318, 368, 710, 720, 710, 629, 168, 160, 689, 716, 731, 736, 729, 316, 729, 729, 710, 769, 290, 719, 680, 318, 389, 162, 289, 162, 718, 729, 319, 790, 680, 890, 362, 319, 760, 316, 729, 380, 319, 728, 716]
+
+If you then iterate through that, and split up all the digits and make a
+set out of it:
+
+>>> _set
+{'0', '6', '1', '3', '2', '8', '9', '7'}
+
+Sorted, thats:
+['0', '1', '2', '3', '6', '7', '8', '9']
+
+OK, so 4 and 5 are missing. That means the number has to be at least 8
+digits, (including all the digits except 4, 5).
+
+Let's try to form a single int with just 8 digits.
+
+So, the first pattern is 680.
+That tells us 8 is to the right of 6 and 0 is right of 8.
+
+Second pattern is 319. Well, that tells us about the relationship
+between 3 and 1 and 3 and 9 and 1 and 9, but doesn't tell us anything
+
+if you just do a search in web browser (Chrome) for '0' at:
+    https://projecteuler.net/resources/documents/0079_keylog.txt
+
+all of the given patterns that include 0 have it in the last position.
+This seems like 0 is last?
+
+Let's try to build on this:
+
+680
+
+If you similarly do a search on '9', it always appears in last position
+or in the middle position, with '0' following.
+
+6890
+
+Seems like we are making progress here. What all appears to the right of
+'8'? Just scanning through the visually highlighted text, 0 and 9 only.
+Seems like the number ends ...890? That's consistent with what I've got
+so far.
+
+7 seems to appear in the first column a lot. And 7 appears only in the
+first column. This implies that it is unlikely any digit is left of 7.
+
+76890
+
+3 appears in the first column quite a bit too. What's left of 3? 7 is
+the only thing given.
+
+736890
+
+What appears (immediately in the patterns) to the right of 3?
+{1, 6, 8}. 6 and 8 are alredy in my working pattern, let's work from
+this:
+
+7316890
+
+Double check: what appears immediately left of 1 (in given patterns)?
+Only: {3, 7}.
+That's consistent.
+
+I've already placed 7 of the digits. What's missing? 2.
+Whats left of 2 (one or two positions left of 2) in given patterns?
+{1, 3, 6, 7}
+
+Let's try this: 
+73162890
+
+*--------------------------------*
+| 73162890 accepted on 2024Sep13 |
+*--------------------------------*
+
+
+
