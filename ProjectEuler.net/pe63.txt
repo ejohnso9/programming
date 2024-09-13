@@ -1,0 +1,224 @@
+
+2024Sep12
+
+Project Euler, Problem #63
+    https://projecteuler.net/problem=63
+========================================
+
+DESCRIPTION:
+    The 5-digit number, 16807 = 7**5, is also a fifth power.
+    Similarly, the 9-digit number, 134217728 = 8**9, is a ninth power.
+
+How many n-digit positive integers exist which are also an nth power?
+
+
+DISCUSSION
+    First of all, for this problem, I didn't write any code. I evaluated
+a few things in the interactive Pyton REPL, but never created a
+source file.
+
+    My first thought was that there's an infinite number of such
+numbers, since neither the bases nor the powers are limited. But it
+wouldn't make sense to ask such a question if that where the case, so
+that must be wrong.
+
+    Then I thought maybe the bases are limited to digits 1 through 9?
+Well, they are, but that may not be obvious. Let's consider the power of
+1.  1 ** 1 == 1 which is a 1-digit number. Anything raised to the 1th
+power is the number itself, and so all the digits 1-9 are 1-digit
+numbers. But 10 is already too big for that pattern:
+    10 ** 1 == 10 is a two digit number!
+
+Let's look at the squares:
+
+>>> [i ** 2 for i in range(1, 10)]
+[1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+1, 2, and 3 are single digit numbers but 4 - 9 are two digit numbers.
+10 ** 2 is 100, which is a 3 digit number (obviously) and fails to meet
+the criteria.
+
+>>> [i ** 3 for i in range(1, 10)]
+[1, 8, 27, 64, 125, 216, 343, 512, 729]
+
+The first 4 cubes aren't big enough to be 3-digit numbers, but the
+others are.  At this point I started thinking about a different pattern.
+
+9 is almost 10. 9 ** 2 is 81, which is 81% of 10 ** 2 == 100.
+
+9 ** 3 is 729, which is about 73% of 1000.
+
+9 ** 4 is 6561, which is now only about 65% of 10000.
+
+As the powers go up, we're getting closer and closer to
+    base ** n not being big enough to be an n-digit number.
+
+
+So, then I wrote this:
+
+>>> sq9 = [(x, 9 ** x) for x in range(1, 20)]
+>>> sq9
+[(1, 9), (2, 81), (3, 729), (4, 6561), (5, 59049), (6, 531441), (7,
+4782969), (8, 43046721), (9, 387420489), (10, 3486784401), (11,
+31381059609), (12, 282429536481), (13, 2541865828329), (14,
+22876792454961), (15, 205891132094649), (16, 1853020188851841), (17,
+16677181699666569), (18, 150094635296999121), (19, 1350851717672992089)]
+
+
+and it quickly became obvious that counting digits is a pain, and I
+didn't feel like writing the expression for converting the number to a
+string and measuring the length of it.
+
+I was alredy thinking about what does it mean to be an n-digit number?
+The log of 100 is 2, and the log of 10 is 1. The log of a 2-digit
+number, L2, is therefore:  1 <= L2 < 2.
+
+So, then I formed this expression to look at how high the power of 9 has
+to go before 9 ** n is no longer an n-digit number:
+
+>>> b = 9; [(x, b ** x, log(b**x)) for x in range(1, 30)]
+[(1, 9, 0.9542425094393249),
+(2, 81, 1.9084850188786497),
+(3, 729, 2.8627275283179747),
+(4, 6561, 3.8169700377572995),
+(5, 59049, 4.771212547196624),
+(6, 531441, 5.7254550566359494),
+(7, 4782969, 6.679697566075274),
+(8, 43046721, 7.633940075514599),
+(9, 387420489, 8.588182584953923),
+(10, 3486784401, 9.542425094393248),
+(11, 31381059609, 10.496667603832574),
+(12, 282429536481, 11.450910113271899),
+(13, 2541865828329, 12.405152622711224),
+(14, 22876792454961, 13.359395132150548),
+(15, 205891132094649, 14.313637641589873),
+(16, 1853020188851841, 15.267880151029198),
+(17, 16677181699666569, 16.22212266046852),
+(18, 150094635296999121, 17.176365169907847),
+(19, 1350851717672992089, 18.13060767934717),
+(20, 12157665459056928801, 19.084850188786497),
+(21, 109418989131512359209, 20.039092698225822),
+(22, 984770902183611232881, 20.993335207665147),
+(23, 8862938119652501095929, 21.947577717104473),
+(24, 79766443076872509863361, 22.901820226543798),
+(25, 717897987691852588770249, 23.856062735983123),
+(26, 6461081889226673298932241, 24.810305245422448),
+(27, 58149737003040059690390169, 25.764547754861773),
+(28, 523347633027360537213511521, 26.718790264301095),
+(29, 4710128697246244834921603689, 27.67303277374042)]
+
+I'm looking for a number where the log of 9 raised to that power is more
+than 1 less than the power. The integer portion of the logs of the
+numbers are incrementing by 1 number on every tuple until we get to 20
+repeated, for powers 21, 22.
+
+That is, 9 ** 21 is a 21-digit number, but 9 ** 22 is also a 21-digit
+number. That's the first place where the log of the number is more
+than one less than the base raised to the power for base 9.
+
+9 ** 1 == 9, a 1-digit number
+9 ** 2 == 18, a 2-digit number
+...
+9 ** 21 is a 21-digit number
+
+That's 21 such integers meeting the criteria.
+
+When you do that same thing for 8, you don't need to go as far as 21:
+
+>>> b = 8; [(p, b ** p, log(b**p)) for p in range(1, 20)]
+[(1, 8, 0.9030899869919435),
+(2, 64, 1.806179973983887),
+(3, 512, 2.709269960975831),
+(4, 4096, 3.612359947967774),
+(5, 32768, 4.515449934959718),
+(6, 262144, 5.418539921951662),
+(7, 2097152, 6.321629908943605),
+(8, 16777216, 7.224719895935548),
+(9, 134217728, 8.127809882927492),
+(10, 1073741824, 9.030899869919436),
+(11, 8589934592, 9.93398985691138),
+(12, 68719476736, 10.837079843903323),
+(13, 549755813888, 11.740169830895267),
+(14, 4398046511104, 12.64325981788721),
+(15, 35184372088832, 13.546349804879155),
+(16, 281474976710656, 14.449439791871097),
+(17, 2251799813685248, 15.35252977886304),
+(18, 18014398509481984, 16.255619765854984),
+(19, 144115188075855872, 17.158709752846928)]
+
+
+When you wrap text this way, you can actually see where the pattern
+breaks. 8 ** 10 has a log which is no more than 1 less than 10.
+But 8 ** 11 has a log which is more than 1 below 11.
+That is, 8 ** 10 is a 10-digit number but 8 ** 11 is ALSO a 10-digit
+number.
+
+So, for base == 8, there are are 10 powers that fit the requirements:
+    p = [1..10]
+
+In this way, I found that 7 ** 6 is a 6-digit number, but so is 7 ** 7.
+6 numbers for base == 7.
+
+6 ** 4 is 1296, a 4-digit number, but so is 6 ** 5 == 7776.
+4 numbers for base == 6.
+
+5 cubed is 125, but 5 ** 4 is 625, so 3 numbers there.
+
+4 squared == 16 works, but 4 cubed == 64 is already too small.
+2 numbers there.
+
+3 ** 1 is 3, but 3 ** 2 == 9 is still a 1-digit number.
+So, one case there for base 3.
+
+For bases 2 and 1, power == 1 is the only one that works.
+
+>>> sum([21, 10, 6, 4, 3, 2, 1, 1, 1])
+49
+
+*--------------------------*
+| 49 accepted on 2024Sep12 |
+*--------------------------*
+
+
+A word on efficiency...
+
+The expressions above are actually doing relatively large
+exponentiations. For example, when looking at base 9:
+
+(29, 4710128697246244834921603689, 27.67303277374042)]
+
+That is, 9 ** 29 is computed as 4710128697246244834921603689.
+That's actually computed a second time and the log of that taken.
+
+>>> s = '4710128697246244834921603689'
+>>> len(s)
+28
+
+But note that:
+>>> from math import log10 as log
+>>> 29 * log(9)
+27.67303277374042
+
+I didn't benchmark it, but I suspect that that is far faster than
+actually computing 9 ** 29.
+
+Still, on my desktop computer, Python can print out the results to:
+>>> b = 9; [(x, b ** x, log(b**x)) for x in range(1, 30)]
+
+In something like a second.
+I can wait literally a second when doing this kind of work. That's not
+unreasonable.
+
+I could write code to iterate upwards to look at where
+ n - (n * log(base)) > 1.0
+
+I essentially did that, manually, interactively, except I was evaluating
+base ** n where base was 9, then 8, etc. the amount of computation going
+down each time from something on the order of a second.
+
+As problem #99 drives home, logs are probably the way to go when you
+have to deal with very large numbers. If it were more than just a few
+seconds to dump out the data as shown above, I would definitely
+benchmark each way and better understand the costs.
+
+
