@@ -14,7 +14,7 @@ How many n-digit positive integers exist which are also an nth power?
 
 DISCUSSION
     First of all, for this problem, I didn't write any code. I evaluated
-a few things in the interactive Pyton REPL, but never created a
+a few things in the interactive Python REPL, but never created a
 source file.
 
     My first thought was that there's an infinite number of such
@@ -27,7 +27,7 @@ Well, they are, but that may not be obvious. Let's consider the power of
 1.  1 ** 1 == 1 which is a 1-digit number. Anything raised to the 1th
 power is the number itself, and so all the digits 1-9 are 1-digit
 numbers. But 10 is already too big for that pattern:
-    10 ** 1 == 10 is a two digit number!
+    10 ** 1 == 10 is a two digit number.
 
 Let's look at the squares:
 
@@ -36,7 +36,8 @@ Let's look at the squares:
 
 1, 2, and 3 are single digit numbers but 4 - 9 are two digit numbers.
 10 ** 2 is 100, which is a 3 digit number (obviously) and fails to meet
-the criteria.
+the criteria. So, 10 and any base larger than 10 are always going to
+fail: they are too big for the requirements starting at power 1.
 
 >>> [i ** 3 for i in range(1, 10)]
 [1, 8, 27, 64, 125, 216, 343, 512, 729]
@@ -69,7 +70,7 @@ and it quickly became obvious that counting digits is a pain, and I
 didn't feel like writing the expression for converting the number to a
 string and measuring the length of it.
 
-I was alredy thinking about what does it mean to be an n-digit number?
+I was already thinking about what does it mean to be an n-digit number?
 The log of 100 is 2, and the log of 10 is 1. The log of a 2-digit
 number, L2, is therefore:  1 <= L2 < 2.
 
@@ -127,14 +128,14 @@ When you do that same thing for 8, you don't need to go as far as 21:
 
 >>> b = 8; [(p, b ** p, log(b**p)) for p in range(1, 20)]
 [(1, 8, 0.9030899869919435),
-(2, 64, 1.806179973983887),
-(3, 512, 2.709269960975831),
-(4, 4096, 3.612359947967774),
-(5, 32768, 4.515449934959718),
-(6, 262144, 5.418539921951662),
-(7, 2097152, 6.321629908943605),
-(8, 16777216, 7.224719895935548),
-(9, 134217728, 8.127809882927492),
+ (2, 64, 1.806179973983887),
+ (3, 512, 2.709269960975831),
+ (4, 4096, 3.612359947967774),
+ (5, 32768, 4.515449934959718),
+ (6, 262144, 5.418539921951662),
+ (7, 2097152, 6.321629908943605),
+ (8, 16777216, 7.224719895935548),
+ (9, 134217728, 8.127809882927492),
 (10, 1073741824, 9.030899869919436),
 (11, 8589934592, 9.93398985691138),
 (12, 68719476736, 10.837079843903323),
