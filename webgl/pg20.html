@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+STATUS:
+    WORKING on 2024Dec30
+
+DESCRIPTION:
+    Page 20 listing of "WebGL Up and Running",
+    by Tony Parisi, ISBN: 978-1-449-32357-8
+
+    GitHub repo: https://github.com/tparisi/WebGLBook
+
+    Should display a black square with a white square centered within
+    it, as seen in the book, Figure 1-5, pg. 16.  This is effectively
+    the same program, but using the ThreeJS library.
+-->
+<html
+  <head>
+    <title>A Simple Three.js Page (WebGL-UAR, Chapter 1, pg 20)</title>
+    <script src="../libs/Three.js"></script>
+
+<script>
+function onLoad()
+{
+    // Grab our container div
+    var container = document.getElementById("container");
+
+    // Create the Three.js renderer, add it to our div
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    container.appendChild(renderer.domElement);
+
+    // Create a new Three.js scene
+    var scene = new THREE.Scene();
+
+    // Create a camera and add it to the scene
+    var camera = new THREE.PerspectiveCamera(
+        45, container.offsetWidth / container.offsetHeight, 1, 4000);
+    camera.position.set(0, 0, 3.333);
+    scene.add(camera);
+
+    // Now, create a rectangle and add it to the scene
+    var geometry = new THREE.PlaneGeometry(1, 1);
+    var mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
+    scene.add(mesh);
+
+    // Render it
+    renderer.render(scene, camera);
+}
+
+</script>
+
+  </head>
+
+<body onload="onLoad()">
+
+    <h2>Example 2-1 (UAR, pg 20)</h2>
+    <p> I typed this in from the book (OMG: working on first load!), but
+    it is essentially the same as what's on the website.</p>
+
+    <p>(But note that what's rendered is from my local file, not loaded
+    from this URL:</p>
+        <a href="https://github.com/tparisi/WebGLBook/blob/master/Chapter%202/example2-1.html">
+            example2-1.html</a>
+    </p>
+
+    <div id="container"
+        style="width:500px; height:500px; background-color:#000000">
+    </div>
+
+</body>
+</html>
