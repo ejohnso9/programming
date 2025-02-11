@@ -1,0 +1,97 @@
+
+Clojure basically IS-A LISP
+; -> means": yields or returns
+
+; semicolon takes place of Python's: '#' for comments
+
+; forms
+"bare string is legal but doesn't do anything"
+("this" "is" "a" "list")
+
+; operations
+; + - * /  ;but see "ratio" below
+(str "foo" "bar") ; "foobar"  ;i.e., concatenation
+
+; pg37
+(if true
+    "My True value."
+    "No.")
+
+; pg38
+(if tf
+    (do (println "stmt 1")
+        "true_value")
+    (do (println "stmt 2")
+        "false_value"))
+
+
+; when - like if and do but w/o else branch
+(when true
+    (println "Stmt 1")
+    (println "Stmt 2")
+    (println "Stmt 3")
+    "last value")  ; value is nil if condition is false
+
+; pg 39 nil => no value
+(nil? 42) ;false
+(nil? nil) ;true
+;NB!!! nil and false are falsy, everything else is truthy
+(nil? "") ;false
+(nil? ()) ;false
+(nil? 0) ;false
+
+; = equality testing  pg 39, 40  NB: not like SQL null tri-state comparison!
+; NB: same operator used for string, int, float, ...
+(= nil nil)  ;true
+(= nil false) ;false
+(= false nil) ;false
+(= false false) ;true
+(= 1 1.0) ;false!!!
+
+; pg 40
+; or: first truthy value (or last value if none are truthy)
+(or false nil false "no") ; -> "no"
+
+; and: first falsy value (or last truthy value if none are falsy)
+(and 1 42 "five" "me") ; "me"
+(and 1 false 42 "five" "me") ; false
+
+; def
+user=> (def myList ["one" "two" "three"])  ; a literal vector
+#'user/myList
+user=> myList
+["one" "two" "three"]
+
+; def: define a value (pgs 40-41)
+(def x 42)
+(def x 1)  ; legal, discouraged ; see chapter 10
+
+; defn: function definition NB: def *AND* defn:*NOT* same operation!
+; a function taking one param
+(defn f [arg1] (str "you passed: " arg1))
+
+; Numbers (pg 42)
+1/5  ; a ratio!
+(/ 1 5) ; same thing
+(mod 10 3) ; 1
+
+; Strings (pg 42) NB: no string interpolation, no single quote usage
+(def name "Chewbacca")
+(str "Sorry," "you stepped on my foot" " - " name)
+
+
+; Maps: two kinds: hash maps, sorted maps
+; keywords covered in next section
+; map value can be any type
+{} ; an empty map
+{:key-1 "One" :key-2 "Two" :empty-map {}}
+(hash-map :a 1 :b 2)
+; => {:a 1 :b 2}  ; i.e., alternate syntax for braces to def a map
+
+(def m {:a "foo" :b "bar"})
+(get m :b) ; => "bar"
+
+
+
+
+
