@@ -4,7 +4,10 @@
 Python functions collected from various sources on the web.
 """
 
+
+from functools import reduce
 import sys
+
 
 # source: http://stackoverflow.com/questions/10035752/elegant-python-code-for-integer-partitioning
 def partition(number, perms=False):
