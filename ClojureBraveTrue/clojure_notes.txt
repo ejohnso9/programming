@@ -85,12 +85,18 @@ user=> myList
 ; map value can be any type
 {} ; an empty map
 {:key-1 "One" :key-2 "Two" :empty-map {}}
-(hash-map :a 1 :b 2)
-; => {:a 1 :b 2}  ; i.e., alternate syntax for braces to def a map
-
+(hash-map :a 1 :b 2) ; => {:a 1 :b 2}  ;i.e., alternate syntax for braces to def a map
 (def m {:a "foo" :b "bar"})
 (get m :b) ; => "bar"
+; alternatively, use the map like a function
+(m :a) ; => "foo"
 
+
+; Keywords (pg 44)
+(:a m) ; => "foo"  <- HEY!!! PAY ATTENTION HERE! UNEXPECTED!
+; both (someMap :keyword) *AND* (:keyword someMap) are accessing the map like: (get myMap :key)
+; default: You can provide a default value in the access call!
+(:spam {:bacon 12 :ham 22 :foo "bar"} "goo")
 
 
 
