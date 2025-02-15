@@ -3,26 +3,28 @@
 So, a few things to note about the Lua language...
 
 conditionals treat the special value nil and false as false,
-*EVERYTHING* else is treated as true.
+*EVERYTHING* else is treated as true (
 
 Here are a few results that might seem surprising:
 
-> 0 and 1
+> 0 and 1  -- NB: 0 is not falsy
 1
-> 1 and 0
+> 1 and 0  -- NB: 0 is not falsy
 0
-> nil and 0
+> nil and 0  -- nil is falsy, but 0 isn't: therefore, the 2nd (truthy) value
 nil
-> 0 and nil
+> 0 and nil  -- 1st truthy arg continues the evalaution to second arg
 nil
-> not 0
+> not 0  # not truthy is false
 false
 > not not ""
 true
 
 
--- For 'and', when the first argument is falsy, you get the first argument.
--- Otherwise, you get the second argument.
+-- For 'and', when the first argument is falsy (by Lua's sort of
+-- counter-intuitive def'n, of course), you get the first argument.
+-- Otherwise (first arg truthy) you get the second argument, regardless
+-- of it's value.
 
 a and b or c    -- is equivalent to the C tertiary test: a ? b : c
                 -- provided b is truthy
