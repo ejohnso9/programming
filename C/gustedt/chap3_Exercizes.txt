@@ -1,0 +1,56 @@
+
+[Exs 1] Add the if (i) condition to the program, and compare the output
+    to the previous.
+
+
+Here, "the previous" I am taking as the output of Listing 1.1, my file
+    'L_1.1.c'a, concatenated direclty here:
+
+-------------------------------------------------
+element 0 is 9, 	its square is 81
+element 1 is 2.9, 	its square is 8.41
+element 2 is 0, 	its square is 0
+element 3 is 7e-05, 	its square is 4.9e-09
+element 4 is 3e+25, 	its square is 9e+50
+-------------------------------------------------
+
+file: ch3_Exs_1.c is same as L_1.1.c but with the additional if
+statement as directed at end of pg 28. Output should be identical to the
+last 4 lines as above (i.e., no output of the 1st line): (again, program
+output concatenated directly here:
+
+-------------------------------------------------
+element 1 is 2.9, 	its square is 8.41
+element 2 is 0, 	its square is 0
+element 3 is 7e-05, 	its square is 4.9e-09
+element 4 is 3e+25, 	its square is 9e+50
+-------------------------------------------------
+
+Yes, precisely as predicted no surprises (to me) there.
+This is trivial material (as of yet).
+
+
+[Exs 2] Try to imagine what ahppens when i has value 0 and is
+    decremented by means of the operator --.
+
+    Well, I suppose a compiler could be sophisticated enough to spot
+this as a problem during compilation, but my guess is that this is going
+to throw a runtime error and not any compilation error.
+
+    I was actually quite surprised when I first spotted the listing at
+the top of page 31: the text sort of implies that this third rendering
+of the loop performs the same as the others. Technically, it says that
+it counts down from 9 to 0. Ok, yeah, and then...? Rather than simply
+imagine what happens, let's test:
+    file: pg31_size_t_iter.c
+
+    OK, well, that is surprsing to me: this program works, no compile
+*OR* runtime error is thrown. We simply break out of the loop - that is,
+code does appear to be completely equivalent. I perhaps should have
+guessed that, having observed Gustedt's attention to detail to this
+point, but the behaviour is still surprising to me, given the code. That
+would make a good interview question, or a good questions for an
+interviewer, if I should ever do a C interview again.
+
+
+
