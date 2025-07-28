@@ -1,5 +1,9 @@
 
-
+Gnu Scheme implementation available at PythonAnywhere:
 /usr/bin/guile
+
+
+SICP 2E
+https://web.mit.edu/6.001/6.037/sicp.pdf
 
 
