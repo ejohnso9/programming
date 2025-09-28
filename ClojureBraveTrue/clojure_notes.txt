@@ -13,6 +13,8 @@ Clojure basically IS-A LISP
 (str "foo" "bar") ; "foobar"  ;i.e., concatenation
 
 ; pg37
+; NB: in this form, you can only have 1 stmt for the true, false clauses
+;     (see next form)
 (if true
     "My True value."
     "No.")
@@ -97,7 +99,6 @@ user=> myList
 ; both (someMap :keyword) *AND* (:keyword someMap) are accessing the map like: (get myMap :key)
 ; default: You can provide a default value in the access call!
 (:spam {:bacon 12 :ham 22 :foo "bar"} "goo")
-
 
 
 
