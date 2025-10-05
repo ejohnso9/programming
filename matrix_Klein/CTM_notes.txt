@@ -1,0 +1,49 @@
+
+2024Aug06
+----------
+
+Let's try to get through at least: "Chatper 0: The Function"
+
+# literal set:
+suits = set('CDHS')
+{'C', 'D', 'H', 'S'}  # card suits: clubs, diamonds, ...
+
+
+"Cardinality"
+    the length or size of a set
+    |S|
+    |suits| # is 4
+
+"Catesian Product"
+    S x T
+    let nums be: {1, 2, 3}
+    suits x nums is: {C1, C2, C3, D1, D2, ...}
+    |suits x nums| is: 12
+
+"Function": a rule or relationship betwee input and output
+    the output is also known as the "image" of the input
+    the input is the "pre-image" of the output
+    f(domain) -> range
+    Also sometimes known as a "mapping" (lens model)
+    "q maps to r": q |-> r  (or: q -> r)  (pg 3)
+    Note that a function can have multiple inputs (of course)...
+        mult(x, y)
+            (1, 1) -> 1
+            (1, 2) -> 2
+            (2, 2) -> 4
+            (2, 3) -> 6
+            ...
+    "Image of q under f": f(q)
+    "q maps to r under f": r = f(q)
+
+    The notation: f: D -> F
+        "f is a function mapping the domain D to the co-domain F"
+        NB: "Note that one has some leeway in choosing the co-diomain
+        since not all of tis members need be outputs." (pg 3)
+
+        Let 'R' here mean the "script" symbol for the reals.
+
+        e.g., cos: R -> R
+            of course, the range of cos is clamped to: [-1, 1]
+
+
