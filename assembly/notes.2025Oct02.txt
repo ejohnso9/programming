@@ -1,0 +1,31 @@
+
+Other Resources
+    https://sonictk.github.io/asm_tutorial/
+
+
+
+I am trying to follow along with this video:
+    # Low Level: You can learn assembly in 10 minutes
+    https://www.youtube.com/watch?v=6S5KRJv-7RU
+
+PythonAnywhere has 'as' and 'ld':
+
+$ which as
+/usr/bin/as
+$ which ld
+/usr/bin/ld
+
+# to assemble:
+$ as one.s -o one.o
+
+# to link
+$ gcc -o one one.o -nostdlib -static
+
+# if you run that (with just _start defined), it is expected to crash.
+# The key is that 'as' was invoked w/o error.
+
+
+# The web page he is showing at 6:01 is:
+https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+    
+
