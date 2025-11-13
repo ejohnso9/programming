@@ -7,8 +7,14 @@
 ; AUTHOR: Erik Johnson
 ; DATE: 2025Nov1
 ;
-(newline)
+; TESTS given on pgs 24 - 25
+;   number?
+;   symbol?
+;   boolean?
+;   pair?  ; i.e., list?
+;   procedure?
 
+(newline)
 
 ; If the operands a, b evaluate to any values, what is...
 ; (NB: using 'a for alpha, 'b for beta (ASCII)

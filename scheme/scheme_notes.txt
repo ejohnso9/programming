@@ -7,24 +7,28 @@
 
 
 # SICP 2E, "Structure and Interpretaton of Computer Programs"
-https://web.mit.edu/6.001/6.037/sicp.pdf
+    https://web.mit.edu/6.001/6.037/sicp.pdf
+    # SICP video lectures: Abelson, Sussman:
+    https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video_galleries/video-lectures/
 
-
-# the 6.001 course @MIT (i.e., the class that goes with the book, above)
-https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/download/
+    # the 6.001 course @MIT (i.e., the class that goes with the book, above)
+    https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/download/
 
 
 "The Supercomputer Toolkit: A General Framework for Special Purpose
 Computing"  (I belive this is mentioned in SICP, integration of motion
 of the solar system, 2 order magnitude higher.)
-https://shiftleft.com/mirrors/www.hpl.hp.com/techreports/94/HPL-94-30.pdf
+    https://shiftleft.com/mirrors/www.hpl.hp.com/techreports/94/HPL-94-30.pdf
 
 
 https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
 
 
 Brian Harvey, Professor @ UC Berkeley's page
-https://people.eecs.berkeley.edu/~bh/
+    https://people.eecs.berkeley.edu/~bh/
+    [ ] Look for his PDF download of "Simply Scheme"
 
-Look for his PDF download of "Simply Scheme"
 
+2025Nov07
+GAMBIT Scheme
+    https://www.gambitscheme.org/
