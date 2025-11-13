@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""
+"""
 
 import sys
 
@@ -24,6 +26,9 @@ def isSafe(i_ls: list) -> bool:
 
 
 def isSafe2(i_ls: list, idx: int) -> bool:
+    """
+    Evaluation of a list of ints for whether it is safe under the modified rules.
+    """
 
     incs, decs, errs = 0, 0, 0
     for i in range(len(i_ls) - 1):
@@ -47,20 +52,21 @@ def isSafe2(i_ls: list, idx: int) -> bool:
     return tf
 
 
-def main(lines: list) -> int:
+def main(lines: list, part: int) -> int:
 
     # Part 1
-    count = 0
-    for i, line in enumerate(lines):
-        try:
-            ls = [int(w) for w in line.strip().split()]
-            if isSafe(ls):
-                count += 1
-        except ValueError as ve_x:
-            print(f"ValueError at i={i}")
+    if part == 1:
+        count = 0
+        for i, line in enumerate(lines):
+            try:
+                ls = [int(w) for w in line.strip().split()]
+                if isSafe(ls):
+                    count += 1
+            except ValueError as ve_x:
+                print(f"ValueError at i={i}")
 
-    # Yay!!! First run: 524 accepted 2024Dec27 12:06AM
-    print(f"Part 1 count is: {count}")
+        # Yay!!! First run: 524 accepted 2024Dec27 12:06AM
+        print(f"Part 1 count is: {count}")
 
     # Part 2
     count = 0
@@ -84,7 +90,7 @@ if __name__ == '__main__':
         lines = fd.readlines()
     print(f"read {len(lines)} lines from '{filename}'")
 
-    rc = main(lines)
+    rc = main(lines, part=2)
     sys.exit(rc)
 
 # EOF
