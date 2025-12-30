@@ -11,8 +11,9 @@
 ;   number?
 ;   symbol?
 ;   boolean?
-;   pair?  ; i.e., list?
+;   pair?  ; i.e., "is list?"
 ;   procedure?
+
 
 (newline)
 
@@ -57,7 +58,7 @@
 ;   OOPS: I initially got this wrong...
 ;   (cons a '()) is: (a)
 ;   and cdr called on any one-element list is a zero-element list: '()
-;   that *IS* null (sometimes returned in LISP for false / #f)
+;   that *IS* null (sometimes returned in LISP imps. as the value for false / #f)
 ;   i.e., the answer is: #t / True
 (let* (
       (stmt "(null? (cdr (cons a '()))")
@@ -73,5 +74,21 @@
 ; Exercize 1.11 essentially asks what I said in d.
 ; Q: What is (null? (cdr ls))  ; where ls is a one-element ls?
 ; A: that's the one-element list minus the first element, which is: '()
-; which *IS* null?
+;    which *IS* null
+;
+(display "1.11 If a list ls contains only one item, what is: (null? (cdr ls)")
+(newline)
+(let* (
+      (ls '(a))
+      (stmt "(null? (cdr ls))")
+      (value (null? (cdr ls))) )
+  (display stmt)
+  (display "  is: ")
+  (display value)
+  (newline)
+  value  ; return value
+)
+(newline)
+
+; EOF
 
