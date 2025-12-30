@@ -1,0 +1,54 @@
+
+
+pg 9
+    (define ten 10) ; special form! (not a reg. func!)
+
+pg 10
+    (quote abc3)
+    'abc3 ; same as above
+
+pg 14 Constructing Lists
+    (cons 1 '())
+
+pg 19 Taking Lists Apart
+    (car ls) ; first element of list: ls
+    (cdr ls) ; a list: 2nd element on (of ls)
+
+pg 25
+    5 data types (each with a predicate func to test data with)
+    -------------------------------------------------------------
+    number      number?
+    symbol      symbol?
+    boolean     boolean?
+    pair        pair?
+    procedure   procedure?
+                ; ALSO: string? list? vector? char? null? port?
+
+
+
+    Tests
+    ---------
+    = < > <= >=  ; use w/ numbers
+    (< 4 5) ; #t
+    (<= 4 4) ; #t
+    (>= 4 2) ; #f
+    ; != is not an operator but you can...
+    (not (= 4 5)) ; #t
+
+    eq? ; symbol samenesss
+    (eq? (car '(Garield cat)) 'cat) ; #f! 'Garfield !same symbol
+    ; NB: constructed lists will be different, even it same data!
+    ; when used with lists, this tests list identity!
+    (eq? (cons 1 '(2 3) (cons 1 '(2 3)))  ; #f !!! two sep lists!
+
+    eqv? ; can include numbers, symbols, booleans
+    (eqv? '(1 2) '(1 2))  ; #t
+    (eqv? (cons 'a '(b c d)) (cons 'a '(b c d))  ; #f  what's going on here?
+    ; ChatGPT explained this as a subtle optimization where the
+    ; interpreter can re-use literals (in the first case, above)
+
+    equal?  ; for pairs, corresponding elements are testeted (i.e., this
+            ; is looking at values, not list identity)
+
+    ; narrower tests (i.e., ones that don't have to test their type) are
+    ; generally more efficient than ones that do)

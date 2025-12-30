@@ -1,0 +1,7 @@
+;
+; Excercizes for "Sheme and the Art of Programming", Springer, Friedman, 1989
+; ISBN: 0-262-19288-8
+;
+; AUTHOR: Erik Johnson
+; DATE: 2025Nov1
+;
