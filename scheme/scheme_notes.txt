@@ -1,4 +1,12 @@
 
+Scheme / LISP Notes
+
+solutions for exercizes in SICP
+    https://sicp-solutions.net/?utm_source=chatgpt.com
+
+# Paul Graham
+    "On Lisp", https://sep.turbifycdn.com/ty/cdn/paulgraham/onlisp.pdf
+
 # Guile (Gnu Scheme implementation available at PythonAnywhere)
 /usr/bin/guile  # $ guile
 
@@ -16,7 +24,7 @@
 
 
 "The Supercomputer Toolkit: A General Framework for Special Purpose
-Computing"  (I belive this is mentioned in SICP, integration of motion
+Computing"  (I believe this is mentioned in SICP, integration of motion
 of the solar system, 2 order magnitude higher.)
     https://shiftleft.com/mirrors/www.hpl.hp.com/techreports/94/HPL-94-30.pdf
 
@@ -32,3 +40,4 @@ Brian Harvey, Professor @ UC Berkeley's page
 2025Nov07
 GAMBIT Scheme
     https://www.gambitscheme.org/
+
