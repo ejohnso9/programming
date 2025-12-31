@@ -62,8 +62,16 @@ def riffle(ls: list[int], out: int = True) -> list[int]:
     return rv_ls
 
 
-# 4. TODO
+# 4. Even the odds (pg 12)
+def only_odd_digits(n: int) -> bool:
+    """Problem 4: is every digit in n odd?"""
+    return all([c in '13579' for c in str(n)])
 
+
+# 5. Cyclops numbers (pg 13)
+def is_cyclops(n: int) -> bool:
+    # length has to be odd
+    
 
 # ENTRY POINT
 if __name__ == '__main__':
