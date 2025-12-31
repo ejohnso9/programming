@@ -1,6 +1,38 @@
 
+NB: there is also a notes file under ~/notes/
+    [ ] TODO: pick a place, get the two files merged, cleaned up
+
+
+PE/COFF format Articles, Resources
+    
+    # 9 pages
+    "An In-Depth Look into the Win32 Portable Executable File Format, Part 1"
+    https://coffi.readthedocs.io/en/latest/pe_format_in_depth_look_part1.pdf
+
+
+    "An In-Depth Look into the Win32 Portable Executable File Format, Part 2"
+    https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/march/inside-windows-an-in-depth-look-into-the-win32-portable-executable-file-format-part-2
+
+    PE32+ is the 64-bit format. Essentially no new fields added, fields
+    only widened from 32 bits to 64 bits in places, one field deleted.
+
+
 Other Resources
+    # NASM Tutorial (64 bit)
+    https://cs.lmu.edu/~ray/notes/nasmtutorial/
+
     https://sonictk.github.io/asm_tutorial/
+    https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+    https://hex-rays.com/ida-free
+    https://www.youtube.com/watch?v=gfmRrPjnEw4
+
+    # binary reverse engineering u: Low Level
+    https://www.youtube.com/watch?v=gh2RXE9BIN8
+
+    https://sonictk.github.io/asm_tutorial/
+    https://github.com/0xAX/asm
+    https://learn.microsoft.com/en-us/windows/win32/debug/pe-format
+
 
 
 
@@ -29,3 +61,99 @@ $ gcc -o one one.o -nostdlib -static
 https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
     
 
+
+#
+# here is the other file, previosly under ~/notes/
+#
+
+
+Web Assembly
+    https://aralroca.com/blog/first-steps-webassembly-rust
+
+NASM
+    https://www.nasm.us/docs.php
+    https://cs.lmu.edu/~ray/notes/nasmtutorial/
+
+'dumpbin' is a MS Window utility for looking at PE/COFF files, not open
+source.
+If you ask ChatGPT about locating the source for that, it offers
+alternatives that do have source, such as the Python module 'pefile',
+'PEview'
+llvm-readobj / llvm-objdump
+    https://github.com/llvm/llvm-project
+https://github.com/radareorg/radare2, etc.
+
+http://retro.hansotten.nl/uploads/books/Programming_the_6502.pdf
+
+https://learn.microsoft.com/en-us/windows/win32/debug/pe-format
+https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/february/inside-windows-win32-portable-executable-file-format-in-detail
+https://coffi.readthedocs.io/en/latest/peering_inside_pe.pdf
+
+
+Matt Pietrek: wheaty.net
+
+Can you find source for MS Windows program 'dumpbin'?
+    Not the source: Python code to download the executble:
+        https://github.com/Delphier/dumpbin
+
+
+
+https://www.tutorialspoint.com/assembly_programming/index.htm
+
+https://www.codeproject.com/Articles/15971/Using-Inline-Assembly-in-C-C
+
+https://gcc.gnu.org/onlinedocs/gcc/extensions-to-the-c-language-family/how-to-use-inline-assembly-language-in-c-code.html
+
+https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+
+
+2025Oct02
+----------
+Using Python
+    see module 'pefile' (pip install pefile)
+https://github.com/0xAX/asm
+
+
+
+
+file: assembly_in_a_box
+-----------------------
+2025Sep16
+Seems to be current MS docs on PE format
+    https://learn.microsoft.com/en-us/windows/win32/debug/pe-format?redirectedfrom=MSDN
+
+
+
+<some time much earlier>
+So... I want to learn assembly.
+There is the 6502...
+    http://www.6502.org/tutorials/6502opcodes.html#VFLAG
+    https://skilldrick.github.io/easy6502/#intro
+
+
+But lots and lots of people have modern machines.
+There seem to be two main varieties:
+    Intel based chips (x86 or IA-32 (same thing?))
+    ARM based chips
+
+There is the Chrome V8:
+    https://v8.dev/
+    [ ] spend some time digging through stuff there.
+
+    V8 is Google’s open source high-performance JavaScript and WebAssembly
+    engine, written in C++. It is used in Chrome and in Node.js, among
+    others. It implements ECMAScript and WebAssembly, and runs on Windows,
+    macOS, and Linux systems that use x64, IA-32, or ARM processors. V8 can
+    be embedded into any C++ application.
+
+It seems to me like WebAssembly is likely to be a major focal point for
+anything cross-platform.
+
+    This "in a box" idea is to provide an enviroment where one can start
+doing real assembly work without having to muck with a real system
+(e.g., you don't want to risk munging your physcial system while fooling
+around with buggy assembly code).
+
+    Interpreters is one way around that...  running stuff 
+
+# EOF
