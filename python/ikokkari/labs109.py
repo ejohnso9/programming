@@ -42,7 +42,7 @@ def ryerson_letter_grade(n):
 def is_ascending(items: list[int]) -> bool:
     if len(items) in (0, 1):
         return True
-    return all([items[i] < items[i + 1] for i in range(len(items) - 1)])
+    return all(items[i] < items[i + 1] for i in range(len(items) - 1))
 
 
 # 3. Riffle shuffle kerfuffle (pg 11)
@@ -70,16 +70,61 @@ def only_odd_digits(n: int) -> bool:
 
 # 5. Cyclops numbers (pg 13)
 def is_cyclops(n: int) -> bool:
-    # length has to be odd
+    """predicate: middle digit 0, no other 0 digits in n"""
+    s = str(n)
+    if len(s) % 2 != 1:
+        return False
+    i = len(s) // 2
+    return s[i] == '0' and '0' not in s[:i] + s[i+1:]
+
+
     
+#---------------------------------------------------------------------------------------------------
+# Problem Set #3:  
+# https://github.com/ikokkari/PythonProblems/blob/main/Third%20Python%20Problem%20Collection.pdf
+#---------------------------------------------------------------------------------------------------
+
+def baum_sweet(n: int) -> int:
+    """
+    1 if no odd-length 0 runs in the binary rep. of n, else 0
+    NB: switching var names from problem statement: n -> num
+    """
+
+    count = 0
+    rep = bin(n)[2:]  # the binary representation string: e.g., "100101"
+    for i in range(len(rep)):
+        if rep[i] == '0':
+            count += 1
+        elif rep[i] == '1': 
+            # did we just switch back to '1's from an odd sequence of '0'?
+            if count > 0 and count % 2:
+                return 0  # False: not Baum-Sweet (i.e., has odd seq. of 0)
+            count = 0
+
+    return 1 if count % 2 == 0 else 0
+
 
 # ENTRY POINT
 if __name__ == '__main__':
     # ls = list(range(1, 9))
-    ls = [0, 1]
-    shuffled = riffle(ls)
+    # ls = [0, 1]
+    # shuffled = riffle(ls)
+    # _ = 'STOP'
 
-    _ = 'STOP'
+    # TEST: 5. Cyclops numbers
+    # n Expected result
+    f = is_cyclops
+    test_data = [
+        (0, True),
+        (101, True),
+        (98053, True),
+        (777888999, False),
+        (1056, False),
+        (675409820, False),
+    ]
+    for n, exp in test_data:
+        print(f"f({n}) is {f(n)}")
+        # assert f(n) == tf 
 
 
 # EOF
