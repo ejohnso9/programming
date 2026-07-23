@@ -57,7 +57,7 @@
 ; d. (null? (cdr (cons a '()))
 ;   OOPS: I initially got this wrong...
 ;   (cons a '()) is: (a)
-;   and cdr called on any one-element list is a zero-element list: '()
+;   and cdr called on any one-element list the empty list: '()
 ;   that *IS* null (sometimes returned in LISP imps. as the value for false / #f)
 ;   i.e., the answer is: #t / True
 (let* (
@@ -76,16 +76,15 @@
 ; A: that's the one-element list minus the first element, which is: '()
 ;    which *IS* null
 ;
-(display "1.11 If a list ls contains only one item, what is: (null? (cdr ls)")
+(display "1.11 If a list ls contains only one item, what is: (null? (cdr ls))")
+(newline)
+(display "    ;; ls <- '(a) ;; (i.e., a 1-element list)")
 (newline)
 (let* (
       (ls '(a))
       (stmt "(null? (cdr ls))")
-      (value (null? (cdr ls))) )
-  (display stmt)
-  (display "  is: ")
-  (display value)
-  (newline)
+      (value (null? (cdr ls))))
+  (format #t "    ~a is: ~a~%" stmt value)
   value  ; return value
 )
 (newline)
