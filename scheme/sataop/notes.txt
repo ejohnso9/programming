@@ -1,4 +1,7 @@
-
+;; comments start with a ';' (as in Scheme code)
+;; Page numbers refer to:
+;; "Scheme and the Art of Programming", George Springer and Daniel P. Friedman
+''
 
 pg 9
     (define ten 10) ; special form! (not a reg. func!)
@@ -8,7 +11,7 @@ pg 10
     'abc3 ; same as above
 
 pg 14 Constructing Lists
-    (cons 1 '())
+    (cons 1 '())  ; -> (1)
 
 pg 19 Taking Lists Apart
     (car ls) ; first element of list: ls
@@ -36,10 +39,10 @@ pg 25
     (not (= 4 5)) ; #t
 
     eq? ; symbol samenesss
-    (eq? (car '(Garield cat)) 'cat) ; #f! 'Garfield !same symbol
-    ; NB: constructed lists will be different, even it same data!
+    (eq? (car '(Garfield cat)) 'cat) ; #f! 'Garfield !same symbol
+    ; NB: constructed lists will be different, even if same data!
     ; when used with lists, this tests list identity!
-    (eq? (cons 1 '(2 3) (cons 1 '(2 3)))  ; #f !!! two sep lists!
+    (eq? (cons 1 '(2 3) (cons 1 '(2 3)))  ; #f !!! two diff lists! (w/ same elements)
 
     eqv? ; can include numbers, symbols, booleans
     (eqv? '(1 2) '(1 2))  ; #t

@@ -1,5 +1,11 @@
 
 Scheme / LISP Notes
+===================
+
+
+"A Scheme Primer"
+    https://files.spritely.institute/papers/scheme-primer.html
+
 
 solutions for exercizes in SICP
     https://sicp-solutions.net/?utm_source=chatgpt.com
@@ -40,4 +46,8 @@ Brian Harvey, Professor @ UC Berkeley's page
 2025Nov07
 GAMBIT Scheme
     https://www.gambitscheme.org/
+
+LISP
+    https://upload.wikimedia.org/wikipedia/commons/d/d4/Peter_Norvig._Paradigms_of_AI_Programming.pdf
+
 
