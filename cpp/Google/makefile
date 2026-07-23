@@ -26,6 +26,14 @@ example2.o: example2.cpp
 	$(CXX) $(CXXFLAGS) -c example2.cpp
 
 
+# example3
+example3: example2.o
+	$(CXX) $(CXXFLAGS) -o example3 example3.o
+
+example3.o: example2.cpp
+	$(CXX) $(CXXFLAGS) -c example3.cpp
+
+
 # applies to all
 clean:
-	rm -f hello hello2 example2 *.o
+	rm -f a.out hello hello2 example2 example3 *.o
