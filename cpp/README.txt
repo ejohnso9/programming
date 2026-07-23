@@ -13,3 +13,16 @@ For example:
 
     $ g++ -o hello hello.cpp
 
+
+// ask ChatGPT about std::bein(), std::end()
+// [ ] play with these
+for (auto x : v) {
+    ...
+}
+
+This is basically equivalent to:
+
+for (auto it = std::begin(v); it != std::end(v); ++it) {
+    auto x = *it;
+    ...
+}
