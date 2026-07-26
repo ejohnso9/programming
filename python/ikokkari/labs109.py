@@ -78,6 +78,27 @@ def is_cyclops(n: int) -> bool:
     return s[i] == '0' and '0' not in s[:i] + s[i+1:]
 
 
+# 6. Domino cycle (pg 14)
+def domino_cycle(tiles) -> bool:
+    """dominoes (2-tuples) form a loop
+    (0 tiles: True, 1 tile: if ends match)
+    """
+
+    # degenerate cases
+    if tiles == []:
+        return True  # empty list taken as a cycle
+
+    if len(tiles) == 1:
+        t = tiles[0]
+        return t[0] == t[1]  # 1-tile cycle if ends match
+
+    # check the ends: 1st LH end has to match last RH end
+    if tiles[0][0] != tiles[-1][1]:
+        return False
+
+    # check all the inner pairings
+    return all(tiles[i][1] == tiles[i+1][0] for i in range(len(tiles) - 1))
+
     
 #---------------------------------------------------------------------------------------------------
 # Problem Set #3:  
