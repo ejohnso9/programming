@@ -77,6 +77,16 @@ def is_cyclops(n: int) -> bool:
     i = len(s) // 2
     return s[i] == '0' and '0' not in s[:i] + s[i+1:]
 
+# My previous version from 2025
+# 6. Domino cycle (pg 14) //passing on 2025Dec31
+# def domino_cycle(ls: list) -> bool:
+#     """
+#     Does the list of dominoes (2-tuples) form a valid loop of matching ends?
+#     """
+#     if ls == []:
+#         return True  # Degenerate case documented in problem statement
+#     inner_tf = all(ls[i][1] == ls[i+1][0] for i in range(len(ls) - 1))
+#     return inner_tf and ls[0][0] == ls[-1][1]
 
 # 6. Domino cycle (pg 14)
 def domino_cycle(tiles) -> bool:
@@ -98,6 +108,26 @@ def domino_cycle(tiles) -> bool:
 
     # check all the inner pairings
     return all(tiles[i][1] == tiles[i+1][0] for i in range(len(tiles) - 1))
+
+
+# 7. Colour trio (pg 15)  //passing on 2025Dec31
+def colour_trio(colors: str) -> str:
+    """pairwise reduction to string of size 1 by mix() function"""
+
+    def mix(c1: str, c2: str) -> str:
+        if c1 == c2:
+            return c1
+        for c in list('ryb'):
+            if c not in [c1, c2]:
+                return c
+
+    def mixDown(ls: list) -> list:
+        return ''.join([mix(ls[i], ls[i + 1]) for i in range(len(ls) - 1)])
+
+    while len(colors) > 1:
+        colors = mixDown(colors)
+
+    return colors
 
     
 #---------------------------------------------------------------------------------------------------
