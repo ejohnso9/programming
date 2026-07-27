@@ -2,3 +2,239 @@
 This directory has some example code from the book,
 "A Tour of C++", Second Edition, B. Stroustrup
 
+RAII
+----
+    [ ] tour: 36, 40, 164, 199-200
+
+
+ChatGPT
+--------
+prefer: ++i to i++ in loops: can be more efficient for non-primitive types
+
+
+Testing
+--------
+    1. CLI/'subprocess' via: std::cin, std::cout
+
+#-----------------------------------------------------------------------
+# Python
+import subprocess
+
+def run_cpp_program(input_value):
+    # Run compiled executable and capture output
+    result = subprocess.run(
+        ['./my_program'],  # replace with your compiled executable
+        input=f"{input_value}\n", 
+        text=True, 
+        capture_output=True
+    )
+    return result.stdout.strip()
+
+# Test cases
+assert run_cpp_program(2) == "4"
+assert run_cpp_program(5) == "25"
+print("All tests passed!")
+#-----------------------------------------------------------------------
+
+    2. Wrap C++ code as Python module
+    # module: pybind11  # prefer this
+    # boost:: python    # previosly read of issues w/ this?
+
+//----------------------------------------------------------------------
+// C++
+int square(int x) {
+    return x * x;
+}
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// C++
+#include <pybind11/pybind11.h>
+
+int square(int x) { return x * x; }
+
+PYBIND11_MODULE(my_module, m) {
+    m.def("square", &square, "Compute square of an integer");
+}
+//----------------------------------------------------------------------
+
+
+# Compile using g++ and pybind11 installed
+$ c++ -O3 -Wall -shared -std=c++17 -fPIC $(python3 -m pybind11 --includes) bindings.cpp -o my_module$(python3-config --extension-suffix)
+
+
+#-----------------------------------------------------------------------
+# Python
+import my_module
+
+assert my_module.square(3) == 9
+assert my_module.square(10) == 100
+print("All tests passed!")
+#-----------------------------------------------------------------------
+
+
+    3. 'ctypes' or 'cffi'
+    # compile code in shared library (.so or .dll)
+
+    # ctypes example...
+    // C++
+    extern "C" int square(int x) {
+        return x * x;
+    }
+
+    # bash
+    $ g++ -shared -fPIC -o libexample.so libexample.cpp
+
+
+
+Practical advice for testing “normal” C++ code from Python
+
+    - Start simple: If your code is already an executable, use subprocess first.
+    You can get a lot of testing done with minimal effort.
+
+    - Use Python’s testing ecosystem: Combine unittest or pytest with subprocess calls.
+
+    - Expose key functions via pybind11 if you need to test internal logic frequently or require fast iteration.
+
+    - Keep tests independent: Avoid relying on global state in C++ — makes Python testing easier.
+
+    - Handle I/O carefully: Python can simulate input files, stdin, or arguments using subprocess.
+
+
+# Here's ChatGPT simply pybind11 example...
+// bindings.cpp
+#include <pybind11/pybind11.h>
+
+int square(int x) { return x * x; }
+
+namespace py = pybind11;
+
+PYBIND11_MODULE(my_module, m) {
+    m.def("square", &square, "Compute the square of a number");
+}
+
+# Will need pybind11 installed via pip: pip install pybind11
+
+# bash
+c++ -O3 -Wall -shared -std=c++17 -fPIC \
+    $(python3 -m pybind11 --includes) \
+    bindings.cpp -o my_module$(python3-config --extension-suffix)
+
+
+# Wrapping an entire C++ class
+// C++
+// counter.cpp
+#include <pybind11/pybind11.h>
+
+class Counter {
+    int value;
+public:
+    Counter(int v=0) : value(v) {}
+    void increment() { ++value; }
+    int get() const { return value; }
+};
+
+namespace py = pybind11;
+
+PYBIND11_MODULE(my_module, m) {
+    py::class_<Counter>(m, "Counter")
+        .def(py::init<int>())
+        .def("increment", &Counter::increment)
+        .def("get", &Counter::get);
+}
+
+
+
+
+2.2, pg23
+----------
+use: . to access members through a name or reference
+     -> to access members through a pointer
+     (see example bottom of sec 2.2)
+
+class Vector {
+public:
+    // pg24: The constructor initilizes the Vector members using a
+    member initilizer list: (starting w/ :elem
+    Vector(int s) :elem{new double[s]}, sz{s} { } // construct a Vector
+    double& operator[](int i) { return elem[i]; }  // element acess: subscripting
+    int size() { return sz; }
+private:
+    double* elem; // pointer to the elements
+    int sz;       // the number of elements
+}
+// see section 4.2.2 for destructor use
+    
+
+2.3, pg 24
+----------
+    // member initializer list
+    :elem{new double[s]}, sz{s}
+
+    // NB: no fundamental diff. btw struct and class (other than
+    //     members are public by default in struct)
+
+
+2.4 Unions
+----------
+    union Value {
+        // one or the other in use here, never both (and the union
+        // itself does not keep track: up to programmer to mamange that)
+        node* p;
+        int i;
+    };
+
+    pg 26
+    // "correspondence between a 'type' field (t) and the type held in a
+    // union is error-prone."
+    // "The use of naked unions is best minimized.": see standard
+    // library type: 'variant' (@see sec 13.5.1)
+
+    // Entry could be def as:
+    struct Entry {
+        string name;
+        variant<Node*,int> v;
+    }
+
+    // usage
+    void f(Entry * pe) {
+        if (holds_alternative<int>(pe->v)) // does *pe hold an int? (sec 13.5.1)
+            cout << get<int>(pe->v);       // get the int
+        // ...
+    }
+    // "For many uses, a variant is simple and safer to use than a union."
+
+
+2.5 Enumerations
+    // used to represent small sets of int values
+-----------------
+    // def
+    enum class Color { red, blue, green };
+    enum class Traffic_light { green, yellow, red };
+
+    // use
+    Color col = Color::red;
+    Traffic_light light = Traffic_light::red;
+
+    // Traffic_light and Color are separate classes: cannot be intermixed
+    // ERROR examples:
+    Traffic_light stop = Color:red;  // ERROR!!!
+    int color = Color:red;  // ERROR: Color is not int!
+    Color c = 2;  // ERROR: Color is not int!
+
+    // OK
+    Color x = Color{2} // verbos
+    Color y {1}; // blue, I assume?
+
+    // pg 27: plain enum
+    enum Color { red, green, blue }
+    int col = green;  // col == 1
+
+
+2.6 Advice
+----------
+    review the items on pgs 27, 28
+
+
+
