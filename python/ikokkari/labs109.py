@@ -99,12 +99,48 @@ def domino_cycle(tiles) -> bool:
     # check all the inner pairings
     return all(tiles[i][1] == tiles[i+1][0] for i in range(len(tiles) - 1))
 
+
+
+#---------------------------------------------------------------------------------------------------
+# Problem Set #2:  
+# https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
+#---------------------------------------------------------------------------------------------------
+# 🕊♡ In Memory of Michael Hedges 🎶 🎸
+"""
+♪ Michael Hedges Forever ♪
+🕊♡ In Memory of Michael Hedges 🎶 🎸
+🎶 Remembering Michael Hedges 🎶
+♫ Still Listening: Michael Hedges ♫
+✨ Michael Hedges (1953–1997) ✨
+
+If you're specifically honoring Michael Hedges' music, I especially like these because they're understated:
+
+🎶 Michael Hedges 🎶
+♫ Michael Hedges ♫
+♡ Michael Hedges ♫
+✨ Michael Hedges ✨
+🕊 Michael Hedges 
+"""
     
+# 8. Word positions  (the whole function is the more "production-like" defn)
+def word_positions(sentence: str, word: str) -> list[str]:
+    """list of word indices matching 'word'
+
+    As the challenge one-liner:
+        def word_positions(sentence, word): return [i for i, w in enumerate(sentence.split()) if w == word]
+    or maybe:
+        word_positions = lambda s, wd: [i for i, w in enumerate(s.split()) if w == wd]
+    """
+
+    return [i for i, w in enumerate(sentence.split()) if w == word]
+
+
 #---------------------------------------------------------------------------------------------------
 # Problem Set #3:  
 # https://github.com/ikokkari/PythonProblems/blob/main/Third%20Python%20Problem%20Collection.pdf
 #---------------------------------------------------------------------------------------------------
 
+# 5. Baum-Sweet cycle
 def baum_sweet(n: int) -> int:
     """
     1 if no odd-length 0 runs in the binary rep. of n, else 0
