@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # file: labs109.py
+# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=100:
 
 # 🕊♡ In Memory of Michael Hedges 🎶 🎸
 
@@ -80,16 +81,18 @@ def is_cyclops(n: int) -> bool:
     i = len(s) // 2
     return s[i] == '0' and '0' not in s[:i] + s[i+1:]
 
+
 # My previous version from 2025
 # 6. Domino cycle (pg 14) //passing on 2025Dec31
-# def domino_cycle(ls: list) -> bool:
-#     """
-#     Does the list of dominoes (2-tuples) form a valid loop of matching ends?
-#     """
-#     if ls == []:
-#         return True  # Degenerate case documented in problem statement
-#     inner_tf = all(ls[i][1] == ls[i+1][0] for i in range(len(ls) - 1))
-#     return inner_tf and ls[0][0] == ls[-1][1]
+def domino_cycle(ls: list) -> bool:
+    """
+    Does the list of dominoes (2-tuples) form a valid loop of matching ends?
+    """
+    if ls == []:
+        return True  # Degenerate case documented in problem statement
+    inner_tf = all(ls[i][1] == ls[i+1][0] for i in range(len(ls) - 1))
+    return inner_tf and ls[0][0] == ls[-1][1]
+
 
 # 6. Domino cycle (pg 14)
 def domino_cycle(tiles) -> bool:
@@ -113,7 +116,7 @@ def domino_cycle(tiles) -> bool:
     return all(tiles[i][1] == tiles[i+1][0] for i in range(len(tiles) - 1))
 
 
-# 7. Colour trio (pg 15)  //passing on 2025Dec31
+# 7. Colour trio (pg 15)  // passing on 2025Dec31
 def colour_trio(colors: str) -> str:
     """pairwise reduction to string of size 1 by mix() function"""
 
@@ -138,6 +141,13 @@ def colour_trio(colors: str) -> str:
 # https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
 #---------------------------------------------------------------------------------------------------
     
+# 4. Lowest common dominator
+def lowest_common_dominator(beta: list[int], gamma: list[int]) -> list[int]:
+    from itertools import accumulate as acc
+
+    return [max(b, g) for b, g in zip(acc(beta), acc(gamma))]
+
+
 # 8. Word positions  (the whole function is the more "production-like" defn)
 def word_positions(sentence: str, word: str) -> list[str]:
     """list of word indices matching 'word'
