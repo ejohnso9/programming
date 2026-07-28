@@ -188,8 +188,7 @@ def square_lamps(n: int, flips: list[int]) -> int:
     positive ints in flips are rows being toggled
     negative ints in flips are cols being toggled
 
-    I did a small example to try to motivate and reason out a more
-    general solution:
+    Small example to motivate and reason out a more general solution:
 
     8x8 example (N = 8)
 
@@ -197,7 +196,7 @@ def square_lamps(n: int, flips: list[int]) -> int:
 
     Let C be number of columns that end up ON
     Let R be number of rows that end up ON
-    C = 2, R = 3
+    R = 3, C = 2
 
             O   O
             N   N    +-- count of cells ON
@@ -213,14 +212,14 @@ def square_lamps(n: int, flips: list[int]) -> int:
                      total = 3 * 6 + 2 * 5 = 28
 
     a quick Vim check:
-      visually select the 0/1 grid
-      :s/1//gn
-      confirms count of 28
+        visually select the 0/1 grid
+        :s/1//gn
+        confirms count of 28
 
-    As the instructions direct, we don't want to actually flip cells on and off in a
-    big square grid. In fact, we don't need to care about individual cells. If I
-    reduce the 'flips' array to two sets that are only storing keys where the row
-    or column was flipped to 1 (ON):
+    As the instructions direct, we don't want to actually flip cells on and off in
+    a big square grid. In fact, we don't need to care about individual cells at all.
+    If I reduce the 'flips' array to two sets that are only storing keys where the
+    row or column was flipped to 1 (ON):
 
       rows: {2, 4, 5}
       cols: {3, 7}
@@ -246,10 +245,10 @@ def square_lamps(n: int, flips: list[int]) -> int:
     cols = set()
     for i in flips:
         if i < 0:
-            s = cols
-            i = -i  # positive index
+            s = cols  # manipulate the cols set
+            i = -i    # positive index (for both)
         else:
-            s = rows
+            s = rows  # manipulate the rows set
 
         # just manipulate the set to keep only ON indices
         if i in s:
@@ -259,7 +258,7 @@ def square_lamps(n: int, flips: list[int]) -> int:
 
     # evaluate that one expression: ((N - C) * R) + (C * (N - R))
     R, C = len(rows), len(cols)
-    N = n  # just a name alias to make it upper-case
+    N = n  # upper-case name alias
     return (N - C) * R + (C * (N - R))
 
 
