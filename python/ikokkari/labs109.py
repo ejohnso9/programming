@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # file: labs109.py
 
+# 🕊♡ In Memory of Michael Hedges 🎶 🎸
+
+
 """
 DESCRIPTION:
     Source file holding function definitions for Ilkka Kokarinen's
@@ -110,27 +113,6 @@ def domino_cycle(tiles) -> bool:
     return all(tiles[i][1] == tiles[i+1][0] for i in range(len(tiles) - 1))
 
 
-#---------------------------------------------------------------------------------------------------
-# Problem Set #2:  
-# https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
-#---------------------------------------------------------------------------------------------------
-# 🕊♡ In Memory of Michael Hedges 🎶 🎸
-"""
-♪ Michael Hedges Forever ♪
-🕊♡ In Memory of Michael Hedges 🎶 🎸
-🎶 Remembering Michael Hedges 🎶
-♫ Still Listening: Michael Hedges ♫
-✨ Michael Hedges (1953–1997) ✨
-
-If you're specifically honoring Michael Hedges' music, I especially like these because they're understated:
-
-🎶 Michael Hedges 🎶
-♫ Michael Hedges ♫
-♡ Michael Hedges ♫
-✨ Michael Hedges ✨
-🕊 Michael Hedges 
-"""
-
 # 7. Colour trio (pg 15)  //passing on 2025Dec31
 def colour_trio(colors: str) -> str:
     """pairwise reduction to string of size 1 by mix() function"""
@@ -150,6 +132,11 @@ def colour_trio(colors: str) -> str:
 
     return colors
 
+
+#---------------------------------------------------------------------------------------------------
+# Problem Set #2:  
+# https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
+#---------------------------------------------------------------------------------------------------
     
 # 8. Word positions  (the whole function is the more "production-like" defn)
 def word_positions(sentence: str, word: str) -> list[str]:
@@ -163,6 +150,37 @@ def word_positions(sentence: str, word: str) -> list[str]:
 
     return [i for i, w in enumerate(sentence.split()) if w == word]
 
+
+# 13. Powertrain
+def powertrain(n: int) -> int:
+    """John Conway's "power train" function:
+    Iterate until n becomes a single digit number, raising each odd
+    digit to the power of the following digit and multiplying each
+    term together.
+
+    Should n contain an odd number of digits, the power of the last
+    digit can be taken as 0.
+
+    For example, for the 5-digit number: abcde, this becomes
+    a**b * c**d (times e**0, which is 1 => just ignore e)
+
+    The value of this function is the number of iterations required to
+    reduce n to a single-digit number.
+    """
+
+    import math
+
+
+    count = 0  # number of loop iterations
+    while n > 10:
+        loi = [int(c) for c in str(n)]  # list of ints (in [0, 9])
+        # NB: any odd digit just sort of "disappears" in the len(loi) // 2 operation
+        n = math.prod([loi[2 * i] ** loi[2 * i + 1] for i in range(len(loi) // 2)])
+        count += 1
+
+    return count
+
+    
 
 #---------------------------------------------------------------------------------------------------
 # Problem Set #3:  
