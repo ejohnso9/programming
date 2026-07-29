@@ -234,7 +234,7 @@ def square_lamps(n: int, flips: list[int]) -> int:
       rows: {2, 4, 5}
       cols: {3, 7}
 
-    There there are two kinds of rows:
+    There are just two kinds of rows:
     a) rows flipped ON:
        these have N - C cells ON: = 8 - 2 = 6
        count of ON rows: R = 3
