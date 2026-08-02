@@ -216,10 +216,31 @@ int main() {
     cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
     cout << "i is: " << i << ", type: " << typeid(i).name() << endl;
     cout << "r is: " << r << ", type: " << typeid(r).name() << endl;
+    // above prints:
+    // ip is: 0x101085bd0, type: Pi
+    // i is: 1, type: i
+    // r is: 1, type: i
+    // which is a bit ambiguous... in the code, the r reference is used as
+    // an alias for i, but obviously r has a modifier in the
+    // declaration, so what is the type of r? I think: int& but I guess
+    // you can't really see that in an introspective way.
 
-    */ // CODE ABOVE was compiling and running fine on 2026Aug02
+    // (b)
+    int i, *ip = 0;
+    // i in simply an int
+    // ip is: int*
+    cout << " i is: " << i << ", type: " << typeid(i).name() << endl;
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+
+    // (c)
+    int* ip, ip2; // ip is: int* while ip is just an int!
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+    cout << "ip2 is: " << ip2 << ", type: " << typeid(ip2).name() << endl;
+
+    */ // CODE ABOVE was compiling and running w/o error on 2026Aug02
     // taking code out so I don't have a growing number of declarations
     // already in play for later problems.
+
     cout << "EOF" << endl;
 
 } // main()
