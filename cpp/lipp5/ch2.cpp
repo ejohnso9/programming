@@ -9,6 +9,7 @@
  */
 
 #include <iostream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -174,18 +175,52 @@ int main() {
     // that you can get at data in it (even though pointer is for
     // different type)
 
-
-    */ // CODE ABOVE was compiling and running fine on 2026Aug02
-    // taking code out so I don't have a growing number of declarations
-    // already in play for later problems.
-
-
     // Ex. 2.24
     // Why is the initialization of p legal but that of lp illegal?
     int i = 42; void *p = &i; // long *lp = &i;
     // As stated on pg 56, void pointers are allowed to reference any
     // type. Such priviledges are not extended to other pointer types.
     // ch2.cpp:183:37: error: cannot initialize a variable of type 'long *' with an rvalue of type 'int *'
+
+    // My own notes: Verify that this is illegal(?)
+    int i = 42; int &i_ref = i; int *ip = &i;
+    cout << "&i is: " << &i << endl;
+    ip = &i_ref; // <-- NO!!!! This compiles, runs w/o ERROR!
+    // I take this to mean we're just taking address of i
+    cout << "&i_ref is: " << ip << endl; // i.e., &i_ref == &i
+
+    // "References to Pointers", pg 58
+    // gives the example:
+    int i = 42;
+    int *p;
+    int *&r = p; // r is reference to the pointer p
+    r = &i;
+    cout << "before *r = 0 ... i is: " << *p;
+    *r = 0;
+    cout << "after, i is: " << *p;
+
+    // I had my own question: could: int *&r = p;
+    // int &*r2 = p; // <-- just as well be this?
+    // The answer to that is: NO! Read it RtoL and the declaration of
+    // pointer to reference is illegal.
+
+    // Ex. 2.25, pg 59
+    cout << "Ex. 2.25, pg 59" << endl;
+    // Determine the types and values of each of the following vars.
+    // (a)
+    int *ip, i, &r = i;
+    // BEFORE compilation
+    // ip is type: int*, value uninitialized
+    //  i is type: int, value uninitialized
+    //  r is type: int&; // value same as i (uninit)
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+    cout << "i is: " << i << ", type: " << typeid(i).name() << endl;
+    cout << "r is: " << r << ", type: " << typeid(r).name() << endl;
+
+    */ // CODE ABOVE was compiling and running fine on 2026Aug02
+    // taking code out so I don't have a growing number of declarations
+    // already in play for later problems.
+    cout << "EOF" << endl;
 
 } // main()
 
