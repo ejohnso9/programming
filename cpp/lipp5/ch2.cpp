@@ -237,6 +237,22 @@ int main() {
     cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
     cout << "ip2 is: " << ip2 << ", type: " << typeid(ip2).name() << endl;
 
+    //
+    // Exercizes Section 2.4 (pg 60)
+    //
+
+    // Ex. 2.26
+    // Which of the following are legal? For those that are illegal,
+    // explain why.
+    // (a)
+    // const int buf; // ILLEGAL: no initializer provided
+    // (b)
+    int cnt = 0; // this is, of course, LEGAL
+    // (c)
+    const int sz = cnt; // LEGAL
+    // (d)
+    // ++cnt; ++sz; // ILLEGAL: you can not modify a const
+
     */ // CODE ABOVE was compiling and running w/o error on 2026Aug02
     // taking code out so I don't have a growing number of declarations
     // already in play for later problems.
