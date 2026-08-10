@@ -1,5 +1,5 @@
 // file: ch2.cpp
-// vim: et ts=4 sw=4 tw=100
+// vim: et ts=4 sw=4 tw=100 autoindent smartindent :
 
 /*
  * Exercizes for Chapter 2 in "C++ Primer", Stanley Lippman, 5th Edition
@@ -9,6 +9,7 @@
  */
 
 #include <iostream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -22,11 +23,13 @@ using namespace std;
 int main() {
 
     // Exercizes Section 2.3.1 (pg51)
-    cout << "Chapter 2 Exercizes\n";
-    cout << "-------------------\n";
-    cout << "n";
+    cout << "Chapter 2 Exercizes" << endl;
+    cout << "-------------------" << endl;
+    cout << endl;
     // cout << "NOT YET IMPLEMENTED.\n";
 
+
+    /* SEE NOTE BELOW ABOUT GROWING DECLARATIONS
 
     //
     // Exercise 2.15:
@@ -36,7 +39,12 @@ int main() {
     // if they are left uncommented, then they are compiling and valid
     
     // a)
-    int ival = 1.01;  // VALID! NB: initializer is not an int value!  Silent narrowing!
+    // Surprisingly, this is somewhat environment dependent.
+    // On PythonAnywhere, the following statement will pass silently w/
+    // a data narrowing!
+    // On my local Mac (clang), this will emit a compiler warning:
+    int ival = 1.01;
+
     cout << "a) ival is: "  << ival << "\n"; 
     // OK, so I learned something here... I expected this would be a compiler error.
     // IT IS NOT!!! Silent, IMPLICIT conversion from double to int (round towards zero)
@@ -64,7 +72,6 @@ int main() {
     // int &rval3; // BC: invalid: a ref type is an alias, not an obj: must always be initialized
     
 
-    /*
     //
     // Exercise 2.16:
     //
@@ -85,7 +92,6 @@ int main() {
     // d)
     r1 = d; // BCV: same as: i = 3;
     // a) through d) all compile
-    */
     
     //
     // Exercise 2.17:
@@ -97,7 +103,163 @@ int main() {
     cout << i << " " << ri << endl;
     // [v] BCV: "10 10\n"
     
-}
+    //
+    // Exercizes Section 2.3.2
+    //
+
+    // Ex. 2.18 Write code to change the value of a pointer.
+    //      Write code to change the value to which a pointer points.
+    cout << "Ex. 2.18:\n";
+    int ary[3]{11, 12, 13};
+    int *ip = &ary[0];
+    cout << "BEFORE:\n";
+    for (int i = 0; i < 3; ++i) {
+        cout << " ary[" << i << "] = " << ary[i] << endl;
+    }
+    
+    cout << "AFTER:\n";
+    for (int i = 0; i < 3; ++i) {
+        // NB: this loop satisfies both requirements of the problem
+        *ip = *ip * 10;
+        ip++;
+        cout << " ary[" << i << "] = " << ary[i] << endl;
+    }
+
+    // Ex. 2.19
+    // Explain the key differences between references and pointers.
+    // References are name aliases, not "objects" (mean there is not
+    // user-addressable memory associated with a reference - you cannot
+    // take the address of it, you can't change its value - it is a C++
+    // runtime "internal". Therefore, they must always be initialized in
+    // the declaration and their value is static of the program
+    // lifetime. In contrast, a pointer *IS* an object, you *CAN* take
+    // the address of a pointer, you can change its value, etc.
+
+    // Ex. 2.20 What does this program do?
+    // BEFORE compilation: it sets i to square of 42 (1764)
+    int i = 42;
+    int *p1 = &i;
+    *p1 = *p1 * *p1;
+    cout << "Ex. 2.20: i is: " << i << endl;
+
+
+    // Ex. 2.21 Explain each of the following definitions. Indicate
+    // whether any are illegal and, if so, why.
+    int i = 0;
+    // (a)
+    // double* dp = &i; // ILLEGAL: base types do not match
+                        // ch2.cpp:152:13: error: cannot initialize a variable of type 'double *' with an rvalue of type 'int *'
+
+    // (b)
+    // int *ip = i; // ILLEGAL: (see page 54)
+                    // ch2.cpp:155:10: error: cannot initialize a variable of type 'int *' with an lvalue of type 'int'
+
+    // (c)
+    int *p = &i; // LEGAL
+
+
+    // Ex. 2.22
+    // Assuming p is a pointer to int, explain the following code:
+    // if (p) ... // same as: if (p != nullptr) or if (p != 0)
+    // if (*p) ... // this is testing the value ref'ed by p as non-zero.
+
+    // Ex. 2.23
+    // Given a pointer to p, can you determine whether p points to a
+    // valid object?
+    // No... given the list at the bottom of pg. 52, I see how (in general).
+    //
+    // TODO: after structs, come back and show that you can increment a
+    // pointer to one past end of valid array, then try to access data
+    // (which I expect you can, w/o compiler error), yet the pointer is
+    // not valid (make some other struct type to sit behind array - show
+    // that you can get at data in it (even though pointer is for
+    // different type)
+
+    // Ex. 2.24
+    // Why is the initialization of p legal but that of lp illegal?
+    int i = 42; void *p = &i; // long *lp = &i;
+    // As stated on pg 56, void pointers are allowed to reference any
+    // type. Such priviledges are not extended to other pointer types.
+    // ch2.cpp:183:37: error: cannot initialize a variable of type 'long *' with an rvalue of type 'int *'
+
+    // My own notes: Verify that this is illegal(?)
+    int i = 42; int &i_ref = i; int *ip = &i;
+    cout << "&i is: " << &i << endl;
+    ip = &i_ref; // <-- NO!!!! This compiles, runs w/o ERROR!
+    // I take this to mean we're just taking address of i
+    cout << "&i_ref is: " << ip << endl; // i.e., &i_ref == &i
+
+    // "References to Pointers", pg 58
+    // gives the example:
+    int i = 42;
+    int *p;
+    int *&r = p; // r is reference to the pointer p
+    r = &i;
+    cout << "before *r = 0 ... i is: " << *p;
+    *r = 0;
+    cout << "after, i is: " << *p;
+
+    // I had my own question: could: int *&r = p;
+    // int &*r2 = p; // <-- just as well be this?
+    // The answer to that is: NO! Read it RtoL and the declaration of
+    // pointer to reference is illegal.
+
+    // Ex. 2.25, pg 59
+    cout << "Ex. 2.25, pg 59" << endl;
+    // Determine the types and values of each of the following vars.
+    // (a)
+    int *ip, i, &r = i;
+    // BEFORE compilation
+    // ip is type: int*, value uninitialized
+    //  i is type: int, value uninitialized
+    //  r is type: int&; // value same as i (uninit)
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+    cout << "i is: " << i << ", type: " << typeid(i).name() << endl;
+    cout << "r is: " << r << ", type: " << typeid(r).name() << endl;
+    // above prints:
+    // ip is: 0x101085bd0, type: Pi
+    // i is: 1, type: i
+    // r is: 1, type: i
+    // which is a bit ambiguous... in the code, the r reference is used as
+    // an alias for i, but obviously r has a modifier in the
+    // declaration, so what is the type of r? I think: int& but I guess
+    // you can't really see that in an introspective way.
+
+    // (b)
+    int i, *ip = 0;
+    // i in simply an int
+    // ip is: int*
+    cout << " i is: " << i << ", type: " << typeid(i).name() << endl;
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+
+    // (c)
+    int* ip, ip2; // ip is: int* while ip is just an int!
+    cout << "ip is: " << ip << ", type: " << typeid(ip).name() << endl;
+    cout << "ip2 is: " << ip2 << ", type: " << typeid(ip2).name() << endl;
+
+    //
+    // Exercizes Section 2.4 (pg 60)
+    //
+
+    // Ex. 2.26
+    // Which of the following are legal? For those that are illegal,
+    // explain why.
+    // (a)
+    // const int buf; // ILLEGAL: no initializer provided
+    // (b)
+    int cnt = 0; // this is, of course, LEGAL
+    // (c)
+    const int sz = cnt; // LEGAL
+    // (d)
+    // ++cnt; ++sz; // ILLEGAL: you can not modify a const
+
+    */ // CODE ABOVE was compiling and running w/o error on 2026Aug02
+    // taking code out so I don't have a growing number of declarations
+    // already in play for later problems.
+
+    cout << "EOF" << endl;
+
+} // main()
 
 // EOF
 
