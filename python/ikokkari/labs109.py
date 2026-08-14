@@ -170,6 +170,8 @@ def power_prefix(prefix: str) -> int:
     is a string with '*' wildcards in it.
     (e.g., power_prefix('*22*3720') -> 63)
     """
+    # TODO: performance could perhaps be improved here via memoization, but as it is passing the
+    #       tester in about 0.6 sec, it's good enough
 
     # let's just handle the base case directly
     if prefix == '1':
