@@ -161,6 +161,43 @@ def word_positions(sentence: str, word: str) -> list[str]:
     return [i for i, w in enumerate(sentence.split()) if w == word]
 
 
+# 9. Power Prefix
+def power_prefix(prefix: str) -> int:
+    """
+    Problem #9 @ TODO: <give URL>
+    Find the power of 2 that gives a number starting with 'prefix' where 'prefix'
+    is a string with '*' wildcards in it.
+    (e.g., power_prefix('*22*3720') -> 63)
+    """
+
+    # let's just handle the base case directly
+    if prefix == '1':
+        return 0
+
+    def str_cmp(template: str, s: str) -> bool:
+        """does given 's' match the template (w/ '*' wildcards)?"""
+        # this is probably less efficient than more imperative stuff, but it's clean
+        for i, c in enumerate(template):
+            if c == '*':
+                continue
+            if template[i] != s[i]:
+                return False
+
+        return True
+
+    two_n, power = 1, 0  # starting at: 2 ** 0 == 1
+    while True:
+        two_n <<= 1  # shift left (i.e., * 2), reassign
+        s = str(two_n)
+        power += 1  # keep track of which power we are at
+        if len(s) < len(prefix):
+            continue  # have to have enough digits in the computed number to cover the template comparison
+        if str_cmp(prefix, str(two_n)):
+            return power  # Found the first 2 ** power that matches
+
+    raise RuntimeError("How did you get here?")
+
+
 # 13. Powertrain
 def powertrain(n: int) -> int:
     """John Conway's "power train" function:
@@ -180,15 +217,47 @@ def powertrain(n: int) -> int:
 
     import math
 
-
     count = 0  # number of loop iterations
     while n > 10:
         loi = [int(c) for c in str(n)]  # list of ints (in [0, 9])
-        # NB: any odd digit just sort of "disappears" in the len(loi) // 2 operation
+        # NB: any trailing odd digit (at end) just sort of "disappears" in the len(loi) // 2 operation
         n = math.prod([loi[2 * i] ** loi[2 * i + 1] for i in range(len(loi) // 2)])
         count += 1
 
     return count
+
+
+# 19.The magic knight of Muhammad ibn Muhammad
+def magic_knight(n: int, items: list[int]) -> list[tuple[int, int]]:
+    """
+    TODO: fill in this doc
+    """
+
+    # initialize grid (list of lists) and other stuff
+    i = 1  # the integer we are putting into cells (also index of work being done)
+    grid = [[0] * n for i in range(n)]
+    work = []
+    row, col = n - 1, n - 1  # start UR corner of grid
+
+    def nextPosition(N: int, rc: tuple[int, int]) -> tuple[int, int]:
+        """
+        NB: refs outer 'grid', 'i' !!! (i.e., this is not strictly "functional")
+        """
+
+        ROW, COL = 0, 1  # like symconsts for fields used in this func: tuple access
+        while True:
+            c = (rc[COL] - 1) % N  # one step left
+            r = (rc[ROW] + 2) % N  # two steps down
+            if grid[r][c] == 0:
+                return (r, c)
+
+    for i in range(n ** 2):
+        grid[row][col] = i
+        row, col = nextPosition(n, (row, col))
+        if i in items:
+            work.append((row, col))
+
+    return work
 
 
 # 25. Square lamplighter
