@@ -184,6 +184,46 @@ def word_positions(sentence: str, word: str) -> list[str]:
     return [i for i, w in enumerate(sentence.split()) if w == word]
 
 
+# 9. Power Prefix
+def power_prefix(prefix: str) -> int:
+    """
+    Problem #9, "Additional Python Problems" (Set 2)
+    https://github.com/ikokkari/PythonProblems/blob/main/109%20Python%20Problems%20for%20CCPS%20109.pdf
+    Find the power of 2 that gives a number starting with 'prefix' where 'prefix'
+    is a string with '*' wildcards in it.
+    (e.g., power_prefix('*22*3720') -> 63)
+    """
+    # TODO: performance could perhaps be improved here via memoization, but as it is passing the
+    #       tester in about 0.6 sec, it's good enough
+
+    # let's just handle the base case directly
+    if prefix == '1':
+        return 0
+
+    def str_cmp(template: str, s: str) -> bool:
+        """does given 's' match the template (w/ '*' wildcards)?"""
+        # this is probably less efficient than more imperative stuff, but it's clean
+        for i, c in enumerate(template):
+            if c == '*':
+                continue
+            if template[i] != s[i]:
+                return False
+
+        return True
+
+    two_n, power = 1, 0  # starting at: 2 ** 0 == 1
+    while True:
+        two_n <<= 1  # shift left (i.e., * 2), reassign
+        s = str(two_n)
+        power += 1  # keep track of which power we are at
+        if len(s) < len(prefix):
+            continue  # have to have enough digits in the computed number to cover the template comparison
+        if str_cmp(prefix, str(two_n)):
+            return power  # Found the first 2 ** power that matches
+
+    raise RuntimeError("How did you get here?")
+
+
 # 13. Powertrain
 def powertrain(n: int) -> int:
     """John Conway's "power train" function:
@@ -203,15 +243,106 @@ def powertrain(n: int) -> int:
 
     import math
 
-
     count = 0  # number of loop iterations
     while n > 10:
         loi = [int(c) for c in str(n)]  # list of ints (in [0, 9])
-        # NB: any odd digit just sort of "disappears" in the len(loi) // 2 operation
+        # NB: any trailing odd digit (at end) just sort of "disappears" in the len(loi) // 2 operation
         n = math.prod([loi[2 * i] ** loi[2 * i + 1] for i in range(len(loi) // 2)])
         count += 1
 
     return count
+
+
+# 19.The magic knight of Muhammad ibn Muhammad
+def magic_knight(n: int, items: list[int]) -> list[tuple[int, int]]:
+    """
+    The problem description basically has up/down inverted from the way rows and columns would normally
+    be rendered. That is, if you print a list-of-lists with element 0 first and then iterating rows upwards,
+    the rows come out:
+        row 1
+        row 2
+        ...
+        row N
+
+    If you say the upper-right (UR) corner is (n-1, n-1), this is essentially mathematical (X, Y) with X increasing
+    upwards:
+        row N
+        ...
+        row 2
+        row 1
+
+    I'm basically doing this in Excel coordinates with Row 1 at the top. It's the same thing, but my up/down is
+    inverted from problem statement. Where the algorithm requires the knight to move "down 2 rows", I am still
+    decreasing the row index by 2 but moving "up" 2 rows in the way one would normally iterate a printout of rows.
+
+    The second thing to note is that in the expected result, what is given are (col, row) coordinates. This is also
+    sort of challenging normal mathematical matrix indexing, but OK, you can think of that as (X, Y) in an X increases
+    up, Y increases to right world. (I had assumed the given tuples were (row, col) as one would normally address
+    a 2D matrix: but everything comes out "bass ackwards" when printing (row, col) tuples, of course.)
+
+    SUGGESTION:
+    A little discussion about notations and conventions in this problem I think would help students a lot.
+    For me at least, I think this is more natural (matrix notation, list-of-lists, row printing ordering):
+
+         0    1    2    3    4  cols ->
+        --   --   --   --   --
+    0 | .. | .. |  3 | .. | .. |
+    1 |  5 | .. | .. | .. | .. |
+    2 | .. | .. | .. |  2 | .. |
+    3 | .. |  4 | .. | .. | .. |
+    4 | .. | .. | .. | .. |  1 |   # move up 2, left 1
+   rows
+    |
+    V
+
+    Than this, mathematical axes:
+    ^
+    |
+    X
+    4 | .. | .. | .. | .. |  1 |   # move down 2, left 1
+    3 | .. |  4 | .. | .. | .. |
+    2 | .. | .. | .. |  2 | .. |
+    1 |  5 | .. | .. | .. | .. |
+    0 | .. | .. |  3 | .. | .. |
+        --   --   --   --   --
+         0    1    2    3    4  Y ->
+
+    Making clear that the expected result is: (col, row) tuples and *NOT* (row, col) tuples
+    will also help, but perhaps that was part of the intended lesson: to struggle with this
+    a bit? I guess it becomes clear pretty quickly if you do a 5x5 by hand that element 10
+    can't possibly be at (row=3, col=1) (4 is already there). After thinking on this a bit,
+    maybe better to NOT say anything and let students figure this out on their own?
+    """
+
+    ROW, COL = 0, 1  # like symconsts for fields used in this func: tuple access
+
+    # initialize grid (list of lists) and other stuff
+    i = 1  # the integer we are putting into cells (also index of work being done)
+    grid = [[0] * n for i in range(n)]
+    work = []
+    row_col = (n - 1, n - 1)  # start LR corner of "normal" grid
+
+    def nextPosition(N: int, rc: tuple[int, int]) -> tuple[int, int]:
+        """
+        NB: refs outer 'grid', 'i' !!! (i.e., this is not strictly "functional")
+        """
+
+        while True:
+            rc = (rc[ROW] - 2) % N, (rc[COL] - 1) % N  # 2 rows up, 1 col left
+            if grid[rc[ROW]][rc[COL]] == 0:
+                return rc
+            else:
+                # two steps left from occupied square
+                return rc[ROW], (rc[COL] - 2) % N
+
+    for i in range(n ** 2):
+        idx_1 = i + 1
+        grid[row_col[ROW]][row_col[COL]] = i + 1
+        if idx_1 in items:
+            work.append((row_col[COL], row_col[ROW]))
+        row_col = nextPosition(n, row_col)
+
+    return work
 
 
 # 25. Square lamplighter
@@ -361,8 +492,22 @@ if __name__ == '__main__':
     # shuffled = riffle(ls)
     # _ = 'STOP'
 
+    # test 2.19:
+    test_cases = [
+        # N, items
+        (5, [1, 10, 12, 14, 24, 25]),
+        (19, [76, 86, 106, 259, 300, 361]),
+        (295, [21024, 40895, 42272, 50760, 82217, 87025]),
+    ]
+    # passing the 3 printed test cases in the problem statement 2026Aug14
+    # (subsequently passed tester109.py same day)
+    for tc in test_cases:
+        result = magic_knight(tc[0], tc[1])
+        print(result)
+
     # TEST: 5. Cyclops numbers
     # n Expected result
+    """
     f = is_cyclops
     test_data = [
         (0, True),
@@ -375,6 +520,7 @@ if __name__ == '__main__':
     for n, exp in test_data:
         print(f"f({n}) is {f(n)}")
         # assert f(n) == tf 
+    """
 
 
 # EOF
