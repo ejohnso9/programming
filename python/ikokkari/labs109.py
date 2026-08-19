@@ -107,14 +107,15 @@ def is_cyclops(n: int) -> bool:
 
 # My previous version from 2025
 # 6. Domino cycle (pg 14) //passing on 2025Dec31
-def domino_cycle(ls: list) -> bool:
-    """
-    Does the list of dominoes (2-tuples) form a valid loop of matching ends?
-    """
-    if ls == []:
-        return True  # Degenerate case documented in problem statement
-    inner_tf = all(ls[i][1] == ls[i+1][0] for i in range(len(ls) - 1))
-    return inner_tf and ls[0][0] == ls[-1][1]
+#def domino_cycle(ls: list) -> bool:
+#    """
+#    Does the list of dominoes (2-tuples) form a valid loop of matching ends?
+#    """
+#    if ls == []:
+#        return True  # Degenerate case documented in problem statement
+#    inner_tf = all(ls[i][1] == ls[i+1][0] for i in range(len(ls) - 1))
+#    return inner_tf and ls[0][0] == ls[-1][1]
+#
 
 
 # 6. Domino cycle (pg 14)
