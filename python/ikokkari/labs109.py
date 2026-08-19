@@ -19,6 +19,29 @@ HISTORY
 """
 
 
+from fractions import Fraction
+
+
+#===============================================================================
+# UTILITY FUNCTIONS
+def to_base(n: int, base: int) -> list[int]:
+    if base < 2:
+        raise ValueError("base must be at least 2")
+    if n < 0:
+        raise ValueError("n must be non-negative")
+
+    if n == 0:
+        return [0]
+
+    digits = []
+    while n:
+        n, digit = divmod(n, base)
+        digits.append(digit)
+
+    return digits[::-1]  # NB: most sig. first: to_base(123, 10) -> [1, 2, 3]
+#===============================================================================
+
+
 # 1. Ryerson letter grade (pg 9)
 def ryerson_letter_grade(n):
     """This is starting source provided by ikokkari"""
@@ -266,10 +289,21 @@ def square_lamps(n: int, flips: list[int]) -> int:
         else:
             s.add(i)  # was OFF: turn it ON
 
-    # evaluate that one expression: ((N - C) * R) + (C * (N - R))
+    # evaluate the total ON cells expression: ((N - C) * R) + (C * (N - R))
     R, C = len(rows), len(cols)
     N = n  # upper-case name alias
     return (N - C) * R + (C * (N - R))
+
+
+# 37. Van der Corput sequence
+def van_der_corput(base: int, n: int) -> Fraction:
+    """
+    Problem #37:
+    https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
+    """
+
+    # iterating 'ls' least-sig first!
+    return sum([Fraction(el, base ** (i+1)) for i, el in enumerate(to_base(n, base)[::-1])])
 
 
 # 63. Markov distance
