@@ -460,6 +460,23 @@ def markov_distance(t1: tuple[int, int, int], t2: tuple[int, int, int]) -> int:
     return dist
 
 
+# 65. St Bitus' Dance
+def super_tiny_rng(seed: int, n: int, n_bits: int) -> list[int]:
+    x: int = seed
+    rand_ints = []  # RV: qty: n, random {n_bits}-bit ints
+    for run_i in range(n):
+        bits = []
+        for i in range(n_bits):
+            x += (x * x) | 5  # the basic RNG operation (provides 1 bit)
+            bits.append(int(bool(x & 0x80000000)))  # extract high-order bit from x
+            x = x & 0xFFFFFFFF  # reduce x to 32-bit version of x
+        bits.reverse()  # LSB first: 2^0 as el[0]
+        rand_int = sum([bits[i] * 2**i for i in range(n_bits)])
+        rand_ints.append(rand_int)
+
+    return rand_ints  # RV: qty: n, random {n_bits}-bit ints
+
+
 #---------------------------------------------------------------------------------------------------
 # Problem Set #3:  
 # https://github.com/ikokkari/PythonProblems/blob/main/Third%20Python%20Problem%20Collection.pdf
