@@ -1,0 +1,5 @@
+zoo
+yes
+cacao
+multinomiaalcoefficient
+racecars
