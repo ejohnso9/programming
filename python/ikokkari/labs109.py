@@ -20,8 +20,8 @@ HISTORY
 
 
 from fractions import Fraction
-
 from magic_knight import magic_knight
+from first_fit_bin_packing import first_fit_bin_packing
 
 
 #===============================================================================
@@ -415,10 +415,6 @@ def baum_sweet(n: int) -> int:
 
 # ENTRY POINT
 if __name__ == '__main__':
-    # ls = list(range(1, 9))
-    # ls = [0, 1]
-    # shuffled = riffle(ls)
-    # _ = 'STOP'
 
     # test 2.19:
     test_cases = [
@@ -449,7 +445,6 @@ if __name__ == '__main__':
         print(f"f({n}) is {f(n)}")
         # assert f(n) == tf 
     """
-
 
 # EOF
 

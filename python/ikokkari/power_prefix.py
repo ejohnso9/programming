@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # file: power_prefix.py
-# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=100:
 
 
 # 9. Power Prefix
@@ -12,6 +11,8 @@ def power_prefix(prefix: str) -> int:
     is a string with '*' wildcards in it.
     (e.g., power_prefix('*22*3720') -> 63)
     """
+    # TODO: performance could perhaps be improved here via memoization, but as it is passing the
+    #       tester in about 0.6 sec, it's good enough
 
     # let's just handle the base case directly
     if prefix == '1':
@@ -39,4 +40,11 @@ def power_prefix(prefix: str) -> int:
             return power  # Found the first 2 ** power that matches
 
     raise RuntimeError("How did you get here?")
+
+
+# ENTRY POINT
+if __name__ == '__main__':
+    print("This is a module defining the function: power_prefix()")
+
+# EOF
 
