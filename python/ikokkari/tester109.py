@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 # Report errors and improvements to ilkka.kokkarinen@gmail.com

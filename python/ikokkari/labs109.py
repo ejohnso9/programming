@@ -22,6 +22,7 @@ HISTORY
 from fractions import Fraction
 from magic_knight import magic_knight
 from first_fit_bin_packing import first_fit_bin_packing
+from count_unicolour_rectangles import count_unicolour_rectangles
 
 
 #===============================================================================
