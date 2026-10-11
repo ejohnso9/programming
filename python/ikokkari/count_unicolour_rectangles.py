@@ -5,14 +5,14 @@
 
 """
 DESCRIPTION:
-    module for 1 function: first_fit_bin_packing()
+    module for 1 function: count_unicolour_rectangles()
 
 
 AUTHOR:
     Erik Johnson: ejohnso9@earthlink.net
 
 HISTORY
-    2026Oct08 
+    2026Oct10 Created
 """
 
 
@@ -21,8 +21,7 @@ HISTORY
 # https://github.com/ikokkari/PythonProblems/blob/main/Additional%20Python%20Problems.pdf
 # --------------------------------------------------------------------------------------------------
     
-# 22. Count monochromatic rectangles
-# NB: naming discrepancy here
+# 22. Count monochromatic rectangles (NB: naming discrepancy here)
 def count_unicolour_rectangles(grid: list[str]) -> int:
     """
     Count of how many rectilinear rectangles have all 4 corners same color.
@@ -31,21 +30,7 @@ def count_unicolour_rectangles(grid: list[str]) -> int:
     count: int = 0
     nrows, ncols = len(grid), len(grid[0])  # width, height
 
-    # functional: no inner refs
-    def findRowsBelow(grid: list[str], row_i: int, col_i: int) -> list[int]:
-        """
-        Let c be the color at grid[row_i][col_i]
-        Build list of row indices below col_i that are same color, c, at (r, col_i), r > row_i
-
-        :param row_i: 0-based row index
-        :param col_i: 0-based column index
-        :return: row indices > row_i with
-        """
-
-        c = grid[row_i][col_i]  # color @ UL corner
-        return [r for r in range(row_i + 1, nrows) if grid(r, col_i) == c]
-
-    # scan upper left corners from (0, 0) to (nrows - 2, ncols - 2)
+    # scan upper left corners from (0, 0) to (nrows - 1, ncols - 1)
     for r1 in range(nrows - 1):
         for c1 in range(ncols - 1):
             color = grid[r1][c1]  # color @ UL corner
@@ -64,7 +49,6 @@ def count_unicolour_rectangles(grid: list[str]) -> int:
                     if grid[r2][c2] == color:
                         count += 1
                         # print(f"({r1}, {c1}), ({r2}, {c1}), ({r1}, {c2}), ({r2}, {c2})")
-                        # print(f"({row_i}, {col_i})", end=' ')
 
     return count
 
@@ -92,6 +76,5 @@ if __name__ == '__main__':
     f = count_unicolour_rectangles  # the function under test
     grid, exp = (TEST_DATA[1][i] for i in (0, 1))
     assert f(grid) == exp
-
 
 # EOF

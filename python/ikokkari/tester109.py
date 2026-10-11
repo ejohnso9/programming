@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Automated tester for the problems in the collection
 # "109 Python Problems for CCPS 109" by Ilkka Kokkarinen.
 # Report errors and improvements to ilkka.kokkarinen@gmail.com
@@ -29,8 +28,8 @@ from datetime import date
 # ZZZ
 
 verbose_execution = {
-    #   "function_one": 42,   # Print the first 42 test cases of function_one
-    #   "function_two": -1,   # Print all test cases of function_two, however manYY there are
+    #  "function_one": 42,   # Print the first 42 test cases of function_one
+    #   "function_two": -1,   # Print all test cases of function_two, however many there are
     #   "function_three": 0   # Be silent with function_three (but run it early)
 }
 
@@ -38,7 +37,7 @@ verbose_execution = {
 use_expected_answers = True
 
 # The release date of this version of the tester.
-version = "December 14, 2025"
+version = "February 20, 2026"
 
 # Fixed seed used to generate pseudorandom numbers.
 fixed_seed = 12345
@@ -57,8 +56,7 @@ timeout_cutoff = 20
 # How many test cases to record in the file for each function.
 testcase_cutoff = 300
 
-# Is the script allowed to create a new expected_answers file? Do not
-# change this unless you know what you are doing.
+# Is the script allowed to create a new expected_answers file?
 can_record = False
 
 # For instructors who want to add their own problems to this set:
@@ -76,9 +74,10 @@ can_record = False
 # 8. Once you have done the above for all the functions that you
 #    want to add, set the value of use_record back to True.
 # 9. Delete the expected_answers file from the same folder that
-#    this script is located in.
+#    this script is located in, and set can_record to True.
 # 10. Run this test script to generate the new expected answers file.
-# 11. Release the new version of tester and record to students.
+# 11. Set can_record back to False.
+# 12. Release the new version of tester and record to students.
 
 
 # Convert a dictionary or set result to a list sorted by keys to
@@ -343,7 +342,249 @@ def rearrange_graph(edges, rng):
 
 # XXX Test case generators for the individual functions.
 
-def haar_wavelet_encode(rng):
+def distance_from_land_generator(rng):
+    for n in islice(pyramid(3, 3, 3), 3000):
+        m = rng.randint(3, n)
+        if rng.randint(0, 99) < 50:
+            n, m = m, n
+        map = [["S" for _ in range(m)] for _ in range(n)]
+        for _ in range(rng.randint(1, 4 * isqrt(n * m))):
+            x = rng.randint(0, n - 1)
+            y = rng.randint(0, m - 1)
+            map[x][y] = "L"
+        map = ["".join(map[x]) for x in range(n)]
+        yield map,
+
+
+def baum_sweet_generator(rng):
+    for n in range(1000000):
+        yield n,
+
+
+def ehrenfeucht_mycielski_generator(rng):
+    k = 10
+    for n in range(1, 7):
+        for ones in range(0, n + 1):
+            for p in combinations(range(n), ones):
+                prefix = ["1" if i in p else "0" for i in range(n)]
+                yield "".join(prefix), k
+                k += 1
+
+
+def night_shift_generator(rng):
+    # Example programs copied from https://esolangs.org/wiki/Night_Shift
+    invert_bits = ["0000-01000", "0001-11000", "000-001", "01001-0011", "11001-0010", "001-/"]
+    extract_first_bit = ["0000-010010", "0001-110010", "00100-0010", "00101-0010", "0010-0011", "010011-0", "110011-1"]
+    extract_last_bit = ["00000-0000", "00001-0001", "00010-0000", "00011-0001", "0000-0", "0001-1"]
+    remove_first_bit = ["0000-001", "0001-001", "001-/"]
+    remove_last_bit = ["00000-010000", "00001-010001", "00010-110000", "00011-110001", "0000-001",
+                       "0001-001", "01001-0010", "11001-0011", "001-/"]
+    increment_binary = ["0000-01000", "0001-11000", "000-0010", "010010-00111", "110010-00100",
+                        "0010 - 00111", "010011-00110", "110011-00111", "0011-/"]
+    for n in islice(pyramid(2, 3, 4), 1000):
+        data = "".join(rng.choice("01") for _ in range(n))
+        for rules in [invert_bits, extract_first_bit, extract_last_bit, remove_first_bit, remove_last_bit, increment_binary]:
+            yield data, rules
+
+
+def sonata_match_generator(rng):
+    with open('words_sorted.txt', 'r', encoding='utf-8') as f:
+        words = [w.strip() for w in f]
+    for n, m in islice(zip(pyramid(5, 2, 4), pyramid(2, 4, 5)), 260):
+        assigned, var_type = dict(), dict()
+        chosen_vars = rng.sample(ups, m)
+        for v in chosen_vars:
+            var_type[v] = rng.choice([True, False])
+            if var_type[v]:
+                assigned[v] = rng.choice(lows)
+            else:
+                while True:
+                    word = rng.choice(words)
+                    if rng.randint(0, 99) < 100 - 5 * len(word):
+                        break
+                assigned[v] = word if rng.randint(0, 99) < 80 else ""
+        text, pattern = "", ""
+        for _ in range(n):
+            if rng.randint(0, 99) < 50:
+                c = rng.choice(lows)
+                pattern += c
+                text += c
+            else:
+                v = rng.choice(chosen_vars)
+                text += assigned[v]
+                pattern += ("^" if var_type[v] else "_") + v
+        while rng.randint(0, 99) < 20:
+            i = rng.choice(range(len(text)))
+            text = text[:i] + rng.choice(lows) + text[i+1:]
+        yield text, pattern
+
+
+def expiring_cookies_generator(rng):
+    for n, m in islice(zip(pyramid(4, 2, 3), count(10)), 500):
+        cookies = [1 for _ in range(n)]
+        for _ in range(m):
+            cookies[isqrt(rng.randint(0, n * n - 1))] += 1
+        cookies.sort()
+        yield cookies,
+
+
+def bowling_paths_generator(rng):
+    for score in range(301):
+        yield score
+
+
+def pseudo_smarandache_generator(rng):
+    for n in range(1, 10000):
+        yield n,
+
+
+def postage_stamp_generator(rng):
+    for n, m in islice(zip(pyramid(2, 2, 2), count(10)), 250):
+        stamps = [1] + sorted(rng.sample(range(2, m), n))
+        for k in rng.sample(range(2, 2 * n + 4), 3):
+            yield stamps, k
+
+
+def frobenius_generator(rng):
+    for n, k in islice(zip(pyramid(2, 3, 3), pyramid(2, 7, 9)), 1000):
+        for _ in range(n):
+            nums = rng.sample(__primes, k)
+            yield sorted(nums),
+
+
+def pollard_rho_generator(rng):
+    PRIMES = [
+        26797907, 31414613, 25537943, 28685731, 32173283,
+        21134899, 24464971, 20782999, 33383071, 28036597,
+        22238383, 30404951, 32241289, 30643609, 23551501,
+        19057373, 26002337, 25647019, 31727669, 28355893,
+        19310029, 24570103, 21760549, 17287709, 29810897,
+        17893243, 20013731, 32600467, 22831087, 32059619,
+        19946887, 17788153, 30188827, 20958323, 22682923,
+        23542429, 24509713, 17332493, 27796133, 21085739,
+        2963404501, 3614474503, 2248506499, 2262889561, 3758106601,
+        2320360421, 4212401929, 3020445331, 2792349533, 2776874897,
+        3566060053, 2685904541, 3328299127, 3467131123, 2624486353,
+    ]
+    for _ in range(200):
+        p1, p2 = rng.sample(PRIMES, 2)
+        yield p1 * p2
+
+
+def cutting_sticks_generator(rng):
+    for sticks in [[5, 10], [6], [1, 2, 3, 4, 5]]:
+        yield sticks,
+    for n in islice(pyramid(5, 2, 2), 200):
+        m = (n * (n + 1)) // 2
+        sticks = []
+        while m >= n:
+            s = rng.randint(n, m)
+            sticks.append(s)
+            m -= s
+        if m > 0:
+            sticks[-1] += m
+        yield sticks,
+
+
+def klee_measure_generator(rng):
+    for n, m, p in islice(zip(pyramid(3, 1, 1),
+                              chain(count(30, 500), scale_random(12345, 20, 2)),
+                              cycle([30, 50, 80])), 4000):
+        events = []
+        s = rng.randint(-m, m)
+        for _ in range(n):
+            e = rng.randint(s + 1, s + 1 + isqrt(m))
+            events.append((s, e))
+            s = rng.randint(s, e) if rng.randint(0, 99) < p else rng.randint(-m, m)
+        rng.shuffle(events)
+        yield events,
+
+
+def square_and_twice_prime_generator(rng):
+    for n in range(1, 300):
+        yield n,
+    for n in islice(scale_random(12345, 3, 10), 130):
+        yield n,
+
+
+def no_dogs_allowed_generator(rng):
+    for n, p in islice(zip(pyramid(3, 3, 7), cycle([10, 30, 50])), 70):
+        m = rng.randint(3, n)
+        if rng.randint(0, 99) < 50:
+            n, m = m, n
+        grid = [[rng.choice("dog") for _ in range(m)] for _ in range(n)]
+        while rng.randint(0, 99) > p:
+            word = rng.choice(["dog", "god"])
+            if rng.randint(0, 100) < 50:
+                x = rng.randint(0, n - 3)
+                y = rng.randint(0, m - 1)
+                grid[x][y] = word[0]
+                grid[x+1][y] = word[1]
+                grid[x+2][y] = word[2]
+            else:
+                x = rng.randint(0, n - 1)
+                y = rng.randint(0, m - 3)
+                grid[x][y] = word[0]
+                grid[x][y+1] = word[1]
+                grid[x][y+2] = word[2]
+
+        yield ["".join(row) for row in grid],
+
+def count_dogs_generator(rng):
+    for n in islice(pyramid(4, 3, 5), 3000):
+        m = rng.randint(3, n)
+        if rng.randint(0, 99) < 50:
+            grid = ["".join(rng.choice("dog") for _ in range(n)) for _ in range(m)]
+        else:
+            grid = ["".join(rng.choice("dog") for _ in range(m)) for _ in range(n)]
+        yield grid,
+
+
+def meaowsephus_generator(rng):
+    for n in islice(pyramid(3, 4, 5), 2000):
+        lives = [rng.randint(1, n + 2) for _ in range(n)]
+        k = rng.randint(1, n // 2 + 1)
+        yield lives, k
+
+
+def damm_checkdigit_generator(rng):
+    for n in islice(pyramid(2, 4, 5), 500):
+        digits = "".join(rng.choice("0123456789") for _ in range(n))
+        yield digits,
+
+
+def three_way_partition_generator(rng):
+    for items in [[0], [1], [2], [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]]:
+        yield items,
+    for n, p in islice(zip(pyramid(3, 2, 2), cycle([20, 50, 80])), 500):
+        items = [rng.randint(0, 2)]
+        for _ in range(n - 1):
+            items.append(rng.choice(items) if rng.randint(0, 99) < p else rng.randint(0, 2))
+        yield items,
+
+
+def is_organ_pipe_generator(rng):
+    for items in [[42], [1, 2], [2, 1], [5, 5], [1, 2, 3], [3, 2, 1], [1, 2, 2, 1]]:
+        yield items,
+    for n in islice(pyramid(4, 5, 6), 2000):
+        up = rng.randint(1, n)
+        down = n - up + 1
+        top = max(up, down)
+        top = rng.randint(top + 1, 2 * top)
+        ups = sorted(rng.sample(range(0, top - 1), up))
+        downs = sorted(rng.sample(range(0, top - 1), down), reverse=True)
+        items = ups + [top] + downs
+        if rng.randint(0, 99) < 50:
+            if rng.randint(0, 99) < 30:
+                i = rng.randint(1, len(items) - 1)
+                items[i] = items[i - 1]
+            else:
+                i, j = rng.sample(range(len(items)), 2)
+                items[i], items[j] = items[j], items[i]
+        yield items,
+
+
+def haar_wavelet_encode_generator(rng):
     for m, k in islice(zip(pyramid(2, 10, 15), pyramid(5, 2, 2)), 1000):
         yield [rng.randint(-k, k) for _ in range(2**m)],
 
@@ -367,21 +608,17 @@ def domino_box_generator(rng):
 
 
 def longest_fib_subsequence_generator(rng):
-    for n, p in islice(zip(pyramid(5, 1, 1), cycle([30, 50, 60])), 3000):
-        f1 = rng.randint(1, n)
-        f2 = rng.randint(1, n)
-        items, m = [], 5
+    for n, m in islice(zip(pyramid(5, 1, 1), pyramid(2, 1, 2)), 3000):
+        items, pairs = [], []
+        for _ in range(m):
+            a = rng.randint(1, n)
+            b = rng.randint(1, n)
+            pairs.append((a, b))
         for _ in range(n):
-            if rng.randint(0, 99) < p:
-                e, f1, f2 = f1, f2, f1 + f2
-            elif len(items) < 3 or rng.randint(0, 99) < 50:
-                e = rng.randint(1, (3 * m) // 2)
-            else:
-                i = rng.randint(0, len(items) - 2)
-                j = rng.randint(i + 1, len(items) - 1)
-                e = items[i] + items[j]
-            m = max(m, e)
-            items.append(e)
+            p = rng.randint(0, len(pairs) - 1)
+            a, b = pairs[p]
+            items.append(a)
+            pairs[p] = (b, a + b)
         yield items,
 
 
@@ -1490,21 +1727,21 @@ def loopless_walk_generator(rng):
                 steps.append(rng.choice(lows))
         yield "".join(steps)
 
+# Superior test case generator created by Claude Opus 4.6.
 
 def square_root_sum_generator(rng):
-    for n in islice(pyramid(3, 2, 2), 2000):
-        n1, n2, d = [], [], rng.randint(0, 1)
-        for _ in range(n):
-            p = rng.randint(2, 3 * n) if n1 == [] else max(n1[-1], n2[-1])
-            p1 = rng.randint(p + 1, p + 4)
-            p2 = p1 + 1
-            if d == 0:
-                n1.append(p1)
-                n2.append(p2)
-            else:
-                n1.append(p2)
-                n2.append(p1)
-            d = 1 - d
+    for n in islice(pyramid(3, 2, 2), 300):
+        # Numbers of the form X^2 + small offset require precision
+        # proportional to the number of digits in X to compare,
+        # since sqrt(X^2 + i) = X + i/(2X) - i^2/(8X^3) + ...
+        # and the leading terms cancel between the two sums.
+        digits = 10 * n
+        X = rng.randint(10**(digits - 1), 10**digits)
+        base = X * X
+        offsets = list(range(1, 2 * n + 1))
+        rng.shuffle(offsets)
+        n1 = sorted([base + off for off in offsets[:n]])
+        n2 = sorted([base + off for off in offsets[n:]])
         yield n1, n2
 
 
@@ -1602,35 +1839,25 @@ def power_prefix_generator(rng):
 
 
 def pinch_moves_generator(rng):
-    yield ".BWW.WB", 'B'
-    yield "RBW.BW", 'W'
-    
-    for n in islice(pyramid(8, 10, 10), 500):
-        board = ""
-        captured = False
-        player = rng.choice('BW')
-        other = 'W' if player == 'B' else 'B'
-        prev = rng.choice("BW")
-        while len(board) < n:
-            move = rng.randint(0, 100)
-            if move < 20 and not captured:
-                o1 = rng.randint(1, 3)
-                o2 = rng.randint(1, 3)
-                if rng.randint(0, 100) < 70:
-                    board += f"{other * o1}{'R' * rng.randint(1, 2)}{other * o2}"
-                else:
-                    board += f"{other * o1}{'R' * rng.randint(1, 2)}{other}{'R' * rng.randint(1, 2)}{other * o2}"
-                captured = True
-            elif move < 50:
-                board += '.'
-            elif move < 80:
-                board += f".{prev * rng.randint(1, 2)}"
-                prev = 'B' if prev == 'W' else 'W'
+    for n, m in islice(zip(pyramid(3, 11, 12), pyramid(2, 10, 10)), 1500):
+        blocks = "S"
+        while len(blocks) < n:
+            b = rng.choice("BWR.")
+            while b == blocks[-1]:
+                b = rng.choice("BWR.")
+            new_blocks = blocks + b
+            for tabu in ("SBW", "SWB", "BWB", "WBW", "R.", ".R", "WRB", "BRW"):
+                if new_blocks.endswith(tabu):
+                    break
             else:
-                p = rng.randint(0, 2)
-                o = rng.randint(0, 2)
-                board += f".{player * p}{other * o}" if rng.randint(0, 100) < 50 else f".{other * o}{player * p}"
-        yield board, player
+                blocks = new_blocks
+        if not(blocks.endswith("BW") or blocks.endswith("WB")):
+            if "." in blocks:
+                board = ""
+                for b in blocks[1:]:
+                    board += b * rng.randint(1, m)
+                yield board, "B"
+                yield board, "W"
 
 
 def tom_and_jerry_generator(rng):
@@ -2872,8 +3099,7 @@ def stalin_sort_generator(rng):
     yield [1, 2],
     yield [2, 1],
     yield [42, 42],
-    m = 5
-    for n in islice(pyramid(3, 1, 1), 1000):
+    for n, m in islice(zip(pyramid(3, 1, 1), pyramid(10, 1, 1)), 1000):
         yield [rng.randint(-(m * m), (m * m)) for _ in range(n)],
         items = list(range(n, -n, -1))
         for _ in range(rng.randint(0, n // 2)):
@@ -6207,12 +6433,12 @@ testcases = [
     (
         "stalin_sort",
         stalin_sort_generator,
-        "ee869e50c9b9def412fadb0d142a8e601d9d550921d04a1736e3a99b98a8deba"
+        "d1c87fd7fc8592551340a2ce38be902820b89c4817cb04a12f7635897daf6ff8"
     ),
     (
         "insertion_sort_swaps",
         stalin_sort_generator,
-        "1c863b25d97baaaee165ee9a07e26b09ee6575634d5180a413836a14e6132d3b"
+        "dfe82a0b9c96861963b9fc178e4f7cd35175e22070d6a5eb668e3f35529af455"
     ),
     (
         "optimal_blackjack",
@@ -6716,7 +6942,7 @@ testcases = [
     (
         "pinch_moves",
         pinch_moves_generator,
-        "cb5932ed866518ab208c571cb411e7d467dc5806995e9dfa6578b92c3b340f5f"
+        "9073bcff14b2dab6c04b4cc55e8599e44e144e0dfcb5f70d5e3442f4d96bf62c"
     ),
     (
         "power_prefix",
@@ -6771,7 +6997,7 @@ testcases = [
     (
         "square_root_sum",
         square_root_sum_generator,
-        "f1e732e1c1e8e4d901b30c928851acdcbe3a007f3128f76344f74e3b8ac4edb3"
+        "54e87a423d1cf24f27cadb8ab6d3132e5a97825cfc9dd1754cdf10207881a12b"
     ),
     (
         "loopless_walk",
@@ -6861,7 +7087,7 @@ testcases = [
     (
         "is_semiconnected",
         is_semiconnected_generator,
-        "45133ffcbe3f48cdbe9c49123790b4d04983b24958a652ecb7cdf1ac469ddfb8"
+        "47a3dbd984103ed9186b0156640b3a3f7f8de51ecf105987bfe7b08846f3ba1d"
     ),
     (
         "poker_test",
@@ -7226,7 +7452,7 @@ testcases = [
     (
         "longest_fib_subsequence",
         longest_fib_subsequence_generator,
-        "fd6d84bb89f7793361b7a0edf022c8c1c7bec22c670b69fb8619e91118d42d11"
+        "5a5dcd99f1ab7e52e25af38e9da69b01643a831e701fc2e450b2ca6d218a95c3"
     ),
     (
         "domino_box",
@@ -7245,14 +7471,114 @@ testcases = [
     ),
     (
         "haar_wavelet_encode",
-        haar_wavelet_encode,
+        haar_wavelet_encode_generator,
         "d83400fadc252ce7c35cd7c8a83d9e6f2f3b098e455cc71d75a37eb3bd77ae54"
     ),
     (
         "haar_wavelet_decode",
-        haar_wavelet_encode,
+        haar_wavelet_encode_generator,
         "49fb6bb0878d5cdc773a1e11d16e6250620e8ac3a88d52fac831a42bb57ea0de"
     ),
+    (
+        "is_organ_pipe",
+        is_organ_pipe_generator,
+        "52288be12bcacf65564b558038c428c9336d8b1918a47513669b1ca4d98308d6"
+    ),
+    (
+        "three_way_partition",
+        three_way_partition_generator,
+        "9db8eb2e997e394441a62dff8b279beab72d3fbdf8c4a1d8040ce29691f67a29"
+    ),
+    (
+        "damm_checkdigit",
+        damm_checkdigit_generator,
+        "06089f114d886b8e46c6cf7d2ad967e5fdab8c8b6632745073690149a72f28d5"
+    ),
+    (
+        "meaowsephus",
+        meaowsephus_generator,
+        "d01cd6e1da2ac893be495e64cee098dbb60c0f33fca94671fc57446fe0d447e4"
+    ),
+    (
+        "count_dogs",
+        count_dogs_generator,
+        "ef6b978f5a17e9dcd18630016163c32eaa051880e20cf5151a6ed781e8b42415"
+    ),
+    (
+        "no_dogs_allowed",
+        no_dogs_allowed_generator,
+        "68f317c349c197c7e9c6bb5d0c976cbb73830628da917800460244a2d3479d27"
+    ),
+    (
+        "square_and_twice_prime",
+        square_and_twice_prime_generator,
+        "184337cd2adc01eda4cc3f86834ceb7b530666b08a440e5b5952908bba10b126"
+    ),
+    (
+        "klee_measure",
+        klee_measure_generator,
+        "2b898c488cf51ee5c82092245f570c140ff60699837d99079772a66442620106"
+    ),
+    (
+        "cutting_sticks",
+        cutting_sticks_generator,
+        "c1f9d8f18febdab88c11e26ca0f5f82d7035eed43f50cadcee6ebb4a586af822"
+    ),
+    (
+        "pollard_rho",
+        pollard_rho_generator,
+        "a663fc8a6dbe642254934ae57f3d30480eb94685ec3892fd337e37094dc29f4b"
+    ),
+    (
+        "frobenius",
+        frobenius_generator,
+        "fe11cd15dabd27d3b8d28db14b6dd002f537dac7358528deb6dbc839de22d501"
+    ),
+    (
+        "postage_stamp",
+        postage_stamp_generator,
+        "8dffdeb04ab412592ee225c465e9ef596f6b675ad1bb0efe5fdf1e374f8b8b36"
+    ),
+    (
+        "pseudo_smarandache",
+        pseudo_smarandache_generator,
+        "8f5be79710ca3110a1c38759fc1cb3d50268e1c80c39e7e0873d6fbe3c93613f"
+    ),
+    (
+        "bowling_paths",
+        bowling_paths_generator,
+        "ee1c30cb4e09c1391c679576a4dd5c48b4e2d71bbdea2c52baa56ed150ad9074"
+    ),
+    (
+        "expiring_cookies",
+        expiring_cookies_generator,
+        "4d341dd237dedc0d5c6c6dbe860137efb9842efdde2719ddbbfcab1299ec0fec"
+    ),
+    (
+        "sonata_match",
+        sonata_match_generator,
+        "8600ff32d6ac1ac723356304c351c00ddb262f29bed7f3d585304f1846fc4552"
+    ),
+    (
+        "night_shift",
+        night_shift_generator,
+        "595783b92175dc3f9f822e1dbd3f826210891d9b56d6e1a63e7975359d4a8a05"
+    ),
+    (
+        "ehrenfeucht_mycielski",
+        ehrenfeucht_mycielski_generator,
+        "b47e4c88744427e51f0ffb1df3817b060a7405396e4692974d99636f73dd4cf9"
+    ),
+    (
+        "baum_sweet",
+        baum_sweet_generator,
+        "035429366eb7a7d6baa60801780f705fff7e15882b90eff3748b7cc8a014a164"
+    ),
+    (
+        "distance_from_land",
+        distance_from_land_generator,
+        "7f0c597828290c9c80b28cb2766e604ff947931faa4a4e1bb0d6d9b65726bae2"
+    )
 ]
 
 # YYY
@@ -7320,7 +7646,7 @@ def run_all():
 
 def discrepancy(teacher, student, test_generator, stop_at_first=False, print_all=False):
     shortest_args, disc_teacher, disc_student, disc, cases = None, None, None, 0, 0
-    for n, args in enumerate(test_generator(fixed_seed)):
+    for n, args in enumerate(test_generator):
         # Turn the args into a tuple, if they aren't one already.
         if type(args) != tuple:
             args = (args,)
@@ -7363,4 +7689,4 @@ run_all()
 
 
 # teacher student generator
-#discrepancy(labs109.max_blocks, max_blocks, max_blocks_generator, print_all=True, stop_at_first=False)
+#discrepancy(labs109.pinch_moves, labs109.pinch_moves2, pinch_moves_generator(Random(fixed_seed)), print_all=False, stop_at_first=True)
