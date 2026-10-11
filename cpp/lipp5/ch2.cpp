@@ -1,5 +1,5 @@
 // file: ch2.cpp
-// vim: et ts=4 sw=4 tw=100 autoindent smartindent :
+// vim: set ts=4 sw=4 sts=4 et tw=100 number autoindent smartindent:
 
 /*
  * Exercizes for Chapter 2 in "C++ Primer", Stanley Lippman, 5th Edition
@@ -256,6 +256,27 @@ int main() {
     */ // CODE ABOVE was compiling and running w/o error on 2026Aug02
     // taking code out so I don't have a growing number of declarations
     // already in play for later problems.
+
+    // page 61 check
+    double dval = 3.14;
+    const int &ri = dval; // text implies this is legal?! In fact, IT IS!!
+    cout << "dval is: " << dval << endl;
+    cout << "ri is: " << ri << endl; // 3 !!!
+
+    // pg 61: Initialization and References to const
+    int i = 42;
+    const int &r1 = i;
+    const int &r2 = 42;
+    const int &r3 = r1 * 2;
+    cout << "r3 is: " << r3 << endl; // "r3 is: 84
+    // r3 = 101; // CANNOT do this!
+    // int &r4 = r * 2; // Book typo? 'r' not declared here! i?
+    //int &r4 = i * 2; // w/ i: this is supposed to be error: non-const ref
+    //cout << "r4 is: " << r4 << endl; 
+    // I think the moral of this story is that you can make references
+    // to other than just a plain var name: there is a temporary
+    // variable created behind the scenes.
+
 
     cout << "EOF" << endl;
 
