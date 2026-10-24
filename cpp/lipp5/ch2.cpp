@@ -1,5 +1,5 @@
 // file: ch2.cpp
-// vim: set ts=4 sw=4 sts=4 et tw=100 number autoindent smartindent:
+// vim: et ts=4 sw=4 tw=100 autoindent smartindent :
 
 /*
  * Exercizes for Chapter 2 in "C++ Primer", Stanley Lippman, 5th Edition
@@ -223,7 +223,7 @@ int main() {
     // which is a bit ambiguous... in the code, the r reference is used as
     // an alias for i, but obviously r has a modifier in the
     // declaration, so what is the type of r? I think: int& but I guess
-    // you can't really see that in an introspective way.
+    // you can't really see that in an introspective way?
 
     // (b)
     int i, *ip = 0;
@@ -239,44 +239,99 @@ int main() {
 
     //
     // Exercizes Section 2.4 (pg 60)
+    cout << "Exercize 2.26 (bottom pg 60)" << endl;
     //
 
     // Ex. 2.26
     // Which of the following are legal? For those that are illegal,
     // explain why.
-    // (a)
-    // const int buf; // ILLEGAL: no initializer provided
-    // (b)
-    int cnt = 0; // this is, of course, LEGAL
-    // (c)
-    const int sz = cnt; // LEGAL
-    // (d)
-    // ++cnt; ++sz; // ILLEGAL: you can not modify a const
+    // const int buf; // (a) ILLEGAL: ch2.cpp:249:15: error: uninitialized const ‘buf’ [-fpermissive]
+    int cnt = 0; // (b) this is, of course, LEGAL
+    cout << "(b) int cnt = 0; // <- LEGAL" << endl;
+    const int sz = cnt; // (c) LEGAL
+    cout << "(c) const int sz = cnt; // <- LEGAL" << endl << endl;
+    // ++cnt; ++sz; // (d) ILLEGAL: you can not modify const sz
 
-    */ // CODE ABOVE was compiling and running w/o error on 2026Aug02
-    // taking code out so I don't have a growing number of declarations
-    // already in play for later problems.
 
-    // page 61 check
-    double dval = 3.14;
-    const int &ri = dval; // text implies this is legal?! In fact, IT IS!!
-    cout << "dval is: " << dval << endl;
-    cout << "ri is: " << ri << endl; // 3 !!!
-
-    // pg 61: Initialization and References to const
+    // Initialization and References to const (middle pg 61)
+    cout << "Initialization and References to const (bottom pg 61)" << endl;
     int i = 42;
-    const int &r1 = i;
-    const int &r2 = 42;
-    const int &r3 = r1 * 2;
-    cout << "r3 is: " << r3 << endl; // "r3 is: 84
-    // r3 = 101; // CANNOT do this!
-    // int &r4 = r * 2; // Book typo? 'r' not declared here! i?
-    //int &r4 = i * 2; // w/ i: this is supposed to be error: non-const ref
-    //cout << "r4 is: " << r4 << endl; 
-    // I think the moral of this story is that you can make references
-    // to other than just a plain var name: there is a temporary
-    // variable created behind the scenes.
+    const int &r1 = i; // OK: const ref bound to non-const value
+    const int &r2 = 42; // "reference to const" AKA "const ref"
+    const int &r3 = r1 * 2; // ref to temp (see pg 62)
+    // int &r4 = r1 * 2; // error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
+                         // does *NOT* work with i either: problem seems to be that it is a temp value!
 
+    // 2026Oct16  This *COMPILES*!
+    double dval = 3.14;
+    const int &ri = dval; // LEGAL! "To ensure that the object to which ri is bound is an int,
+                          // the compiler transformes this code into something like:
+                          // const int temp = dval;
+                          // const int &ri = temp;
+                          // I think it would be better to simply say that ref to int does not bind
+                          // to double? Seems like a basic type error? But they didn't ask me.
+    cout << "ri is: " << ri << endl;
+
+    // error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
+    double pi = 3.14;
+    // int &pi_ref = pi; // <- ILLEGAL (b/c bound to const, I believe)
+
+    int foo = 42;
+    cout << "foo was: " << foo << endl;
+    int &foo_ref = foo;
+    foo = 99;
+    cout << "now is: " << foo << endl << endl;
+    */ // CODE ABOVE was compiling and running w/o error on 2026Oct21
+
+
+    // There's basically two kinds of 'const' when it comes to pointers...
+    // 1) declaring the pointer itself to be const - i.e., disallowing code to change
+    //    where (to what thing) the pointer points to (that does not disallow changing
+    //    what is pointed at!)
+    // 2) declaring a pointer to point to a const thing (that is, we are going
+    //    to treat it as if the reffered thing is const (meaning disallow changing
+    //    the referrent through the pointer) whether it is actually const or not.
+    double pi = 3.1415926;
+    double phi = 1.6180;
+    cout << "pi is:" << pi << endl;
+    const double *pi_p = &pi; // pointer is const, pointed-to is not!
+    cout << "pi (through the pointer) is: " << *pi_p << endl;
+    cout << "make pi_p point to phi." << endl;
+    pi_p = &phi;
+    cout << "                  pi is now: " << *pi_p << endl << endl; // NOT pi! phi!
+
+    // but you can't do this: it's a pointer to const!
+    // *pi_p = 3.1419;  // BAD VALUE!
+    //  cout << "pi is now:" << *pi_p << endl; // NOT pi! phi!
+
+    // the second notion of const: constant reference
+    double *const phi_p = &phi;
+    double const *phi_p2 = &phi; // this syntax also legal, same as line above
+    cout << "phi (through the pointer) is:" << *phi_p << endl;
+    // but I can't make that pointer point elsewhere:
+    // like this: phi_p = &pi;
+    // ch2.cpp:311:11: error: assignment of read-only variable ‘phi_p’
+    // 311 |     phi_p = &pi;
+    //     |     ~~~~~~^~~~~
+
+    /*
+    Though a reference is not an object (it's a name alias) and it has been said:
+    "you can't take the address of a reference", I discovered today that that's 
+    semantically slippery. You can't get an address value for the reference itself
+    (it's internal to the C runtime system, not user-accessible memeory).
+    You can, however "take address of a reference" - meaning the address of
+    the object the reference refers to!
+    */
+    double &pi_ref = pi;
+    cout << "address of pi (directly): " << &pi << endl;
+    cout << "                 &pi_ref: " << &pi_ref << endl;
+
+    // The two types of const are independent, and you can have one or the other,
+    // both or neither. Bottom of pg 63 talks about:
+    // 1) "Top-Level const" which is the first sense (above): the pointer itself is const
+    //    (the pointer can't be changed to point elsewhere).
+    // 2) "low level const" is the second notion above: pointer (or reference)
+    //    can't be used to change what is pointed to (or referred to).
 
     cout << "EOF" << endl;
 
