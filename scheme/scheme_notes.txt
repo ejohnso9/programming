@@ -2,6 +2,7 @@
 Scheme / LISP Notes
 ===================
 
+https://cisco.github.io/ChezScheme/csug/csug.html
 
 "A Scheme Primer"
     https://files.spritely.institute/papers/scheme-primer.html
