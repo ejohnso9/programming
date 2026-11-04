@@ -1,0 +1,70 @@
+
+# 2026Aug11 - Peerless
+#
+PS> Get-Module -ListAvailable SqlServer
+PS> Install-Module SqlServer -Scope CurrentUser
+
+
+# After I asked him about installation policy...
+# Stirney: PSGallery is fine. You can run:
+PS> Set-PSRepository PSGallery -InstallationPolicy Trusted
+
+
+# built-in cmdlets
+    Get-Verb
+    Get-Command
+        # e.g.: Get-Command -Name *String
+    Get-Member
+    Get-Help
+
+
+# filtering
+Get-Command | Select-Object -First 5
+
+Get-Command | Where-Object # filtering based on properties
+    # eg: Get-Command | Where-Object {$_.ProcessName -like "p*"}
+
+
+Data Types
+    Boolean
+    Int32
+    Double
+    Array      # like Py tuple
+    ArrayList  # like Py list
+    HashTables # like Py dict
+
+
+# Examples
+> $t = $true
+> $t.GetType()
+IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     True     Boolean                                  System.ValueType
+> $t.GetType().Name
+Boolean
+
+
+> using namespace System.Collections
+> $ls = [ArrayList]::new()
+> $ls.GetType()
+
+
+
+# HashTable  NB: formatted input
+PS C:\WINDOWS\system32> $ht = @{
+>> one = "1"
+>> 2 = "two"
+>> }
+# see: > Get-Member -InputObject $ht
+
+# what all does a string implement?
+> Get-Member -InputObject "foo"
+Clone  Method  ...
+...
+
+Split  Method  ...
+... many others
+
+# also: > [String] | Get-Member
+
+# EOF
