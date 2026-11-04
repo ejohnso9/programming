@@ -24,7 +24,7 @@ int main() {
 
     // Exercizes Section 2.3.1 (pg51)
     cout << "Chapter 2 Exercizes" << endl;
-    cout << "-------------------" << endl;
+    cout << "===================" << endl;
     cout << endl;
     // cout << "NOT YET IMPLEMENTED.\n";
 
@@ -284,7 +284,9 @@ int main() {
     */ // CODE ABOVE was compiling and running w/o error on 2026Oct21
 
 
+    /* 2026Oct-block1
     // There's basically two kinds of 'const' when it comes to pointers...
+    // (and references can never be made to refer to something else after init.)
     // 1) declaring the pointer itself to be const - i.e., disallowing code to change
     //    where (to what thing) the pointer points to (that does not disallow changing
     //    what is pointed at!)
@@ -314,24 +316,137 @@ int main() {
     // 311 |     phi_p = &pi;
     //     |     ~~~~~~^~~~~
 
-    /*
-    Though a reference is not an object (it's a name alias) and it has been said:
-    "you can't take the address of a reference", I discovered today that that's 
-    semantically slippery. You can't get an address value for the reference itself
-    (it's internal to the C runtime system, not user-accessible memeory).
-    You can, however "take address of a reference" - meaning the address of
-    the object the reference refers to!
-    */
+    // Though a reference is not an object (it's a name alias) and it has been said:
+    // "you can't take the address of a reference", I discovered today that that's 
+    // semantically slippery. You can't get an address value for the reference itself
+    // (it's internal to the C runtime system, not user-accessible memeory).
+    // You can, however "take address of a reference" - meaning the address of
+    // the object the reference refers to!
     double &pi_ref = pi;
     cout << "address of pi (directly): " << &pi << endl;
     cout << "                 &pi_ref: " << &pi_ref << endl;
+    */
 
     // The two types of const are independent, and you can have one or the other,
-    // both or neither. Bottom of pg 63 talks about:
+    // both, or neither. Bottom of pg 63 talks about:
     // 1) "Top-Level const" which is the first sense (above): the pointer itself is const
     //    (the pointer can't be changed to point elsewhere).
     // 2) "low level const" is the second notion above: pointer (or reference)
     //    can't be used to change what is pointed to (or referred to).
+
+
+    /* Exercize 2.27: Which of the following initializations are legal? (explain why)
+    // -------------------------------------------------------------------------------
+    int i2 = 42; // <- this code not given in the problem, so it makes the problem somewhat
+                 // ambiguous
+
+    // (a) illegal: can't have non-const ref to literal constant
+    // error: cannot bind non-const lvalue reference of type ‘int&’ to an rvalue of type ‘int’
+    // int i = -1, &r = 0;
+    
+    // (b) legal: p2 isn't being changed
+    int *const p2 = &i2; // OK for pointer to be const though referrent isn't
+
+    // (c) illegal: same as (a)
+    const int i = -1, &r = 0;
+
+    // (d) legal: p3 isn't being changed
+    const int *const p3 = &i2;
+
+    // (e) legal: p1 can be declared to point to const thingy, even though i2 isn't const
+    const int *p1 = &i2;
+
+    // (f) illegal: refs are always top-level const, makes no sense to declare it
+    // const int &const r2;
+
+    // not clear whether each statement is supposed to be evalauted in isolation? (I guess?)
+    // (g) legal:
+    // const int i2 = i, &r = i; // this is a re-declaration of i2 which is illegal, but only
+    // problematic b/c I already have statements for i2, r.
+    const int i3 = i, &r3 = i; // but this is fine:
+    */ // Ex2.27 was working by itslef
+
+    /* 2026Oct26  Ex 2.28 OK by itself
+    // Exercize 2.28 (pg 64): Explain the following definitions. Identify any that are illegal.
+    // ----------------------------------------------------------------------------------------
+    // (a) ok...? i is an int, cp is top-level const pointer to int
+    // int i, *const cp; // ILLEGAL: cp would have to be initialized
+
+    // (b) p1 is a pointer to int, p2 is const pointer to int
+    // int *p1, *const p2; // ALSO ILLEGAL: p2 not init'd
+
+    // (c) ic is: const int, but r not declared const: won't work!
+    // const int ic, &r = ic; // ILLEGAL: @ic: ic not init'd
+
+    // (d) p3 const at top-level and low level, but not init'd
+    // const int *const p3;  // ILLEGAL: hello? you have to init!
+
+    // (e) p3 const at top-level and low level
+    const int *p; // The only one of these 5 which is: LEGAL.
+    */
+
+    // 2026Nov04 Ex 2.29
+    cout << "Ex. 2.29, (pg 64) " << endl;
+    cout << "------------------" << endl;
+    cout << "was passing 2026Nov04" << endl << endl;
+    /*
+    // Using the variables in the previous exercize, which of the following assignements are
+    // legal? Explain why?   L -> Legal, I -> Illegal
+    //
+    // ej: Well, this is an odd way to structure the problem, because 4/5 of the previous
+    // statements weren't legal and so didn't compile?
+    // I will declare the vars I think they mean here...
+    int i;
+    const int ic{88};
+    int *p1{&i};
+    int *const p2{&i};
+    const int *const p3 = &i;
+
+    // (a)
+    i = ic; // L: copy an int value into non-const int
+    cout << "(a) i = ic; // <- is LEGAL" << endl;
+
+    // (b)
+    // p1 = p3; // I: low-level const not ignored!
+               // error: invalid conversion from ‘const int*’ to ‘int*’ [-fpermissive]
+               //    (else you would be able to modify j through p1 by getting the address from p3, but p3 is pointer to const int!
+    cout << "(b) p1 = pc; // <- is ILLEGAL" << endl;
+
+    // (c)
+    // p1 = &ic; // I: error: invalid conversion from ‘const int*’ to ‘int*’ [-fpermissive]
+                 // ic is still low-level const, else p1 could be used to modify it
+    cout << "(c) p1 = &ic; // <- is ILLEGAL" << endl;
+
+    // (d)
+    //p3 = &ic; // I: p3 is top-level and low-level const. Must be init'd, can't be changed thereafter.
+                // ch2.cpp:419:8: error: assignment of read-only variable ‘p3’
+                // 419 |     p3 = &ic; // I:
+                //     |     ~~~^~~~~
+    cout << "(d) p3 = &ic; // <- is ILLEGAL" << endl;
+
+    // (e)
+    //p2 = p1; // I: p2 is constant pointer: can't reassign after init!
+             // ch2.cpp:425:8: error: assignment of read-only variable ‘p2’
+    cout << "(e) p2 = p1; // <- is ILLEGAL" << endl;
+
+    // (f) I: ic is const int: you can't reassign it's value (of course)
+    // ic = *p3;
+    // ch2.cpp:430:8: error: assignment of read-only variable ‘ic’
+    // 430 |     ic = *p3;
+    //     |     ~~~^~~~~
+    cout << "(f) ic = *p3; // <- is ILLEGAL" << endl;
+    */
+
+    cout << "Ex. 2.30 (pg 65) " << endl;
+    cout << "-----------------" << endl;
+    cout << "In general, references are name aliases. They must always be initialized." << endl;
+    cout << "Sort of like implicit top-level const; a reference can't be made to refer to something else after initialization (i.e., can't be 'reseated')." << endl;
+    cout << "Whether you can modify the referent through a reference depends on the reference's declared type." << endl;
+    cout << "NB: this is legal: int i, const int &ri = i; (i.e., i is not const, but modification through ri is prohibited!)" << endl;
+    cout << "const int v2 = 0; // not a pointer: top-level const" << endl;
+    cout << "int v1 = v2; // neither: const qualification of source doesn't transfer to v1!" << endl;
+    cout << "int *p1 = &v1, &r1 = v1; // p1 has neither kind of const, r1 references non-const int" << endl;
+    cout << "const int *p2 = &v2, *const p3 = &i, &r2 = v2; // p2 has low-level const, p3 has both levels of const, r2 references const int" << endl;
 
     cout << "EOF" << endl;
 
