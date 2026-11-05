@@ -437,6 +437,7 @@ int main() {
     cout << "(f) ic = *p3; // <- is ILLEGAL" << endl;
     */
 
+    /*
     cout << "Ex. 2.30 (pg 65) " << endl;
     cout << "-----------------" << endl;
     cout << "In general, references are name aliases. They must always be initialized." << endl;
@@ -447,6 +448,27 @@ int main() {
     cout << "int v1 = v2; // neither: const qualification of source doesn't transfer to v1!" << endl;
     cout << "int *p1 = &v1, &r1 = v1; // p1 has neither kind of const, r1 references non-const int" << endl;
     cout << "const int *p2 = &v2, *const p3 = &i, &r2 = v2; // p2 has low-level const, p3 has both levels of const, r2 references const int" << endl;
+    */
+
+    cout << "Ex. 2.31 (pg 65) " << endl;
+    cout << "-----------------" << endl;
+    int i = 0;
+    const int v2 = 0;
+    int v1 = v2;
+    int *p1 = &v1, &r1 = v1;
+    const int *p2 = &v2, *const p3 = &i, &r2 = v2;
+
+    r1 = v2; // LEGAL: v1 is assigned v2's value, v1 is not const
+    p1 = p2; // ILLEGAL: p2 decl pointer to const int, v2 as const int.
+             //          By allowing that assignment to non-const int *, you could otherwise change
+             //          v2 through p1. (i.e., can't discard low-level const)
+    p2 = p1; // LEGAL: p2 decl const int*: you can have p2 point to what p1 points to
+    p1 = p3; // ILLEGAL: can't allow p1 to be assigned like this b/c of p3's low-level const
+             // (i.e., p1's low-level const cannot be less restrictive than p3's low-level const).
+             // Otherwise, p1 could be used to modify the object p3 points to.
+             // NB: The top-level const on p3 is *NOT* the reason this assignment is illegal!
+    p2 = p3; // LEGAL: p2 is low-level const, meaning ptr to const int. initializing from p3's address is fine.
+
 
     cout << "EOF" << endl;
 
